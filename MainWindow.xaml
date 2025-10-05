@@ -7,34 +7,28 @@
         mc:Ignorable="d"
         Title="Spotify Desktop Widget" 
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
         ShowTitle="True"
         Height="450" 
         Width="800">
     <hc:Window.NonClientAreaContent>
+      
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width ="10*"/>
-                <ColumnDefinition Width ="20*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="3*" />
-            </Grid.RowDefinitions>
-            <StackPanel Height="29">
-                <Menu HorizontalAlignment="Left">
-                    <MenuItem Header="Header1">
-                        <MenuItem Header="Header1"/>
-                        <MenuItem Header="Header2"/>
-                    </MenuItem>
-                    <MenuItem Header="Header2">
-                        <MenuItem Header="Header1"/>
-                        <MenuItem Header="Header2"/>
-                    </MenuItem>
-                </Menu>
-            </StackPanel>
-
-            
-             <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
+                <StackPanel Height="29">
+                    <Menu HorizontalAlignment="Left">
+                        <MenuItem Header="Header1">
+                            <MenuItem Header="Header1"/>
+                            <MenuItem Header="Header2"/>
+                        </MenuItem>
+                        <MenuItem Header="Header2">
+                            <MenuItem Header="Header1"/>
+                            <MenuItem Header="Header2"/>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+                <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16" Effect="{StaticResource EffectShadow2}">
                     <StackPanel Button.Click="ButtonSkins_OnClick">
                         <hc:Divider Width="200" Margin="0,10" Content="Application Theme"/>
@@ -67,8 +61,10 @@
                 </Border>
             </Popup>
         </Grid>
+        
     </hc:Window.NonClientAreaContent>
-    <Grid>
+    <Border CornerRadius="15" Background="#33FFFFFF" Padding="10">
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width ="10*"/>
             <ColumnDefinition Width ="20*"/>
@@ -82,4 +78,5 @@
         <ListBox x:Name="TracksListBox" Grid.Row="1" Grid.Column="1" ></ListBox>
         
     </Grid>
+    </Border>
 </hc:Window>

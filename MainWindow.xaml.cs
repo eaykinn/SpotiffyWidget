@@ -16,6 +16,7 @@ namespace SpotiffyWidget
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += (s, e) => BlurHelper.EnableBlur(this);
         }
 
         #region Change Theme
@@ -100,9 +101,6 @@ namespace SpotiffyWidget
 
         private async void AccessButton_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Access.Default.AccessToken = "";
-            Properties.Access.Default.RefreshToken = "";
-            Properties.Access.Default.Save();
             TracksListBox.Items.Clear();
 
             if (await GrantAccess())
