@@ -140,7 +140,11 @@ namespace SpotiffyWidget
 
                 foreach (var item in playlists)
                 {
-                    TracksListBox.Items.Add(item.Name);
+                    ListBoxItem liItem = new ListBoxItem();
+                    liItem.Background = null;
+                    liItem.Content = item.Name;
+
+                    TracksListBox.Items.Add(liItem);
                 }
             }
         }
