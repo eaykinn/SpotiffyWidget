@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Models;
@@ -13,7 +14,8 @@ namespace SpotiffyWidget.Requests
         public static async Task<List<T>> Search<T>(
             string accessToken,
             string searchQuery,
-            string type
+            string type,
+            CancellationToken cancellationToken
         )
         {
             string url =
@@ -24,7 +26,7 @@ namespace SpotiffyWidget.Requests
                 + $"type="
                 + type;
 
-            var result = await SpotifyApiHelper.SendRequestAsync<SearchResponse>(url, accessToken);
+            var result = await SpotifyApiHelper.SendRequestAsync<SearchResponse>(url, accessToken, cancellationToken);
             if (type == "track" && typeof(T) == typeof(Track))
                 return result.Tracks.Items as List<T>;
             else if (type == "artist" && typeof(T) == typeof(Artist))

@@ -1,13 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using HandyControl.Controls;
+﻿using HandyControl.Controls;
 using HandyControl.Themes;
 using HandyControl.Tools;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Models;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SpotiffyWidget
 {
@@ -107,8 +109,11 @@ namespace SpotiffyWidget
 
             if (await GrantAccess())
             {
+                CancellationService.Reset();
+                var cancellationToken = CancellationService.Token;
+
                 var tracks = await Requests.ProfileRequests.GetTopTracksAsync(
-                    Properties.Access.Default.AccessToken
+                    Properties.Access.Default.AccessToken,10, cancellationToken
                 );
 
                 foreach (var item in tracks)
@@ -117,7 +122,7 @@ namespace SpotiffyWidget
                 }
 
                 /*var artists = await Requests.ProfileRequests.GetTopArtistsAsync(
-                    Properties.Access.Default.AccessToken
+                    Properties.Access.Default.AccessToken, cancellationToken
                 );
 
                 foreach (var item in artists)
@@ -128,7 +133,7 @@ namespace SpotiffyWidget
                 var searchArtists = await Requests.SearchRequests.Search<Artist>(
                     Properties.Access.Default.AccessToken,
                     "Imagine Dragons",
-                    "artist"
+                    "artist", cancellationToken
                 );
 
                 foreach (var item in searchArtists)
@@ -138,7 +143,7 @@ namespace SpotiffyWidget
                 TracksListBox.Items.Clear();
 
                 var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
-                    Properties.Access.Default.AccessToken
+                    Properties.Access.Default.AccessToken, cancellationToken
                 );
 
                 foreach (var item in playlists)
@@ -152,13 +157,12 @@ namespace SpotiffyWidget
                 TracksListBox.Items.Clear();
 
                 var allTracks = await Requests.ProfileRequests.GetTracksAsync(
-                    Properties.Access.Default.AccessToken
+                    Properties.Access.Default.AccessToken,50, cancellationToken
                 );
 
                 foreach (var item in allTracks)
                 {
-
-                    TracksListBox.Items.Add(item.Track.Name);
+                    TracksListBox.Items.Add(item.Track.Name +" " + item.TimeAdded + " "+ item.Track.Artists.FirstOrDefault().Name);
                 }
             }
         }
