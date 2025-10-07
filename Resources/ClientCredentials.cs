@@ -8,7 +8,10 @@ namespace SpotiffyWidget.Resources
 {
     public static class ClientCredentials
     {
-        public static string ClientId { get; set; } = "445f0a63fc804fa1aa70b11b4a89bb15";
-        public static string ClientSecret { get; set; } = "c7b24567487d49ac80f849c406f75f5f";
+        public static readonly string ClientId =
+            Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+
+        public static readonly string ClientSecret =
+            Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
     }
 }
