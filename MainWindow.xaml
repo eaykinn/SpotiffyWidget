@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:cards="clr-namespace:SpotiffyWidget.Cards"
         mc:Ignorable="d"
         Title="Spotify Desktop Widget" 
         WindowStartupLocation="CenterScreen"
@@ -11,24 +12,28 @@
         AllowsTransparency="True"
         Background="Transparent"
         ShowTitle="True"
-        Height="450" 
-        Width="800">
+        Height="558" 
+        Width="392"
+        MinWidth="300"
+        MinHeight="250"
+        MaxHeight="700"  
+        MaxWidth="600">
     <hc:Window.NonClientAreaContent>
-      
+
         <Grid>
-                <StackPanel Height="29">
-                    <Menu HorizontalAlignment="Left">
-                        <MenuItem Header="Header1">
-                            <MenuItem Header="Header1"/>
-                            <MenuItem Header="Header2"/>
-                        </MenuItem>
-                        <MenuItem Header="Header2">
-                            <MenuItem Header="Header1"/>
-                            <MenuItem Header="Header2"/>
-                        </MenuItem>
-                    </Menu>
-                </StackPanel>
-                <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
+            <StackPanel Height="29">
+                <Menu HorizontalAlignment="Left">
+                    <MenuItem Header="Header1">
+                        <MenuItem Header="Header1"/>
+                        <MenuItem Header="Header2"/>
+                    </MenuItem>
+                    <MenuItem Header="Header2">
+                        <MenuItem Header="Header1"/>
+                        <MenuItem Header="Header2"/>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+            <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16" Effect="{StaticResource EffectShadow2}">
                     <StackPanel Button.Click="ButtonSkins_OnClick">
                         <hc:Divider Width="200" Margin="0,10" Content="Application Theme"/>
@@ -61,24 +66,49 @@
                 </Border>
             </Popup>
         </Grid>
-        
+
     </hc:Window.NonClientAreaContent>
     <Border CornerRadius="15" Background="#33FFFFFF" Padding="10">
         <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width ="10*"/>
-            <ColumnDefinition Width ="20*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-        <Button Grid.Column="0" Grid.Row="0" Click="AccessButton_Click" Name="AccessButton" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ConfigGeometry}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width ="10*"/>
+                <ColumnDefinition Width ="20*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" MinHeight="100"/>
+                <RowDefinition Height="3*" MinHeight="100"/>
+            </Grid.RowDefinitions>
 
-        <ListBox x:Name="TracksListBox" Grid.Row="1" Grid.Column="1" >
-           
-        </ListBox>
-        
-    </Grid>
+            <hc:TransitioningContentControl x:Name="LoadingPanel"  Visibility="Collapsed" TransitionMode="Fade" Grid.Column="0" Grid.Row="1" Panel.ZIndex="11" Grid.ColumnSpan="2">
+                <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5"/>
+                    <TextBlock Text="Loading..." 
+                         Margin="10,5,0,0" 
+                         FontSize="14" 
+                         Foreground="Black" 
+                         HorizontalAlignment="Center"/>
+                </StackPanel>
+            </hc:TransitioningContentControl>
+            
+            <Button Grid.Column="1" Grid.Row="0" Click="CancelClick" Name="Cancel" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CloseGeometry}"/>
+
+            <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True" TabItemWidth="120" TabItemHeight="25" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged">
+                <hc:TabItem Header="My Tracks">
+                    <ListBox HorizontalContentAlignment="Stretch" x:Name="ArtistListBox"  />
+                </hc:TabItem>
+
+                <hc:TabItem Header="My Top Artists">
+                    <ListBox HorizontalContentAlignment="Stretch" x:Name="TracksListBox"  />
+                </hc:TabItem>
+
+                <hc:TabItem Header="My Albums">
+                    <ListBox HorizontalContentAlignment="Stretch" x:Name="AlbumList"  />
+                </hc:TabItem>
+
+            </hc:TabControl>
+
+            
+
+        </Grid>
     </Border>
 </hc:Window>

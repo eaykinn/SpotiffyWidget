@@ -1,15 +1,18 @@
-﻿using HandyControl.Controls;
-using HandyControl.Themes;
-using HandyControl.Tools;
-using SpotiffyWidget.Helpers;
-using SpotiffyWidget.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HandyControl.Controls;
+using HandyControl.Themes;
+using HandyControl.Tools;
+using SpotiffyWidget.Cards;
+using SpotiffyWidget.Helpers;
+using SpotiffyWidget.Models;
+using TabControl = HandyControl.Controls.TabControl;
+using TabItem = HandyControl.Controls.TabItem;
 
 namespace SpotiffyWidget
 {
@@ -101,68 +104,212 @@ namespace SpotiffyWidget
             }
         }
 
-        private async void AccessButton_Click(object sender, RoutedEventArgs e)
+        private async void LoadTopArtists()
         {
-      
-
             TracksListBox.Items.Clear();
 
-            if (await GrantAccess())
+            if (!await GrantAccess())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            Cancel.IsEnabled = true;
+
+            LoadingPanel.Visibility = Visibility.Visible;
+
+            try
             {
-                CancellationService.Reset();
-                var cancellationToken = CancellationService.Token;
-
-                var tracks = await Requests.ProfileRequests.GetTopTracksAsync(
-                    Properties.Access.Default.AccessToken,10, cancellationToken
-                );
-
-                foreach (var item in tracks)
+                await Task.Run(async () =>
                 {
-                    TracksListBox.Items.Add(item.Name);
-                }
+                    // 1) Top tracks
+                    /*var tracks = await Requests.ProfileRequests.GetTopTracksAsync(
+                        Properties.Access.Default.AccessToken,
+                        10,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var trackNames = tracks.Select(t => t.Name).ToList();
+                    */
+                    // 2) Artists
+                    var artists = await Requests.ProfileRequests.GetTopArtistsAsync(
+                        Properties.Access.Default.AccessToken,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var artistNames = artists.Select(a => a.Name).ToList();
 
-                /*var artists = await Requests.ProfileRequests.GetTopArtistsAsync(
-                    Properties.Access.Default.AccessToken, cancellationToken
-                );
+                    Dispatcher.Invoke(() =>
+                    {
+                        TracksListBox.Items.Clear();
+                        foreach (var s in artists)
+                        {
+                            ArtistCard card = new ArtistCard();
+                            card.Name.Text = s.Name;
 
-                foreach (var item in artists)
+                            card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
+                                new Uri(s.Images.FirstOrDefault().Url)
+                            );
+
+                            TracksListBox.Items.Add(card);
+                        }
+                    });
+                    // 3) Search
+                    /*var searchArtists = await Requests.SearchRequests.Search<Artist>(
+                        Properties.Access.Default.AccessToken,
+                        "Imagine Dragons",
+                        "artist",
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var searchArtistNames = searchArtists.Select(a => a.Name).ToList();
+
+                    // 4) Playlists
+                    var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
+                        Properties.Access.Default.AccessToken,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var playlistNames = playlists.Select(p => p.Name).ToList();
+                    
+                    // 5) All tracks
+                    var allTracks = await Requests.ProfileRequests.GetTracksAsync(
+                        Properties.Access.Default.AccessToken,
+                        50,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    // Tek seferde UI güncellemesi
+                    Dispatcher.Invoke(() =>
+                    {
+                        TracksListBox.Items.Clear();
+                        foreach (var s in allTracks)
+                        {
+                            TrackCard card = new TrackCard();
+                            card.Name.Text = s.Track.Name;
+                            card.Artist.Text = s.Track.Artists.FirstOrDefault().Name;
+                            card.Album.Text = s.Track.Album.Name;
+                            card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
+                                new Uri(s.Track.Album.Images.FirstOrDefault().Url)
+                            );
+
+                            TracksListBox.Items.Add(card);
+                        }
+                    });*/
+                });
+            }
+            catch (OperationCanceledException oce)
+            {
+                // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
+                if (cancellationToken.IsCancellationRequested)
+                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
+                else
+                    Growl.Warning(
+                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
+                    );
+            }
+            catch (Exception ex)
+            {
+                Growl.Error(ex.Message);
+            }
+            finally
+            {
+                LoadingPanel.Visibility = Visibility.Collapsed;
+
+                Cancel.IsEnabled = false;
+            }
+        }
+
+        private async void LoadAllTracks()
+        {
+            ArtistListBox.Items.Clear();
+
+            if (!await GrantAccess())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            Cancel.IsEnabled = true;
+
+            LoadingPanel.Visibility = Visibility.Visible;
+
+            try
+            {
+                await Task.Run(async () =>
                 {
-                    TracksListBox.Items.Add(item.Name);
-                }
+                    // 5) All tracks
+                    var allTracks = await Requests.ProfileRequests.GetTracksAsync(
+                        Properties.Access.Default.AccessToken,
+                        50,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                var searchArtists = await Requests.SearchRequests.Search<Artist>(
-                    Properties.Access.Default.AccessToken,
-                    "Imagine Dragons",
-                    "artist", cancellationToken
-                );
+                    // Tek seferde UI güncellemesi
+                    Dispatcher.Invoke(() =>
+                    {
+                        ArtistListBox.Items.Clear();
+                        foreach (var s in allTracks)
+                        {
+                            TrackCard card = new TrackCard();
+                            card.Name.Text = s.Track.Name;
+                            card.Artist.Text = s.Track.Artists.FirstOrDefault().Name;
+                            card.Album.Text = s.Track.Album.Name;
+                            card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
+                                new Uri(s.Track.Album.Images.FirstOrDefault().Url)
+                            );
 
-                foreach (var item in searchArtists)
+                            ArtistListBox.Items.Add(card);
+                        }
+                    });
+                });
+            }
+            catch (OperationCanceledException oce)
+            {
+                // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
+                if (cancellationToken.IsCancellationRequested)
+                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
+                else
+                    Growl.Warning(
+                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
+                    );
+            }
+            catch (Exception ex)
+            {
+                Growl.Error(ex.Message);
+            }
+            finally
+            {
+                LoadingPanel.Visibility = Visibility.Collapsed;
+
+                Cancel.IsEnabled = false;
+            }
+        }
+
+        private void CancelClick(object sender, RoutedEventArgs e)
+        {
+            CancellationService.Cancel();
+            Growl.Info("İşlem iptal edildi.");
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                var tab = MainTabs.SelectedItem as TabItem;
+                if (tab != null)
                 {
-                    TracksListBox.Items.Add(item.Name);
-                }
-                TracksListBox.Items.Clear();
-
-                var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
-                    Properties.Access.Default.AccessToken, cancellationToken
-                );
-
-                foreach (var item in playlists)
-                {
-
-
-                    TracksListBox.Items.Add(item.Name);
-                }
-                */
-
-                TracksListBox.Items.Clear();
-
-                var allTracks = await Requests.ProfileRequests.GetTracksAsync(
-                    Properties.Access.Default.AccessToken,50, cancellationToken
-                );
-
-                foreach (var item in allTracks)
-                {
-                    TracksListBox.Items.Add(item.Track.Name +" " + item.TimeAdded + " "+ item.Track.Artists.FirstOrDefault().Name);
+                    switch (tab.Header.ToString())
+                    {
+                        case "My Tracks":
+                            LoadAllTracks();
+                            break;
+                        case "My Top Artists":
+                            LoadTopArtists();
+                            break;
+                    }
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace SpotiffyWidget.Requests
             return trackItems;
         }
 
-        // user's tracks with added time (limit parameters will be added)
+        // user's tracks with added time (limit parameters can be added)
         public static async Task<List<ProfileTrack>> GetTracksAsync(string accessToken, int trackCount, CancellationToken cancellationToken)
         {
             string url = SpotifyEndPoints.Profile.Tracks +"?" + $"limit=" + trackCount; ;
