@@ -13,6 +13,7 @@ namespace SpotiffyWidget.Models
         public List<T> Items { get; set; }
     }
 
+
     public class SearchResponse
     {
         [JsonProperty("tracks")]

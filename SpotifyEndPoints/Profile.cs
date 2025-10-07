@@ -12,5 +12,6 @@ namespace SpotiffyWidget.SpotifyEndPoints
         public static string Playlists { get; } = "https://api.spotify.com/v1/me/playlists";
         public static string TopTracks { get; } = "https://api.spotify.com/v1/me/top/tracks";
         public static string TopArtists { get; } = "https://api.spotify.com/v1/me/top/artists";
+        public static string Tracks { get; } = "https://api.spotify.com/v1/me/tracks";
     }
 }

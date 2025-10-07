@@ -101,6 +101,8 @@ namespace SpotiffyWidget
 
         private async void AccessButton_Click(object sender, RoutedEventArgs e)
         {
+      
+
             TracksListBox.Items.Clear();
 
             if (await GrantAccess())
@@ -114,7 +116,7 @@ namespace SpotiffyWidget
                     TracksListBox.Items.Add(item.Name);
                 }
 
-                var artists = await Requests.ProfileRequests.GetTopArtistsAsync(
+                /*var artists = await Requests.ProfileRequests.GetTopArtistsAsync(
                     Properties.Access.Default.AccessToken
                 );
 
@@ -134,17 +136,29 @@ namespace SpotiffyWidget
                     TracksListBox.Items.Add(item.Name);
                 }
                 TracksListBox.Items.Clear();
+
                 var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
                     Properties.Access.Default.AccessToken
                 );
 
                 foreach (var item in playlists)
                 {
-                    ListBoxItem liItem = new ListBoxItem();
-                    liItem.Background = null;
-                    liItem.Content = item.Name;
 
-                    TracksListBox.Items.Add(liItem);
+
+                    TracksListBox.Items.Add(item.Name);
+                }
+                */
+
+                TracksListBox.Items.Clear();
+
+                var allTracks = await Requests.ProfileRequests.GetTracksAsync(
+                    Properties.Access.Default.AccessToken
+                );
+
+                foreach (var item in allTracks)
+                {
+
+                    TracksListBox.Items.Add(item.Track.Name);
                 }
             }
         }

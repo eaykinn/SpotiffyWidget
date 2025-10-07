@@ -23,6 +23,14 @@ namespace SpotiffyWidget.Requests
             return trackItems;
         }
 
+        public static async Task<List<ProfileTrack>> GetTracksAsync(string accessToken)
+        {
+            string url = SpotifyEndPoints.Profile.Tracks;
+            var tracks = await SpotifyApiHelper.SendRequestAsync<Paging<ProfileTrack>>(url, accessToken);
+            var trackItems = tracks.Items.ToList(); 
+            return trackItems;
+        }
+
         public static async Task<List<Artist>> GetTopArtistsAsync(string accessToken)
         {
             string url = SpotifyEndPoints.Profile.TopArtists;

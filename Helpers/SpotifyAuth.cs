@@ -30,7 +30,7 @@ namespace SpotiffyWidget.Helpers
             Console.WriteLine("Waiting for redirect...");
 
             string scopes =
-                "streaming user-read-playback-state user-modify-playback-state playlist-read-private user-top-read";
+                "streaming user-read-playback-state user-modify-playback-state playlist-read-private user-top-read user-library-read";
 
             string authorizationUrl =
                 SpotifyEndPoints.Auth.AuthUrl
