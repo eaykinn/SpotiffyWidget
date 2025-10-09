@@ -69,46 +69,10 @@ namespace SpotiffyWidget
         }
         #endregion
 
-        public async Task<bool> GrantAccess()
-        {
-            if (Properties.Access.Default.AccessToken != "")
-            {
-                if (!await SpotifyAuth.CheckToken(Properties.Access.Default.AccessToken))
-                {
-                    string accessToken = await SpotifyAuth.RefreshAccessToken(
-                        Properties.Access.Default.RefreshToken
-                    );
-                    if (accessToken == null)
-                    {
-                        Growl.Info("Could not refresh access token.");
-                        return false;
-                    }
-                    return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                //token yok
-                string authcode = SpotifyAuth.GetAuthCode();
-                var accesstoken = await SpotifyAuth.GetAccessToken(authcode);
-                if (accesstoken.Count == 0)
-                {
-                    Growl.Info("Could not get access token.");
-                    return false;
-                }
-                return true;
-            }
-        }
 
         private async void LoadTopArtists()
         {
-            TracksListBox.Items.Clear();
-
-            if (!await GrantAccess())
+            if (!await SpotifyApiHelper.GrantAccess())
                 return;
 
             CancellationService.Reset();
@@ -164,13 +128,7 @@ namespace SpotiffyWidget
                     cancellationToken.ThrowIfCancellationRequested();
                     var searchArtistNames = searchArtists.Select(a => a.Name).ToList();
 
-                    // 4) Playlists
-                    var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
-                        Properties.Access.Default.AccessToken,
-                        cancellationToken
-                    );
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var playlistNames = playlists.Select(p => p.Name).ToList();
+
                     
                     // 5) All tracks
                     var allTracks = await Requests.ProfileRequests.GetTracksAsync(
@@ -223,9 +181,7 @@ namespace SpotiffyWidget
 
         private async void LoadAllTracks()
         {
-            ArtistListBox.Items.Clear();
-
-            if (!await GrantAccess())
+            if (!await SpotifyApiHelper.GrantAccess())
                 return;
 
             CancellationService.Reset();
@@ -288,6 +244,69 @@ namespace SpotiffyWidget
             }
         }
 
+        private async void LoadMyPlayLists()
+        {
+            if (!await SpotifyApiHelper.GrantAccess())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            Cancel.IsEnabled = true;
+
+            LoadingPanel.Visibility = Visibility.Visible;
+
+            try
+            {
+                await Task.Run(async () =>
+                {
+                    // 4) Playlists
+                    var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
+                        Properties.Access.Default.AccessToken,
+                        cancellationToken
+                    );
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    // Tek seferde UI güncellemesi
+                    Dispatcher.Invoke(() =>
+                    {
+                        MyPlayLists.Items.Clear();
+                        foreach (var s in playlists)
+                        {
+                            MyPlayListsCard card = new MyPlayListsCard();
+                            card.PlayListName.Text = s.Name;
+                            card.Owner.Text = s.Owner.DisplayName;
+                            card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
+                                new Uri(s.Images.FirstOrDefault().Url)
+                            );
+                            card.NumberOfTracks.Text = s.TrackInfo.Total.ToString() + " Songs";
+                            MyPlayLists.Items.Add(card);
+                        }
+                    });
+                });
+            }
+            catch (OperationCanceledException oce)
+            {
+                // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
+                if (cancellationToken.IsCancellationRequested)
+                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
+                else
+                    Growl.Warning(
+                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
+                    );
+            }
+            catch (Exception ex)
+            {
+                Growl.Error(ex.Message);
+            }
+            finally
+            {
+                LoadingPanel.Visibility = Visibility.Collapsed;
+
+                Cancel.IsEnabled = false;
+            }
+        }
+
         private void CancelClick(object sender, RoutedEventArgs e)
         {
             CancellationService.Cancel();
@@ -308,6 +327,9 @@ namespace SpotiffyWidget
                             break;
                         case "My Top Artists":
                             LoadTopArtists();
+                            break;
+                        case "My PlayLists":
+                            LoadMyPlayLists();
                             break;
                     }
                 }

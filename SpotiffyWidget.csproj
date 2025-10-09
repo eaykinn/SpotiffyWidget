@@ -21,9 +21,16 @@
   <ItemGroup>
     <PackageReference Include="HandyControls" Version="3.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="NPSMLib" Version="0.9.14" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Cards\PlayerCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Cards\ArtistCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Cards\MyPlayListsCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Properties\Access.Designer.cs">

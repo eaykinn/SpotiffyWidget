@@ -13,7 +13,6 @@ namespace SpotiffyWidget.Models
         public List<T> Items { get; set; }
     }
 
-
     public class SearchResponse
     {
         [JsonProperty("tracks")]
@@ -21,5 +20,11 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("artists")]
         public Paging<Artist> Artists { get; set; }
+    }
+
+    public class Devices
+    {
+        [JsonProperty("devices")]
+        public List<Device> DeviceList { get; set; }
     }
 }

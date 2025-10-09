@@ -14,10 +14,12 @@
         ShowTitle="True"
         Height="558" 
         Width="392"
-        MinWidth="300"
-        MinHeight="250"
-        MaxHeight="700"  
-        MaxWidth="600">
+        MinWidth="360"
+        MinHeight="330"
+        MaxHeight="930"
+        MaxWidth="530"
+           
+   >
     <hc:Window.NonClientAreaContent>
 
         <Grid>
@@ -75,11 +77,12 @@
                 <ColumnDefinition Width ="20*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*" MinHeight="100"/>
-                <RowDefinition Height="3*" MinHeight="100"/>
+                <RowDefinition Height="20*" MinHeight="155"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="40*" MinHeight="100"/>
             </Grid.RowDefinitions>
 
-            <hc:TransitioningContentControl x:Name="LoadingPanel"  Visibility="Collapsed" TransitionMode="Fade" Grid.Column="0" Grid.Row="1" Panel.ZIndex="11" Grid.ColumnSpan="2">
+            <hc:TransitioningContentControl x:Name="LoadingPanel"  Visibility="Collapsed" TransitionMode="Fade" Grid.Column="0" Grid.Row="2" Panel.ZIndex="11" Grid.ColumnSpan="2">
                 <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
                     <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5"/>
                     <TextBlock Text="Loading..." 
@@ -92,7 +95,10 @@
             
             <Button Grid.Column="1" Grid.Row="0" Click="CancelClick" Name="Cancel" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CloseGeometry}"/>
 
-            <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True" TabItemWidth="120" TabItemHeight="25" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged">
+
+            <cards:PlayerCard x:Name="PlayerCard" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+            
+            <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True" TabItemWidth="120" TabItemHeight="25" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged">
                 <hc:TabItem Header="My Tracks">
                     <ListBox HorizontalContentAlignment="Stretch" x:Name="ArtistListBox"  />
                 </hc:TabItem>
@@ -101,8 +107,8 @@
                     <ListBox HorizontalContentAlignment="Stretch" x:Name="TracksListBox"  />
                 </hc:TabItem>
 
-                <hc:TabItem Header="My Albums">
-                    <ListBox HorizontalContentAlignment="Stretch" x:Name="AlbumList"  />
+                <hc:TabItem Header="My PlayLists">
+                    <ListBox HorizontalContentAlignment="Stretch" x:Name="MyPlayLists"  />
                 </hc:TabItem>
 
             </hc:TabControl>

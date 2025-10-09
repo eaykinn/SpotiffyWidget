@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Newtonsoft.Json;
 
 namespace SpotiffyWidget.Models
 {
-    public class Playlist
+    public class UserProfile
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("href")]
-        public string Href { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         [JsonProperty("uri")]
         public string Uri { get; set; }
@@ -21,10 +19,7 @@ namespace SpotiffyWidget.Models
         [JsonProperty("images")]
         public List<Image> Images { get; set; }
 
-        [JsonProperty("owner")]
-        public UserProfile Owner { get; set; }
-
-        [JsonProperty("tracks")]
-        public TrackInfo TrackInfo { get; set; }
+        [JsonProperty("display_name")]
+        public string DisplayName { get; set; }
     }
 }
