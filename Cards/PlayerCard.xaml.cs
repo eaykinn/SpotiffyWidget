@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using HandyControl.Controls;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Models;
@@ -28,11 +30,21 @@ namespace SpotiffyWidget.Cards
     /// </summary>
     public partial class PlayerCard : UserControl
     {
+        DispatcherTimer uiTimer = new DispatcherTimer();
+
         public PlayerCard()
         {
             InitializeComponent();
 
-            NPSMLibFunctions.GetNowPlayingInfo();
+            uiTimer = new DispatcherTimer();
+            uiTimer.Interval = TimeSpan.FromMilliseconds(100);
+            uiTimer.Tick += UpdateSongInfo;
+            uiTimer.Start();
+        }
+
+        private void UpdateSongInfo(object? sender, EventArgs e)
+        {
+            NPSMLibFunctions.UpdatePlayback();
             Cover.Source = NPSMLibFunctions.Image;
             SongName.Text = NPSMLibFunctions.SongName;
             ArtistName.Text = NPSMLibFunctions.ArtistName;
@@ -47,60 +59,78 @@ namespace SpotiffyWidget.Cards
 
         private async void PlayPause()
         {
-            if (!await SpotifyApiHelper.GrantAccess())
+            if (!await SpotifyAuth.GrantAccess())
                 return;
 
-            CancellationService.Reset();
-            var cancellationToken = CancellationService.Token;
+            if (!await SpotifyAuth.CheckDevice())
+                return;
 
-            await Task.Run(async () =>
+            Reset();
+            var cancellationToken = Token;
+
+            var playBackState = await PlayerRequests.GetPlayBackState(
+                Properties.Access.Default.AccessToken,
+                cancellationToken
+            );
+
+            if (playBackState.IsPlaying)
             {
-                var devices = await Requests.PlayerRequests.GetDevices(
+                await PlayerRequests.Pause(
                     Properties.Access.Default.AccessToken,
+                    null,
                     cancellationToken
                 );
-
-                if (devices.DeviceList.Count == 0)
-                {
-                    HandyControl.Controls.MessageBox.Show(
-                        "No active device found. Please open Spotify on one of your devices.",
-                        "Error",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-                    return;
-                }
-
-                var playBackState = await Requests.PlayerRequests.GetPlayBackState(
+                uiTimer.Stop();
+                return;
+            }
+            else
+            {
+                await PlayerRequests.Play(
                     Properties.Access.Default.AccessToken,
+                    null,
                     cancellationToken
                 );
-
-                if (playBackState.IsPlaying)
-                {
-                    await Requests.PlayerRequests.Pause(
-                        Properties.Access.Default.AccessToken,
-                        null,
-                        cancellationToken
-                    );
-                    return;
-                }
-                else
-                {
-                    Console.WriteLine(devices);
-
-                    await Requests.PlayerRequests.Play(
-                        Properties.Access.Default.AccessToken,
-                        null,
-                        cancellationToken
-                    );
-                }
-            });
+                uiTimer.Start();
+                return;
+            }
         }
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
             PlayPause();
+        }
+
+        private async void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            Reset();
+            var cancellationToken = Token;
+            bool ok = await PlayerRequests.Next(
+                Properties.Access.Default.AccessToken,
+                cancellationToken
+            );
+        }
+
+        private async void PreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            Reset();
+            var cancellationToken = Token;
+
+            bool ok = await PlayerRequests.Previous(
+                Properties.Access.Default.AccessToken,
+                cancellationToken
+            );
         }
     }
 }

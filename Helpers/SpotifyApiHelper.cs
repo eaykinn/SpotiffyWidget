@@ -70,46 +70,12 @@ namespace SpotiffyWidget.Helpers
             if (body != null)
             {
                 string json = JsonConvert.SerializeObject(body);
+
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
             var response = await _httpClient.SendAsync(request, cancellationToken);
             return response;
-        }
-
-        public static async Task<bool> GrantAccess()
-        {
-            if (Properties.Access.Default.AccessToken != "")
-            {
-                if (!await SpotifyAuth.CheckToken(Properties.Access.Default.AccessToken))
-                {
-                    string accessToken = await SpotifyAuth.RefreshAccessToken(
-                        Properties.Access.Default.RefreshToken
-                    );
-                    if (accessToken == null)
-                    {
-                        Growl.Info("Could not refresh access token.");
-                        return false;
-                    }
-                    return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                //token yok
-                string authcode = SpotifyAuth.GetAuthCode();
-                var accesstoken = await SpotifyAuth.GetAccessToken(authcode);
-                if (accesstoken.Count == 0)
-                {
-                    Growl.Info("Could not get access token.");
-                    return false;
-                }
-                return true;
-            }
         }
     }
 }

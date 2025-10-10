@@ -8,8 +8,6 @@
         mc:Ignorable="d"
         Title="Spotify Desktop Widget" 
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        AllowsTransparency="True"
         Background="Transparent"
         ShowTitle="True"
         Height="558" 
@@ -17,23 +15,14 @@
         MinWidth="360"
         MinHeight="330"
         MaxHeight="930"
-        MaxWidth="530"
+        MaxWidth="530" WindowStyle="None" ShowInTaskbar="False"
            
    >
     <hc:Window.NonClientAreaContent>
 
         <Grid>
             <StackPanel Height="29">
-                <Menu HorizontalAlignment="Left">
-                    <MenuItem Header="Header1">
-                        <MenuItem Header="Header1"/>
-                        <MenuItem Header="Header2"/>
-                    </MenuItem>
-                    <MenuItem Header="Header2">
-                        <MenuItem Header="Header1"/>
-                        <MenuItem Header="Header2"/>
-                    </MenuItem>
-                </Menu>
+
             </StackPanel>
             <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16" Effect="{StaticResource EffectShadow2}">

@@ -4,6 +4,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              MaxHeight="450"
              MaxWidth="500"
+            
            >
     <Border Background="#22FFFFFF"
             Margin="0"
@@ -57,9 +58,9 @@
             <TextBlock x:Name="ArtistName" Grid.Column="9" Grid.Row="3" Grid.ColumnSpan="6" Text="" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Arist Name</TextBlock>
             <TextBlock x:Name="AlbumName" Grid.Column="9" Grid.Row="5" Grid.ColumnSpan="6" Text="" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Album Name</TextBlock>
 
-            <Button Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
+            <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PreviousButton_Click"></Button>
             <Button x:Name="PlayPauseButton" Grid.Column="9" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayPauseButton_Click"></Button>
-            <Button Grid.Column="11" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
+            <Button x:Name="NextButton" Grid.Column="11" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click"></Button>
             <Button Grid.Column="17" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
             <Button Grid.Column="17" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
             <CheckBox Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Left" >

@@ -69,10 +69,9 @@ namespace SpotiffyWidget
         }
         #endregion
 
-
         private async void LoadTopArtists()
         {
-            if (!await SpotifyApiHelper.GrantAccess())
+            if (!await SpotifyAuth.GrantAccess())
                 return;
 
             CancellationService.Reset();
@@ -181,7 +180,7 @@ namespace SpotiffyWidget
 
         private async void LoadAllTracks()
         {
-            if (!await SpotifyApiHelper.GrantAccess())
+            if (!await SpotifyAuth.GrantAccess())
                 return;
 
             CancellationService.Reset();
@@ -213,6 +212,7 @@ namespace SpotiffyWidget
                             card.Name.Text = s.Track.Name;
                             card.Artist.Text = s.Track.Artists.FirstOrDefault().Name;
                             card.Album.Text = s.Track.Album.Name;
+                            card.TrackUri = s.Track.Uri;
                             card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                                 new Uri(s.Track.Album.Images.FirstOrDefault().Url)
                             );
@@ -246,7 +246,7 @@ namespace SpotiffyWidget
 
         private async void LoadMyPlayLists()
         {
-            if (!await SpotifyApiHelper.GrantAccess())
+            if (!await SpotifyAuth.GrantAccess())
                 return;
 
             CancellationService.Reset();

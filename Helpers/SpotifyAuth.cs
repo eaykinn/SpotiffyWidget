@@ -7,6 +7,10 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
+using HandyControl.Controls;
+using Newtonsoft.Json.Linq;
+using SpotiffyWidget.Requests;
 using static SpotiffyWidget.Helpers.SpotifyAuth;
 
 namespace SpotiffyWidget.Helpers
@@ -172,6 +176,65 @@ namespace SpotiffyWidget.Helpers
                 else
                     return false;
             }
+        }
+
+        public static async Task<bool> GrantAccess()
+        {
+            if (Properties.Access.Default.AccessToken != "")
+            {
+                if (!await SpotifyAuth.CheckToken(Properties.Access.Default.AccessToken))
+                {
+                    string accessToken = await SpotifyAuth.RefreshAccessToken(
+                        Properties.Access.Default.RefreshToken
+                    );
+                    if (accessToken == null)
+                    {
+                        Growl.Info("Could not refresh access token.");
+                        return false;
+                    }
+                    return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                //token yok
+                string authcode = SpotifyAuth.GetAuthCode();
+                var accesstoken = await SpotifyAuth.GetAccessToken(authcode);
+                if (accesstoken.Count == 0)
+                {
+                    Growl.Info("Could not get access token.");
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public static async Task<bool> CheckDevice()
+        {
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            var devices = await PlayerRequests.GetDevices(
+                Properties.Access.Default.AccessToken,
+                cancellationToken
+            );
+
+            if (devices.DeviceList.Count == 0)
+            {
+                HandyControl.Controls.MessageBox.Show(
+                    "No active device found. Please open Spotify on one of your devices.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                return false;
+            }
+
+            return true;
         }
     }
 }

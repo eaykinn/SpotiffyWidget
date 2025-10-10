@@ -23,5 +23,7 @@ namespace SpotiffyWidget.SpotifyEndPoints
         public static string Queue { get; } = "https://api.spotify.com/v1/me/player/queue";
 
         public static string Devices { get; } = "https://api.spotify.com/v1/me/player/devices";
+        public static string Next { get; } = "https://api.spotify.com/v1/me/player/next";
+        public static string Previous { get; } = "https://api.spotify.com/v1/me/player/previous";
     }
 }

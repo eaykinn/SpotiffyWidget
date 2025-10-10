@@ -60,5 +60,42 @@ namespace SpotiffyWidget.Requests
             );
             return playBackState;
         }
+
+        public static async Task<bool> Next(string accessToken, CancellationToken cancellationToken)
+        {
+            object body = null;
+
+            string url = SpotifyEndPoints.Player.Next;
+            var response = await SpotifyApiHelper.PostAsync(
+                url,
+                body,
+                accessToken,
+                cancellationToken
+            );
+
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
+        }
+
+        public static async Task<bool> Previous(
+            string accessToken,
+            CancellationToken cancellationToken
+        )
+        {
+            object body = null;
+
+            string url = SpotifyEndPoints.Player.Previous;
+            var response = await SpotifyApiHelper.PostAsync(
+                url,
+                body,
+                accessToken,
+                cancellationToken
+            );
+
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
+        }
     }
 }

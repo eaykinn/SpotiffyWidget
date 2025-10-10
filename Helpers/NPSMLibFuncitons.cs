@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NPSMLib;
 
@@ -12,29 +8,33 @@ namespace SpotiffyWidget.Helpers
 {
     public static class NPSMLibFunctions
     {
-        public static string SongName { get; set; } = null;
-        public static string ArtistName { get; set; } = null;
-        public static string AlbumName { get; set; } = null;
-        public static BitmapFrame Image { get; set; } = null;
-        public static string MaxTime { get; set; } = null;
-        public static string CurrentTime { get; set; } = null;
-        public static int MaxSeconds { get; set; } = 0;
-        public static int CurrentSecond { get; set; } = 0;
+        private static NowPlayingSessionManager _player;
+        private static NowPlayingSession _currentSession;
+        private static MediaPlaybackDataSource _dataSource;
 
-        public static void GetNowPlayingInfo()
+        public static string SongName { get; set; }
+        public static string ArtistName { get; set; }
+        public static string AlbumName { get; set; }
+        public static BitmapFrame Image { get; set; }
+        public static string MaxTime { get; set; }
+        public static string CurrentTime { get; set; }
+        public static int MaxSeconds { get; set; }
+        public static int CurrentSecond { get; set; }
+
+        private static double _lastPosition = -1;
+        private static DateTime _lastUpdate = DateTime.Now;
+
+        public static void InitializeSession()
         {
-            NowPlayingSessionManager player = new NowPlayingSessionManager();
+            _player = new NowPlayingSessionManager();
 
-            NowPlayingSession[] sessions = player.GetSessions();
-            var sessionInfos = sessions
-                .Where(x =>
-                    x.SourceAppId == "Spotify.exe"
-                    || x.SourceAppId.Contains("spotify")
-                    || x.SourceAppId.Contains("Spotify")
-                )
-                .Select(x => x.GetSessionInfo())
-                .ToList();
-            if (sessionInfos.Count == 0)
+            var sessions = _player.GetSessions();
+            var spotifySession = sessions.FirstOrDefault(x =>
+                x.SourceAppId.Equals("Spotify.exe", StringComparison.OrdinalIgnoreCase)
+                || x.SourceAppId.Contains("spotify", StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (spotifySession == null)
             {
                 SongName = "No Data";
                 ArtistName = "No Data";
@@ -42,52 +42,77 @@ namespace SpotiffyWidget.Helpers
                 Image = null;
                 return;
             }
-            else
-            {
-                player.SetCurrentSession(sessionInfos[0]);
-            }
 
-            NowPlayingSession currentSession = player.CurrentSession;
-            MediaPlaybackDataSource playnaclDataSource =
-                currentSession.ActivateMediaPlaybackDataSource();
+            _player.SetCurrentSession(spotifySession.GetSessionInfo());
+            _currentSession = _player.CurrentSession;
+            _dataSource = _currentSession.ActivateMediaPlaybackDataSource();
 
-            using (Stream streamInfo = playnaclDataSource.GetThumbnailStream())
+            // 🎵 Şarkı bilgilerini ilk defa çek
+            var info = _dataSource.GetMediaObjectInfo();
+            SongName = info.Title ?? "No Data";
+            ArtistName = info.Artist ?? "No Data";
+            AlbumName = info.AlbumTitle ?? "No Data";
+
+            // 🖼️ Albüm resmi
+            using (var stream = _dataSource.GetThumbnailStream())
             {
-                if (streamInfo != null)
+                if (stream != null)
                 {
                     Image = BitmapFrame.Create(
-                        streamInfo,
+                        stream,
                         BitmapCreateOptions.None,
                         BitmapCacheOption.OnLoad
                     );
                 }
             }
+        }
 
-            MediaObjectInfo mediaInfo = playnaclDataSource.GetMediaObjectInfo();
-            if (mediaInfo.Title != null)
+        public static void UpdatePlayback()
+        {
+            if (_dataSource == null)
             {
-                SongName = mediaInfo.Title;
-                ArtistName = mediaInfo.Artist;
-                AlbumName = mediaInfo.AlbumTitle;
-            }
-            else
-            {
-                SongName = "No Data";
-                ArtistName = "No Data";
-                AlbumName = "No Data";
+                InitializeSession();
+                return;
             }
 
-            MediaTimelineProperties timeline = playnaclDataSource.GetMediaTimelineProperties();
-            MaxTime =
-                timeline.EndTime.Minutes.ToString() + ":" + timeline.EndTime.Seconds.ToString();
-            CurrentTime =
-                timeline.Position.Minutes.ToString() + ":" + timeline.Position.Seconds.ToString();
+            try
+            {
+                var timeline = _dataSource.GetMediaTimelineProperties();
 
-            CurrentSecond = (int)timeline.Position.TotalSeconds;
+                // Spotify'dan yeni pozisyon gelmiş mi kontrol et
+                if (
+                    Math.Abs(timeline.Position.TotalSeconds - _lastPosition) < 0.01
+                    && timeline.Position.TotalSeconds > 0
+                )
+                {
+                    // Yeni veri yok → biz arttıralım
+                    if ((DateTime.Now - _lastUpdate).TotalSeconds >= 1)
+                    {
+                        CurrentSecond++;
+                        if (CurrentSecond > MaxSeconds)
+                            CurrentSecond = MaxSeconds;
 
-            MaxSeconds = (int)timeline.EndTime.TotalSeconds;
+                        _lastUpdate = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    // Yeni veri geldi → normal güncelle
+                    CurrentSecond = (int)timeline.Position.TotalSeconds;
+                    MaxSeconds = (int)timeline.EndTime.TotalSeconds;
+                    _lastPosition = timeline.Position.TotalSeconds;
+                    _lastUpdate = DateTime.Now;
+                    InitializeSession();
+                }
 
-            return;
+                // Süre metinlerini güncelle
+                MaxTime = $"{timeline.EndTime.Minutes}:{timeline.EndTime.Seconds:D2}";
+                CurrentTime = $"{(int)(CurrentSecond / 60)}:{CurrentSecond % 60:D2}";
+            }
+            catch
+            {
+                InitializeSession();
+            }
         }
     }
 }

@@ -30,7 +30,7 @@
             <TextBlock x:Name="Artist" Grid.Column="1" Grid.Row="1" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBlock x:Name="Album"  Grid.Column="1" Grid.Row="2" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black"  VerticalAlignment="Center" Margin="0,0,10,0"/>
 
-            <Button  Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DownloadGeometry}"/>
+            <Button  Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DownloadGeometry}" Click="Button_Click"/>
           
         </Grid>
     </Border>
