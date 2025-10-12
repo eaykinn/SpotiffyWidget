@@ -30,6 +30,7 @@ namespace SpotiffyWidget.Cards
     public partial class TrackCard : UserControl
     {
         public string TrackUri { get; set; }
+        public string TrackId { get; set; }
 
         public TrackCard()
         {
@@ -56,9 +57,55 @@ namespace SpotiffyWidget.Cards
             );
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             await PlayTrack(this.TrackUri);
+        }
+
+        private async Task AddQueue(string trackUri)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            await PlayerRequests.AddQueue(
+                Properties.Access.Default.AccessToken,
+                trackUri,
+                cancellationToken
+            );
+        }
+
+        private async void AddQueueButton_Click(object sender, RoutedEventArgs e)
+        {
+            await AddQueue(this.TrackUri);
+        }
+
+        private async Task LikeSong(string TrackId)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+            var body = new { ids = new string[] { TrackId } };
+            await TracksRequests.LikeSong(
+                Properties.Access.Default.AccessToken,
+                body,
+                cancellationToken
+            );
+        }
+
+        private async void LikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            await LikeSong(this.TrackId);
         }
     }
 }

@@ -20,6 +20,9 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("artists")]
         public Paging<Artist> Artists { get; set; }
+
+        [JsonProperty("playlists")]
+        public Paging<Playlist> PlayLists { get; set; }
     }
 
     public class Devices

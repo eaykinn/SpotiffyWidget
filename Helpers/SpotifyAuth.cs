@@ -23,7 +23,7 @@ namespace SpotiffyWidget.Helpers
             public string refresh_token { get; set; }
         }
 
-        public static string GetAuthCode()
+        public static async Task<string> GetAuthCode()
         {
             string redirectUri = Resources.CallBackUri.Uri;
             var listener = new HttpListener();
@@ -34,7 +34,7 @@ namespace SpotiffyWidget.Helpers
             Console.WriteLine("Waiting for redirect...");
 
             string scopes =
-                "streaming user-read-playback-state user-modify-playback-state playlist-read-private user-top-read user-library-read";
+                "streaming user-read-playback-state user-modify-playback-state playlist-read-private user-top-read user-library-read user-library-modify";
 
             string authorizationUrl =
                 SpotifyEndPoints.Auth.AuthUrl
@@ -48,7 +48,9 @@ namespace SpotiffyWidget.Helpers
             //MessageBox.Show(authorizationUrl);
             //Console.WriteLine(authorizationUrl);
             ProcessStartInfo linkx = new(authorizationUrl) { UseShellExecute = true };
-            Process.Start(linkx);
+
+            await Task.Run(() => Process.Start(linkx));
+
             HttpListenerContext context;
 
             try
@@ -202,7 +204,7 @@ namespace SpotiffyWidget.Helpers
             else
             {
                 //token yok
-                string authcode = SpotifyAuth.GetAuthCode();
+                string authcode = await SpotifyAuth.GetAuthCode();
                 var accesstoken = await SpotifyAuth.GetAccessToken(authcode);
                 if (accesstoken.Count == 0)
                 {

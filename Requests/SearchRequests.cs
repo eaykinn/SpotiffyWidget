@@ -26,11 +26,17 @@ namespace SpotiffyWidget.Requests
                 + $"type="
                 + type;
 
-            var result = await SpotifyApiHelper.SendRequestAsync<SearchResponse>(url, accessToken, cancellationToken);
+            var result = await SpotifyApiHelper.SendRequestAsync<SearchResponse>(
+                url,
+                accessToken,
+                cancellationToken
+            );
             if (type == "track" && typeof(T) == typeof(Track))
                 return result.Tracks.Items as List<T>;
             else if (type == "artist" && typeof(T) == typeof(Artist))
                 return result.Artists.Items as List<T>;
+            else if (type == "playlist" && typeof(T) == typeof(Playlist))
+                return result.PlayLists.Items as List<T>;
             else
                 return new List<T>();
         }

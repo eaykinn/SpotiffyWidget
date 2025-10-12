@@ -83,12 +83,29 @@ namespace SpotiffyWidget.Requests
             CancellationToken cancellationToken
         )
         {
-            object body = null;
-
             string url = SpotifyEndPoints.Player.Previous;
             var response = await SpotifyApiHelper.PostAsync(
                 url,
-                body,
+                null,
+                accessToken,
+                cancellationToken
+            );
+
+            if (!response.IsSuccessStatusCode)
+                return false;
+            return true;
+        }
+
+        public static async Task<bool> AddQueue(
+            string accessToken,
+            string trackUri,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.Queue + "?uri=" + trackUri;
+            var response = await SpotifyApiHelper.PostAsync(
+                url,
+                null,
                 accessToken,
                 cancellationToken
             );

@@ -45,11 +45,9 @@ namespace SpotiffyWidget.Helpers
 
             if (body != null)
             {
-                request.Content = new StringContent(
-                    JsonConvert.SerializeObject(body),
-                    Encoding.UTF8,
-                    "application/json"
-                );
+                string json = JsonConvert.SerializeObject(body);
+
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
             var response = await _httpClient.SendAsync(request, cancellationToken);
@@ -65,6 +63,27 @@ namespace SpotiffyWidget.Helpers
         )
         {
             var request = new HttpRequestMessage(HttpMethod.Put, url);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            if (body != null)
+            {
+                string json = JsonConvert.SerializeObject(body);
+
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+            return response;
+        }
+
+        public static async Task<HttpResponseMessage> DeleteAsync(
+            string url,
+            object body,
+            string accessToken,
+            CancellationToken cancellationToken
+        )
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             if (body != null)
