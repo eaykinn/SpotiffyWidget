@@ -10,8 +10,8 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         ShowTitle="True"
-        Height="570" 
-        Width="400"
+        Height="762" 
+        Width="847"
         MinWidth="380"
         MinHeight="430"
         WindowStyle="None">
@@ -128,7 +128,7 @@
 
                         <hc:ButtonGroup  x:Name="ArtistRadioButton"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Style="{StaticResource ButtonGroupSolid}">
                             <RadioButton x:Name="MyTopArtists" Click="ArtistsRadioButton_Click" >My Top Artists</RadioButton>
-                            <RadioButton x:Name="SearchedArtist" Click="ArtistsRadioButton_Click" IsEnabled="False" >Searched Artist</RadioButton>
+                            <RadioButton x:Name="SearchedArtist" Click="ArtistsRadioButton_Click" IsEnabled="False" >Search Results</RadioButton>
                         </hc:ButtonGroup>
                         
                         <hc:SearchBar x:Name="ArtistSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,10,0" SearchStarted="ArtistSearchBar_SearchStarted"/>
@@ -155,8 +155,8 @@
                             
                         </Grid.ColumnDefinitions>
                         <hc:ButtonGroup  x:Name="PlayListRadioButton"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Style="{StaticResource ButtonGroupSolid}">
-                            <RadioButton x:Name="MyPlayListsRadioButton" Click="PlaylistRadioButton_Click" >My Play Lists</RadioButton>
-                            <RadioButton x:Name="SearchedPlayListsRadioButton"  IsEnabled="False" >Searched Play Lists</RadioButton>
+                            <RadioButton x:Name="MyPlayListsRadioButton" Click="PlaylistRadioButton_Click" > My Play Lists</RadioButton>
+                            <RadioButton x:Name="SearchedPlayListsRadioButton" IsEnabled="False" >Search Results</RadioButton>
                         </hc:ButtonGroup>
                         <hc:SearchBar x:Name="PlayListSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" SearchStarted="PlayListSearchBar_SearchStarted"/>
 

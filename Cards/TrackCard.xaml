@@ -29,7 +29,7 @@
             <TextBlock x:Name="Artist" Grid.Column="1" Grid.Row="1" Text="" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBlock x:Name="Album"  Grid.Column="1" Grid.Row="2" Text="" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black"  VerticalAlignment="Center" Margin="0,0,10,0"/>
 
-            <Button x:Name="LikeButton" Grid.Column="2" Grid.Row="0"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AddGeometry}" Click="LikeButton_Click" />
+            <Button x:Name="LikeButton" Grid.Column="2" Grid.Row="0"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35"  Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AddGeometry}" Click="LikeButton_Click" />
             <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DownloadGeometry}" Click="PlayButton_Click"/>
             <Button x:Name="AddQueueButton" Grid.Column="2" Grid.Row="2"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AudioGeometry}" Click="AddQueueButton_Click"/>
             

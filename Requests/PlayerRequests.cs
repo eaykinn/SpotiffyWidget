@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,17 +25,46 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+
+            if (devices == null)
+                return new Devices();
             return devices;
         }
 
-        public static async Task Play(
+        public static async Task<bool> Play(
             string accessToken,
             object body,
             CancellationToken cancellationToken
         )
         {
             string url = SpotifyEndPoints.Player.Play;
-            await SpotifyApiHelper.PutAsync(url, body, accessToken, cancellationToken);
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                body,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
+        }
+
+        public static async Task<bool> TransferPlayBackState(
+            string accessToken,
+            object body,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.PlayBackState;
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                body,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
         }
 
         public static async Task Pause(
@@ -58,6 +88,8 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+            if (playBackState == null)
+                return new PlayBackState();
             return playBackState;
         }
 
@@ -72,7 +104,8 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
-
+            if (response == null)
+                return false;
             if (!response.IsSuccessStatusCode)
                 return false;
             return true;
@@ -90,7 +123,8 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
-
+            if (response == null)
+                return false;
             if (!response.IsSuccessStatusCode)
                 return false;
             return true;
@@ -109,10 +143,47 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
-
+            if (response == null)
+                return false;
             if (!response.IsSuccessStatusCode)
                 return false;
             return true;
+        }
+
+        public static async Task<bool> SetVolume(
+            string accessToken,
+            int volume,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.Volume + "?volume_percent=" + volume;
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                null,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
+        }
+
+        public static async Task<bool> ShufflePlayBack(
+            string accessToken,
+            bool isShuffle,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.Shuffle + "?state=" + isShuffle;
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                null,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
         }
     }
 }

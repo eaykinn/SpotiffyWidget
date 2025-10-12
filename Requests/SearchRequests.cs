@@ -31,6 +31,9 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+
+            if (result == null)
+                return new List<T>();
             if (type == "track" && typeof(T) == typeof(Track))
                 return result.Tracks.Items as List<T>;
             else if (type == "artist" && typeof(T) == typeof(Artist))

@@ -40,7 +40,7 @@
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="12*" MaxHeight="20"/>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="15*" MaxHeight="20"/>
+                <RowDefinition Height="15*" MaxHeight="30"/>
                 <RowDefinition Height="3"/>
                 <RowDefinition Height="9*" MaxHeight="25"/>
                 <RowDefinition Height="3" />
@@ -54,7 +54,7 @@
             <TextBlock x:Name="ArtistName" Grid.Column="9" Grid.Row="3" Grid.ColumnSpan="6" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Arist Name</TextBlock>
             <TextBlock x:Name="AlbumName" Grid.Column="9" Grid.Row="5" Grid.ColumnSpan="6" Text="" FontSize="11" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Album Name</TextBlock>
 
-            <Button x:Name="ShuffleButton" Grid.Column="5" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignVCenterGeometry}"></Button>
+            <Button x:Name="ShuffleButton" Grid.Column="5" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ShuffleButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignVCenterGeometry}"></Button>
             <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ErrorGeometry}"></Button>
             <Button x:Name="PlayPauseButton" Grid.Column="9" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayPauseButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CheckedGeometry}"></Button>
             <Button x:Name="NextButton" Grid.Column="11" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DropperGeometry}"></Button>
@@ -70,9 +70,23 @@
 
             <TextBlock x:Name="CurrentTime" Grid.Column="3" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Right" Foreground="Black" VerticalAlignment="Center" >0:00</TextBlock>
             <TextBlock x:Name="MaxTime" Grid.Column="15" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center">0:00</TextBlock>
+            <hc:PreviewSlider x:Name="PlayerSlider" Grid.Column="5" Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10" SmallChange="1"></hc:PreviewSlider>
 
-            <hc:PreviewSlider x:Name="PlayerSlider" Grid.Column="5" Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10" SmallChange="1"> </hc:PreviewSlider>
-            
+
+
+            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical"  Grid.Row="1" Grid.RowSpan="7" Grid.Column="17" MouseLeave="HideVolumeSlider">
+                <Border MinHeight="90" x:Name="VolumeSliderBorder" Visibility="Hidden" VerticalAlignment="Stretch" Background="White">
+                    <hc:PreviewSlider x:Name="VolumeSlider"  Orientation="Vertical" Maximum="100" PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"></hc:PreviewSlider>
+                </Border>
+
+                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignBottomGeometry}"></Button>
+
+            </StackPanel>
+  
+          
+
+
+
         </Grid>
     </Border>
 </UserControl>

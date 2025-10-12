@@ -29,6 +29,8 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+            if (tracks == null)
+                return new List<Track>();
             var trackItems = tracks.Items.ToList();
             return trackItems;
         }
@@ -46,8 +48,12 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
-            var trackItems = tracks.Items.ToList();
-            return trackItems;
+            if (tracks != null)
+            {
+                var trackItems = tracks.Items.ToList();
+                return trackItems;
+            }
+            return new List<ProfileTrack>();
         }
 
         // user's top artists
@@ -62,6 +68,8 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+            if (artists == null)
+                return new List<Artist>();
             var artistsItems = artists.Items.ToList();
             return artistsItems;
         }
@@ -78,6 +86,9 @@ namespace SpotiffyWidget.Requests
                 accessToken,
                 cancellationToken
             );
+
+            if (playlists == null)
+                return new List<Playlist>();
             var playlistItems = playlists.Items.ToList();
             return playlistItems;
         }

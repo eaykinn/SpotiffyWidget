@@ -24,13 +24,24 @@ namespace SpotiffyWidget.Helpers
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await _httpClient.SendAsync(request, cancellationToken);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync(cancellationToken);
-
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            try
+            {
+                var response = await _httpClient.SendAsync(request, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync(cancellationToken);
+                var result = JsonConvert.DeserializeObject<T>(json);
+                return result;
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine("Request iptal edildi veya timeout: " + ex.Message);
+                return default; // veya uygun şekilde handle et
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine("HTTP hatası: " + ex.Message);
+                return default;
+            }
         }
 
         public static async Task<HttpResponseMessage> PostAsync(
@@ -40,19 +51,35 @@ namespace SpotiffyWidget.Helpers
             CancellationToken cancellationToken
         )
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            if (body != null)
+            try
             {
-                string json = JsonConvert.SerializeObject(body);
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "Bearer",
+                    accessToken
+                );
 
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                if (body != null)
+                {
+                    string json = JsonConvert.SerializeObject(body);
+
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+
+                var response = await _httpClient.SendAsync(request, cancellationToken);
+
+                return response;
             }
-
-            var response = await _httpClient.SendAsync(request, cancellationToken);
-
-            return response;
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine("Request iptal edildi veya timeout: " + ex.Message);
+                return default; // veya uygun şekilde handle et
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine("HTTP hatası: " + ex.Message);
+                return default;
+            }
         }
 
         public static async Task<HttpResponseMessage> PutAsync(
@@ -62,18 +89,34 @@ namespace SpotiffyWidget.Helpers
             CancellationToken cancellationToken
         )
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            if (body != null)
+            try
             {
-                string json = JsonConvert.SerializeObject(body);
+                var request = new HttpRequestMessage(HttpMethod.Put, url);
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "Bearer",
+                    accessToken
+                );
 
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                if (body != null)
+                {
+                    string json = JsonConvert.SerializeObject(body);
+
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+
+                var response = await _httpClient.SendAsync(request, cancellationToken);
+                return response;
             }
-
-            var response = await _httpClient.SendAsync(request, cancellationToken);
-            return response;
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine("Request iptal edildi veya timeout: " + ex.Message);
+                return default; // veya uygun şekilde handle et
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine("HTTP hatası: " + ex.Message);
+                return default;
+            }
         }
 
         public static async Task<HttpResponseMessage> DeleteAsync(
@@ -83,18 +126,34 @@ namespace SpotiffyWidget.Helpers
             CancellationToken cancellationToken
         )
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            if (body != null)
+            try
             {
-                string json = JsonConvert.SerializeObject(body);
+                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "Bearer",
+                    accessToken
+                );
 
-                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                if (body != null)
+                {
+                    string json = JsonConvert.SerializeObject(body);
+
+                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+
+                var response = await _httpClient.SendAsync(request, cancellationToken);
+                return response;
             }
-
-            var response = await _httpClient.SendAsync(request, cancellationToken);
-            return response;
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine("Request iptal edildi veya timeout: " + ex.Message);
+                return default; // veya uygun şekilde handle et
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine("HTTP hatası: " + ex.Message);
+                return default;
+            }
         }
     }
 }

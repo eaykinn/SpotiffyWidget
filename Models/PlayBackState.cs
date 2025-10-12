@@ -11,5 +11,11 @@ namespace SpotiffyWidget.Models
     {
         [JsonProperty("is_playing")]
         public bool IsPlaying { get; set; }
+
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("device")]
+        public Device Device { get; set; }
     }
 }

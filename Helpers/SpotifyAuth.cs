@@ -6,10 +6,12 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using HandyControl.Controls;
 using Newtonsoft.Json.Linq;
+using SpotiffyWidget.Models;
 using SpotiffyWidget.Requests;
 using static SpotiffyWidget.Helpers.SpotifyAuth;
 
@@ -225,6 +227,9 @@ namespace SpotiffyWidget.Helpers
                 cancellationToken
             );
 
+            if (devices == null || devices.DeviceList == null)
+                return false;
+
             if (devices.DeviceList.Count == 0)
             {
                 HandyControl.Controls.MessageBox.Show(
@@ -235,8 +240,61 @@ namespace SpotiffyWidget.Helpers
                 );
                 return false;
             }
+            else
+            {
+                if (!devices.DeviceList.Any(x => x.IsActive))
+                {
+                    bool success = await PlayerRequests.TransferPlayBackState(
+                        Properties.Access.Default.AccessToken,
+                        new { device_ids = new string[] { devices.DeviceList[0].Id }, play = true },
+                        cancellationToken
+                    );
 
+                    if (!success)
+                    {
+                        return false;
+                    }
+                }
+            }
             return true;
         }
+
+        //public static async Task<bool> ActivateDevice()
+        //{
+        //    CancellationService.Reset();
+        //    var cancellationToken = CancellationService.Token;
+
+        //    var devices = await PlayerRequests.GetDevices(
+        //        Properties.Access.Default.AccessToken,
+        //        cancellationToken
+        //    );
+        //    var playingDevices = devices.DeviceList.Where(x => x.IsActive).FirstOrDefault();
+
+        //    if (playingDevices != null)
+        //        return true;
+        //    else
+        //    {
+        //        var body = new { device_ids = new string[] { devices.DeviceList[0].Id } };
+
+        //        var response = await PlayerRequests.TransferPlayBackState(
+        //            Properties.Access.Default.AccessToken,
+        //            body,
+        //            cancellationToken
+        //        );
+
+        //        if (response)
+        //            return true;
+        //        else
+        //        {
+        //            HandyControl.Controls.MessageBox.Show(
+        //                "Could not transfer playback to the device.",
+        //                "Error",
+        //                MessageBoxButton.OK,
+        //                MessageBoxImage.Error
+        //            );
+        //            return false;
+        //        }
+        //    }
+        //}
     }
 }

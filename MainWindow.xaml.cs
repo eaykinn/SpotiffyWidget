@@ -535,8 +535,6 @@ namespace SpotiffyWidget
                         });
                         break;
                 }
-                if (type == "track") { }
-                else { }
             }
             catch (OperationCanceledException oce)
             {
