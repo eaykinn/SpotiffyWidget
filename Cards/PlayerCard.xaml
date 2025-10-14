@@ -6,8 +6,8 @@
             Margin="0"
             Padding="5"
             CornerRadius="12"
-            HorizontalAlignment="Stretch" >
-        <Grid>
+            HorizontalAlignment="Stretch">
+        <Grid> 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3"/>
                 <ColumnDefinition Width="10*"/>
@@ -70,7 +70,7 @@
 
             <TextBlock x:Name="CurrentTime" Grid.Column="3" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Right" Foreground="Black" VerticalAlignment="Center" >0:00</TextBlock>
             <TextBlock x:Name="MaxTime" Grid.Column="15" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center">0:00</TextBlock>
-            <hc:PreviewSlider x:Name="PlayerSlider" Grid.Column="5" Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10" SmallChange="1"></hc:PreviewSlider>
+            <hc:PreviewSlider x:Name="PlayerSlider"  PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="5" Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10" SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" DragOver="PlayerSlider_DragOver"/>
 
 
 

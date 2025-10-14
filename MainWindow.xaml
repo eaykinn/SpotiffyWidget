@@ -11,7 +11,7 @@
         Background="Transparent"
         ShowTitle="True"
         Height="762" 
-        Width="847"
+        Width="450"
         MinWidth="380"
         MinHeight="430"
         WindowStyle="None">
@@ -106,7 +106,7 @@
                             <RadioButton x:Name="MyTopTracks" Click="TracksRadioButton_Click">My Top Tracks</RadioButton>
                         </hc:ButtonGroup>
                         <hc:SearchBar x:Name="TrackSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,10,0" SearchStarted="TrackSearchBar_SearchStarted"/>
-                        <ListBox Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0,10,10" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"  />
+                        <ListBox  Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0,10,10" HorizontalContentAlignment="Stretch" x:Name="TracksListBox" MouseDoubleClick="TracksDoubleClick" />
                     </Grid>
                 </hc:TabItem>
                 

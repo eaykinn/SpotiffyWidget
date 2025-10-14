@@ -42,7 +42,7 @@ namespace SpotiffyWidget.Cards
 
         private async void PlayerCard_Loaded(object sender, RoutedEventArgs e)
         {
-            uiTimer.Interval = TimeSpan.FromMilliseconds(100);
+            uiTimer.Interval = TimeSpan.FromMilliseconds(700);
             uiTimer.Tick += UpdateSongInfo;
             uiTimer.Start();
 
@@ -300,5 +300,50 @@ namespace SpotiffyWidget.Cards
         }
 
         private void ShowVolumeSlider(object sender, RoutedEventArgs e) { }
+
+        private async void PlayerSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            uiTimer.Stop();
+            int position = (int) PlayerSlider.Value *1000;
+            await SetPositionAync(position);
+        }
+
+        private async Task SetPositionAync(int position)
+        {
+            
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (!await SpotifyAuth.GrantAccess())
+                    return;
+                if (!await SpotifyAuth.CheckDevice())
+                    return;
+                Reset();
+                var cancellationToken = Token;
+
+                await PlayerRequests.SeekTo(
+                    Properties.Access.Default.AccessToken,
+                    position,
+                    cancellationToken
+                );
+            }
+            finally
+            {
+                _semaphore.Release();
+                uiTimer.Start();
+            }
+        }
+
+        private void PlayerSlider_DragEnter(object sender, MouseButtonEventArgs e)
+        {
+            uiTimer.Stop();
+        }
+
+        private void PlayerSlider_DragOver(object sender, DragEventArgs e)
+        {
+            uiTimer.Start();
+        }
+
+ 
     }
 }

@@ -157,7 +157,7 @@ namespace SpotiffyWidget.Helpers
                     return json.access_token;
                 }
                 else
-                {
+                {        
                     Console.WriteLine("Error: " + responseContent);
                     return null;
                 }
@@ -194,6 +194,9 @@ namespace SpotiffyWidget.Helpers
                     if (accessToken == null)
                     {
                         Growl.Info("Could not refresh access token.");
+                        string authcode = await SpotifyAuth.GetAuthCode();
+                        var accesstoken = await SpotifyAuth.GetAccessToken(authcode);
+
                         return false;
                     }
                     return true;

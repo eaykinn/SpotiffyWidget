@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HandyControl.Controls;
 using Newtonsoft.Json.Linq;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Models;
@@ -73,11 +74,21 @@ namespace SpotiffyWidget.Cards
             CancellationService.Reset();
             var cancellationToken = CancellationService.Token;
 
-            await PlayerRequests.AddQueue(
+            var response = await PlayerRequests.AddQueue(
                 Properties.Access.Default.AccessToken,
                 trackUri,
                 cancellationToken
             );
+
+            if (!response)
+            {
+                Growl.Warning("Error occured");
+            }else
+            {
+                Growl.Info("Added to queue");
+                
+            }
+
         }
 
         private async void AddQueueButton_Click(object sender, RoutedEventArgs e)
@@ -96,11 +107,22 @@ namespace SpotiffyWidget.Cards
             CancellationService.Reset();
             var cancellationToken = CancellationService.Token;
             var body = new { ids = new string[] { TrackId } };
-            await TracksRequests.LikeSong(
+            var response = await TracksRequests.LikeSong(
                 Properties.Access.Default.AccessToken,
                 body,
                 cancellationToken
             );
+
+
+            if (!response)
+            {
+                Growl.Warning("Error occured");
+            }
+            else
+            {
+                Growl.Info("Added to liked songs");
+
+            }
         }
 
         private async void LikeButton_Click(object sender, RoutedEventArgs e)

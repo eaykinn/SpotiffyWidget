@@ -1,16 +1,17 @@
-﻿using System;
+﻿using HandyControl.Controls;
+using HandyControl.Themes;
+using HandyControl.Tools;
+using SpotiffyWidget.Cards;
+using SpotiffyWidget.Helpers;
+using SpotiffyWidget.Models;
+using SpotiffyWidget.Requests;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using HandyControl.Controls;
-using HandyControl.Themes;
-using HandyControl.Tools;
-using SpotiffyWidget.Cards;
-using SpotiffyWidget.Helpers;
-using SpotiffyWidget.Models;
 using TabControl = HandyControl.Controls.TabControl;
 using TabItem = HandyControl.Controls.TabItem;
 
@@ -583,6 +584,39 @@ namespace SpotiffyWidget
                 }
                 PlayListSearchBar.Text = "";
             }
+        }
+
+        private async void TracksDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {   
+            if (TracksListBox.SelectedItem is TrackCard selectedCard)
+            {
+                string trackUri = selectedCard.TrackUri;
+                if (!string.IsNullOrEmpty(trackUri))
+                {
+                    await PlayTrack(trackUri);
+                }
+            }
+           
+        }
+
+        private async Task PlayTrack(string trackUri)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            var body = new { uris = new string[] { trackUri } };
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            await PlayerRequests.Play(
+                Properties.Access.Default.AccessToken,
+                body,
+                cancellationToken
+            );
         }
     }
 }
