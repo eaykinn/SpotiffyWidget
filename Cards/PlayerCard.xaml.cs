@@ -102,9 +102,9 @@ namespace SpotiffyWidget.Cards
         {
             NPSMLibFunctions.UpdatePlayback();
             Cover.Source = NPSMLibFunctions.Image;
-            SongName.Text = NPSMLibFunctions.SongName;
-            ArtistName.Text = NPSMLibFunctions.ArtistName;
-            AlbumName.Text = NPSMLibFunctions.AlbumName;
+            SongName.Content = NPSMLibFunctions.SongName;
+            ArtistName.Content = NPSMLibFunctions.ArtistName;
+            AlbumName.Content = NPSMLibFunctions.AlbumName;
             MaxTime.Text = NPSMLibFunctions.MaxTime;
             CurrentTime.Text = NPSMLibFunctions.CurrentTime;
 
@@ -214,13 +214,13 @@ namespace SpotiffyWidget.Cards
         private async void ShowVolumeSlider(object sender, MouseEventArgs e)
         {
             await GetPlayBackVolumeAsync();
-            VolumeSliderBorder.Visibility = Visibility.Visible;
+            VolumePopup.IsOpen = true;
         }
 
-        private void HideVolumeSlider(object sender, MouseEventArgs e)
-        {
-            VolumeSliderBorder.Visibility = Visibility.Hidden;
-        }
+        //private void HideVolumeSlider(object sender, MouseEventArgs e)
+        //{
+        //    VolumeSliderBorder.Visibility = Visibility.Hidden;
+        //}
 
         private void VolumeSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -301,16 +301,18 @@ namespace SpotiffyWidget.Cards
 
         private void ShowVolumeSlider(object sender, RoutedEventArgs e) { }
 
-        private async void PlayerSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private async void PlayerSlider_PreviewMouseLeftButtonUp(
+            object sender,
+            MouseButtonEventArgs e
+        )
         {
             uiTimer.Stop();
-            int position = (int) PlayerSlider.Value *1000;
+            int position = (int)PlayerSlider.Value * 1000;
             await SetPositionAync(position);
         }
 
         private async Task SetPositionAync(int position)
         {
-            
             await _semaphore.WaitAsync();
             try
             {
@@ -344,6 +346,16 @@ namespace SpotiffyWidget.Cards
             uiTimer.Start();
         }
 
- 
+        private void StackPanel_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (!VolumePopup.IsMouseOver && !VolumeButton.IsMouseOver)
+                VolumePopup.IsOpen = false;
+        }
+
+        private void StackPanel_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            if (!VolumePopup.IsMouseOver && !VolumeButton.IsMouseOver)
+                VolumePopup.IsOpen = false;
+        }
     }
 }

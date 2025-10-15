@@ -1,17 +1,18 @@
-﻿using HandyControl.Controls;
-using HandyControl.Themes;
-using HandyControl.Tools;
-using SpotiffyWidget.Cards;
-using SpotiffyWidget.Helpers;
-using SpotiffyWidget.Models;
-using SpotiffyWidget.Requests;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HandyControl.Controls;
+using HandyControl.Themes;
+using HandyControl.Tools;
+using HandyControl.Tools.Extension;
+using SpotiffyWidget.Cards;
+using SpotiffyWidget.Helpers;
+using SpotiffyWidget.Models;
+using SpotiffyWidget.Requests;
 using TabControl = HandyControl.Controls.TabControl;
 using TabItem = HandyControl.Controls.TabItem;
 
@@ -22,6 +23,10 @@ namespace SpotiffyWidget
         private bool _tracksOnLoad;
         private bool _artistsOnLoad;
         private bool _playlistsOnLoad;
+
+        private bool _isTracksCompactView = false;
+        private bool _artistsCompactView = false;
+        private bool _playlistsCompactView = false;
 
         public MainWindow()
         {
@@ -586,8 +591,11 @@ namespace SpotiffyWidget
             }
         }
 
-        private async void TracksDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {   
+        private async void TracksDoubleClick(
+            object sender,
+            System.Windows.Input.MouseButtonEventArgs e
+        )
+        {
             if (TracksListBox.SelectedItem is TrackCard selectedCard)
             {
                 string trackUri = selectedCard.TrackUri;
@@ -596,7 +604,6 @@ namespace SpotiffyWidget
                     await PlayTrack(trackUri);
                 }
             }
-           
         }
 
         private async Task PlayTrack(string trackUri)
@@ -617,6 +624,59 @@ namespace SpotiffyWidget
                 body,
                 cancellationToken
             );
+        }
+
+        private void ChangeView_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as FrameworkElement;
+            string name = btn?.Name;
+
+            var style = new Style(typeof(ListBoxItem));
+
+            switch (name)
+            {
+                case ("TrackChangeView"):
+                    if (_isTracksCompactView)
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        _isTracksCompactView = false;
+                    }
+                    else
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        _isTracksCompactView = true;
+                    }
+
+                    TracksListBox.ItemContainerStyle = style;
+                    break;
+                case ("ArtistChangeView"):
+                    if (_artistsCompactView)
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        _artistsCompactView = false;
+                    }
+                    else
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        _artistsCompactView = true;
+                    }
+                    ArtistListBox.ItemContainerStyle = style;
+                    break;
+                case ("PlayListChangeView"):
+                    if (_playlistsCompactView)
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        _playlistsCompactView = false;
+                    }
+                    else
+                    {
+                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        _playlistsCompactView = true;
+                    }
+
+                    MyPlayLists.ItemContainerStyle = style;
+                    break;
+            }
         }
     }
 }

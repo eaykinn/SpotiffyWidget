@@ -32,27 +32,30 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="15*"/>
-                <RowDefinition Height="3"/>
-                <RowDefinition Height="15*"/>
+                <RowDefinition Height="25*" MinHeight="45"/>
                 <RowDefinition Height="1"/>
-                <RowDefinition Height="15*"/>
+                <RowDefinition Height="25*" MinHeight="35"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="25*" MinHeight="35"/>
                 <RowDefinition Height="5"/>
-                <RowDefinition Height="12*" MaxHeight="20"/>
+                <RowDefinition Height="13*" MinHeight="18"/>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="15*" MaxHeight="30"/>
+                <RowDefinition Height="17*" MinHeight="20"/>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="9*" MaxHeight="25"/>
+                <RowDefinition Height="12*" MinHeight="12"/>
                 <RowDefinition Height="3" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" ClipToBounds="True">
+            <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" Grid.ColumnSpan="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" ClipToBounds="True">
                 <Image x:Name="Cover" Stretch="Uniform"/>
             </Border>
 
-            <TextBlock x:Name="SongName" Grid.Column="9" Grid.Row="1" Grid.ColumnSpan="6" Text="" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Song  Name</TextBlock>
-            <TextBlock x:Name="ArtistName" Grid.Column="9" Grid.Row="3" Grid.ColumnSpan="6" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Arist Name</TextBlock>
-            <TextBlock x:Name="AlbumName" Grid.Column="9" Grid.Row="5" Grid.ColumnSpan="6" Text="" FontSize="11" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0">Album Name</TextBlock>
+            <hc:RunningBlock x:Name="SongName" BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9" Content="Song  Name" FontSize="14" FontWeight="Bold" HorizontalAlignment="Stretch" Foreground="Black" VerticalAlignment="Center" Margin="5,0,10,0" AutoRun="True">
+            </hc:RunningBlock>
+            <hc:RunningBlock x:Name="ArtistName" BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="3" Grid.ColumnSpan="9" Content="Arist Name" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="5,0,10,0" AutoRun="True">
+                </hc:RunningBlock>
+            <hc:RunningBlock x:Name="AlbumName" BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="5" Grid.ColumnSpan="9" Content="Album Name" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="5,0,10,0" AutoRun="True">
+                </hc:RunningBlock>
 
             <Button x:Name="ShuffleButton" Grid.Column="5" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ShuffleButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignVCenterGeometry}"></Button>
             <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ErrorGeometry}"></Button>
@@ -68,19 +71,27 @@
                 <Label Height="20" FontSize="9" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,0,0,0" Content="Stop when session is locked" BorderBrush="{x:Null}" Background="{x:Null}"></Label>
             </CheckBox>
 
-            <TextBlock x:Name="CurrentTime" Grid.Column="3" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Right" Foreground="Black" VerticalAlignment="Center" >0:00</TextBlock>
-            <TextBlock x:Name="MaxTime" Grid.Column="15" Grid.Row="7" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center">0:00</TextBlock>
+            <TextBlock x:Name="CurrentTime" Grid.Column="3" Grid.Row="7" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right" Foreground="Black" VerticalAlignment="Center" >0:00</TextBlock>
+            <TextBlock x:Name="MaxTime" Grid.Column="15" Grid.Row="7" FontSize="11" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center">0:00</TextBlock>
             <hc:PreviewSlider x:Name="PlayerSlider"  PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="5" Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10" SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" DragOver="PlayerSlider_DragOver"/>
 
 
-
-            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical"  Grid.Row="1" Grid.RowSpan="7" Grid.Column="17" MouseLeave="HideVolumeSlider">
-                <Border MinHeight="90" x:Name="VolumeSliderBorder" Visibility="Hidden" VerticalAlignment="Stretch" Background="White">
-                    <hc:PreviewSlider x:Name="VolumeSlider"  Orientation="Vertical" Maximum="100" PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"></hc:PreviewSlider>
-                </Border>
-
-                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignBottomGeometry}"></Button>
-
+            
+            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical"  Grid.Row="1" Grid.RowSpan="7" Grid.Column="17">
+               
+                    <Popup x:Name="VolumePopup"
+                           StaysOpen="False"
+                           Placement="Top"
+                           PopupAnimation="Scroll"
+                           AllowsTransparency="True"
+                           PlacementTarget="{Binding ElementName=VolumeButton}">
+                    <Border MinHeight="100" Width="30" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch" Background="LightGray" HorizontalAlignment="Stretch" CornerRadius="10">
+                        <hc:PreviewSlider x:Name="VolumeSlider"  Orientation="Vertical" Maximum="100" PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" HorizontalAlignment="Center"></hc:PreviewSlider>
+                    </Border>
+                 
+                </Popup>
+                    <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignBottomGeometry}"></Button>
+               
             </StackPanel>
   
           

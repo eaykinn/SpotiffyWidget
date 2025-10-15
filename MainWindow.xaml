@@ -13,7 +13,7 @@
         Height="762" 
         Width="450"
         MinWidth="380"
-        MinHeight="430"
+        MinHeight="440"
         WindowStyle="None">
     <hc:Window.NonClientAreaContent>
 
@@ -63,7 +63,7 @@
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="20*" MinHeight="180"/>
+                <RowDefinition Height="20*" MinHeight="200"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="40*" MinHeight="180"/>
             </Grid.RowDefinitions>
@@ -101,10 +101,14 @@
                             <ColumnDefinition Width="1*"/>
                             
                         </Grid.ColumnDefinitions>
-                        <hc:ButtonGroup  x:Name="TrackRadioButton"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Style="{StaticResource ButtonGroupSolid}">
-                            <RadioButton x:Name="MyTracks" Click="TracksRadioButton_Click" >My Tracks</RadioButton>
-                            <RadioButton x:Name="MyTopTracks" Click="TracksRadioButton_Click">My Top Tracks</RadioButton>
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
+                            <hc:ButtonGroup  x:Name="TrackRadioButton" Style="{StaticResource ButtonGroupSolid}">
+                                <RadioButton x:Name="MyTracks" FontSize="11"  Padding="5,0,5,0" Click="TracksRadioButton_Click">My Tracks</RadioButton>
+                                <RadioButton x:Name="MyTopTracks" FontSize="11" Padding="5,0,5,0" Click="TracksRadioButton_Click">My Top Tracks</RadioButton>
+                            
                         </hc:ButtonGroup>
+                            <Button  x:Name="TrackChangeView" Click="ChangeView_Click">:=</Button>
+                        </StackPanel>
                         <hc:SearchBar x:Name="TrackSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,10,0" SearchStarted="TrackSearchBar_SearchStarted"/>
                         <ListBox  Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0,10,10" HorizontalContentAlignment="Stretch" x:Name="TracksListBox" MouseDoubleClick="TracksDoubleClick" />
                     </Grid>
@@ -125,12 +129,14 @@
                             <ColumnDefinition Width="1*"/>
 
                         </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
 
-                        <hc:ButtonGroup  x:Name="ArtistRadioButton"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Style="{StaticResource ButtonGroupSolid}">
-                            <RadioButton x:Name="MyTopArtists" Click="ArtistsRadioButton_Click" >My Top Artists</RadioButton>
-                            <RadioButton x:Name="SearchedArtist" Click="ArtistsRadioButton_Click" IsEnabled="False" >Search Results</RadioButton>
-                        </hc:ButtonGroup>
-                        
+                            <hc:ButtonGroup  x:Name="ArtistRadioButton" Style="{StaticResource ButtonGroupSolid}">
+                                <RadioButton x:Name="MyTopArtists" Click="ArtistsRadioButton_Click" >My Top Artists</RadioButton>
+                                <RadioButton x:Name="SearchedArtist" Click="ArtistsRadioButton_Click" IsEnabled="False" >Search Results</RadioButton>
+                            </hc:ButtonGroup>
+                            <Button x:Name="ArtistChangeView" Click="ChangeView_Click">:=</Button>
+                        </StackPanel>
                         <hc:SearchBar x:Name="ArtistSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,10,0" SearchStarted="ArtistSearchBar_SearchStarted"/>
                         <ListBox Margin="10,0,10,10" Grid.Row="1" Grid.ColumnSpan="5" HorizontalContentAlignment="Stretch" x:Name="ArtistListBox"  />
                     </Grid>
@@ -154,10 +160,14 @@
                             <ColumnDefinition Width="1*"/>
                             
                         </Grid.ColumnDefinitions>
-                        <hc:ButtonGroup  x:Name="PlayListRadioButton"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Style="{StaticResource ButtonGroupSolid}">
-                            <RadioButton x:Name="MyPlayListsRadioButton" Click="PlaylistRadioButton_Click" > My Play Lists</RadioButton>
-                            <RadioButton x:Name="SearchedPlayListsRadioButton" IsEnabled="False" >Search Results</RadioButton>
-                        </hc:ButtonGroup>
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
+
+                            <hc:ButtonGroup  x:Name="PlayListRadioButton" Style="{StaticResource ButtonGroupSolid}">
+                                <RadioButton x:Name="MyPlayListsRadioButton" Click="PlaylistRadioButton_Click" >My Play Lists</RadioButton>
+                                <RadioButton x:Name="SearchedPlayListsRadioButton" IsEnabled="False" >Search Results</RadioButton>
+                            </hc:ButtonGroup>
+                            <Button  x:Name="PlayListChangeView" Click="ChangeView_Click">:=</Button>
+                        </StackPanel>
                         <hc:SearchBar x:Name="PlayListSearchBar" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0" SearchStarted="PlayListSearchBar_SearchStarted"/>
 
                         <ListBox  HorizontalContentAlignment="Stretch" x:Name="MyPlayLists" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="10,0,10,10"/>
