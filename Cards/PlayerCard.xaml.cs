@@ -59,11 +59,15 @@ public partial class PlayerCard : UserControl
                     cancellationToken
                 );
                 if (playBackState?.Device != null)
-                    await Dispatcher.InvokeAsync(() => { VolumeSlider.Value = playBackState.Device.VolumePercent; });
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        VolumeSlider.Value = playBackState.Device.VolumePercent;
+                    });
             }
             catch (OperationCanceledException oce)
             {
-                if (cancellationToken.IsCancellationRequested) Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
+                if (cancellationToken.IsCancellationRequested)
+                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
 
                 Growl.Warning(
                     "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
@@ -87,8 +91,8 @@ public partial class PlayerCard : UserControl
         SongName.Content = NPSMLibFunctions.SongName;
         ArtistName.Content = NPSMLibFunctions.ArtistName;
         AlbumName.Content = NPSMLibFunctions.AlbumName;
-        MaxTime.Text = NPSMLibFunctions.MaxTime;
-        CurrentTime.Text = NPSMLibFunctions.CurrentTime;
+        MaxTime.Content = NPSMLibFunctions.MaxTime;
+        CurrentTime.Content = NPSMLibFunctions.CurrentTime;
 
         PlayerSlider.Interval = 1;
         PlayerSlider.Maximum = NPSMLibFunctions.MaxSeconds;
@@ -119,20 +123,12 @@ public partial class PlayerCard : UserControl
 
             if (playBackState.IsPlaying)
             {
-                await PlayerRequests.Pause(
-                    Access.Default.AccessToken,
-                    null,
-                    cancellationToken
-                );
+                await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
                 uiTimer.Stop();
             }
             else
             {
-                await PlayerRequests.Play(
-                    Access.Default.AccessToken,
-                    null,
-                    cancellationToken
-                );
+                await PlayerRequests.Play(Access.Default.AccessToken, null, cancellationToken);
                 uiTimer.Start();
             }
         }
@@ -182,10 +178,7 @@ public partial class PlayerCard : UserControl
             Reset();
             var cancellationToken = Token;
 
-            await PlayerRequests.Previous(
-                Access.Default.AccessToken,
-                cancellationToken
-            );
+            await PlayerRequests.Previous(Access.Default.AccessToken, cancellationToken);
         }
         finally
         {
@@ -237,8 +230,7 @@ public partial class PlayerCard : UserControl
                     Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
                 else
                     Growl.Warning(
-                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: "
-                        + oce.Message
+                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
                     );
             }
             catch (Exception ex)
@@ -281,11 +273,7 @@ public partial class PlayerCard : UserControl
         }
     }
 
-
-    private async void PlayerSlider_PreviewMouseLeftButtonUp(
-        object sender,
-        MouseButtonEventArgs e
-    )
+    private async void PlayerSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         uiTimer.Stop();
         var position = (int)PlayerSlider.Value * 1000;
@@ -304,11 +292,7 @@ public partial class PlayerCard : UserControl
             Reset();
             var cancellationToken = Token;
 
-            await PlayerRequests.SeekTo(
-                Access.Default.AccessToken,
-                position,
-                cancellationToken
-            );
+            await PlayerRequests.SeekTo(Access.Default.AccessToken, position, cancellationToken);
         }
         finally
         {

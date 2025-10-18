@@ -7,7 +7,7 @@
     <Border Background="#22FFFFFF"
             Margin="0"
             Padding="5"
-            CornerRadius="12"
+            CornerRadius="5"
             HorizontalAlignment="Stretch" >
         <Grid>
             <Grid.ColumnDefinitions>
@@ -17,23 +17,23 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0">
                 <Image x:Name="Cover"  Stretch="Uniform" />
             </Border>
-            <TextBlock x:Name="Name" Grid.Column="1" Grid.Row="0" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <TextBlock x:Name="Artist" Grid.Column="1" Grid.Row="1" Text="" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <TextBlock x:Name="Album"  Grid.Column="1" Grid.Row="2" Text="" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black"  VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Label x:Name="Name" Grid.Column="1" Grid.Row="0" BorderBrush="{x:Null}" Background="Transparent" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Label x:Name="Artist" Grid.Column="1" Grid.Row="1" BorderBrush="{x:Null}" Background="Transparent" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Label x:Name="Album"  Grid.Column="1" Grid.Row="2" BorderBrush="{x:Null}" Background="Transparent" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"/>
 
             <Button x:Name="LikeButton" Grid.Column="2" Grid.Row="0"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35"  Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AddGeometry}" Click="LikeButton_Click" />
-            <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DownloadGeometry}" Click="PlayButton_Click"/>
+            <Button x:Name="PlayButton" Grid.Column="2" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource InfoGeometry}" Click="PlayButton_Click"/>
             <Button x:Name="AddQueueButton" Grid.Column="2" Grid.Row="2"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AudioGeometry}" Click="AddQueueButton_Click"/>
-            
-            
+       
+
         </Grid>
     </Border>
 </UserControl>

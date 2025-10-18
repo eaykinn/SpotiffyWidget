@@ -34,7 +34,6 @@ namespace SpotiffyWidget
             _tracksOnLoad = true;
             _artistsOnLoad = true;
             _playlistsOnLoad = true;
-            Loaded += (s, e) => BlurHelper.EnableBlur(this);
         }
 
         #region Change Theme
@@ -67,7 +66,7 @@ namespace SpotiffyWidget
                         Title = "Select Accent Color",
                     };
 
-                    picker.SelectedColorChanged += delegate
+                    picker.Confirmed += delegate
                     {
                         ((App)Application.Current).UpdateAccent(picker.SelectedBrush);
                         window.Close();
@@ -106,13 +105,18 @@ namespace SpotiffyWidget
                     foreach (var s in artists)
                     {
                         ArtistCard card = new ArtistCard();
-                        card.Name.Text = s.Name;
+                        card.Name.Content = s.Name;
 
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Images.FirstOrDefault().Url)
                         );
 
-                        ArtistListBox.Items.Add(card);
+                        var listboxItem = new ListBoxItem();
+                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                        listboxItem.Content = card;
+
+                        ArtistListBox.Items.Add(listboxItem);
                     }
                 });
                 // 3) Search
@@ -192,16 +196,19 @@ namespace SpotiffyWidget
                     foreach (var s in allTracks)
                     {
                         TrackCard card = new TrackCard();
-                        card.Name.Text = s.Track.Name;
-                        card.Artist.Text = s.Track.Artists.FirstOrDefault().Name;
-                        card.Album.Text = s.Track.Album.Name;
+                        card.Name.Content = s.Track.Name;
+                        card.Artist.Content = s.Track.Artists.FirstOrDefault().Name;
+                        card.Album.Content = s.Track.Album.Name;
                         card.TrackUri = s.Track.Uri;
                         card.TrackId = s.Track.Id;
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Track.Album.Images.FirstOrDefault().Url)
                         );
-
-                        TracksListBox.Items.Add(card);
+                        var listboxItem = new ListBoxItem();
+                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                        listboxItem.Content = card;
+                        TracksListBox.Items.Add(listboxItem);
                     }
                 });
             }
@@ -250,13 +257,19 @@ namespace SpotiffyWidget
                     foreach (var s in playlists)
                     {
                         MyPlayListsCard card = new MyPlayListsCard();
-                        card.PlayListName.Text = s.Name;
-                        card.Owner.Text = s.Owner.DisplayName;
+                        card.PlayListName.Content = s.Name;
+                        card.Owner.Content = s.Owner.DisplayName;
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Images.FirstOrDefault().Url)
                         );
-                        card.NumberOfTracks.Text = s.TrackInfo.Total.ToString() + " Songs";
-                        MyPlayLists.Items.Add(card);
+                        card.NumberOfTracks.Content = s.TrackInfo.Total.ToString() + " Songs";
+
+                        var listboxItem = new ListBoxItem();
+                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                        listboxItem.Content = card;
+
+                        MyPlayLists.Items.Add(listboxItem);
                     }
                 });
             }
@@ -306,16 +319,21 @@ namespace SpotiffyWidget
                     foreach (var s in allTracks)
                     {
                         TrackCard card = new TrackCard();
-                        card.Name.Text = s.Name;
-                        card.Artist.Text = s.Artists.FirstOrDefault().Name;
-                        card.Album.Text = s.Album.Name;
+                        card.Name.Content = s.Name;
+                        card.Artist.Content = s.Artists.FirstOrDefault().Name;
+                        card.Album.Content = s.Album.Name;
                         card.TrackUri = s.Uri;
                         card.TrackId = s.Id;
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Album.Images.FirstOrDefault().Url)
                         );
 
-                        TracksListBox.Items.Add(card);
+                        var listboxItem = new ListBoxItem();
+                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                        listboxItem.Content = card;
+
+                        TracksListBox.Items.Add(listboxItem);
                     }
                 });
             }
@@ -465,9 +483,9 @@ namespace SpotiffyWidget
                             foreach (var s in searchTracks)
                             {
                                 TrackCard card = new TrackCard();
-                                card.Name.Text = s.Name ?? "";
-                                card.Artist.Text = s.Artists.FirstOrDefault().Name ?? "";
-                                card.Album.Text = s.Album.Name ?? "";
+                                card.Name.Content = s.Name ?? "";
+                                card.Artist.Content = s.Artists.FirstOrDefault().Name ?? "";
+                                card.Album.Content = s.Album.Name ?? "";
                                 card.TrackUri = s.Uri;
                                 card.TrackId = s.Id;
                                 if (s.Album.Images.Count != 0)
@@ -477,7 +495,13 @@ namespace SpotiffyWidget
                                             new Uri(s.Album.Images.FirstOrDefault().Url)
                                         );
                                 }
-                                TracksListBox.Items.Add(card);
+
+                                var listboxItem = new ListBoxItem();
+                                listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                                listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                                listboxItem.Content = card;
+
+                                TracksListBox.Items.Add(listboxItem);
                             }
                         });
                         break;
@@ -496,7 +520,7 @@ namespace SpotiffyWidget
                             foreach (var s in searchArtists)
                             {
                                 ArtistCard card = new ArtistCard();
-                                card.Name.Text = s.Name;
+                                card.Name.Content = s.Name;
                                 if (s.Images.Count != 0)
                                 {
                                     card.Cover.Source =
@@ -505,7 +529,12 @@ namespace SpotiffyWidget
                                         );
                                 }
 
-                                ArtistListBox.Items.Add(card);
+                                var listboxItem = new ListBoxItem();
+                                listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                                listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                                listboxItem.Content = card;
+
+                                ArtistListBox.Items.Add(listboxItem);
                             }
                         });
                         break;
@@ -526,8 +555,8 @@ namespace SpotiffyWidget
                             foreach (var s in searchPlayLists)
                             {
                                 MyPlayListsCard card = new MyPlayListsCard();
-                                card.PlayListName.Text = s.Name ?? "";
-                                card.Owner.Text = s.Owner.DisplayName ?? "";
+                                card.PlayListName.Content = s.Name ?? "";
+                                card.Owner.Content = s.Owner.DisplayName ?? "";
                                 if (s.Images.Count != 0)
                                 {
                                     card.Cover.Source =
@@ -535,8 +564,15 @@ namespace SpotiffyWidget
                                             new Uri(s.Images.FirstOrDefault().Url)
                                         );
                                 }
-                                card.NumberOfTracks.Text = s.TrackInfo.Total.ToString() + " Songs";
-                                MyPlayLists.Items.Add(card);
+                                card.NumberOfTracks.Content =
+                                    s.TrackInfo.Total.ToString() + " Songs";
+
+                                var listboxItem = new ListBoxItem();
+                                listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                                listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                                listboxItem.Content = card;
+
+                                MyPlayLists.Items.Add(listboxItem);
                             }
                         });
                         break;
@@ -631,52 +667,75 @@ namespace SpotiffyWidget
             var btn = sender as FrameworkElement;
             string name = btn?.Name;
 
-            var style = new Style(typeof(ListBoxItem));
+            Style existingStyle = null;
+
+            switch (name)
+            {
+                case "TrackChangeView":
+                    existingStyle = TracksListBox.ItemContainerStyle;
+                    break;
+                case "ArtistChangeView":
+                    existingStyle = ArtistListBox.ItemContainerStyle;
+                    break;
+                case "PlayListChangeView":
+                    existingStyle = MyPlayLists.ItemContainerStyle;
+                    break;
+            }
+
+            if (existingStyle == null)
+                existingStyle = new Style(typeof(ListBoxItem));
+
+            var newStyle = new Style(typeof(ListBoxItem), existingStyle);
 
             switch (name)
             {
                 case ("TrackChangeView"):
                     if (_isTracksCompactView)
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
                         _isTracksCompactView = false;
                     }
                     else
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
                         _isTracksCompactView = true;
                     }
 
-                    TracksListBox.ItemContainerStyle = style;
+                    TracksListBox.ItemContainerStyle = newStyle;
                     break;
                 case ("ArtistChangeView"):
                     if (_artistsCompactView)
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
                         _artistsCompactView = false;
                     }
                     else
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
                         _artistsCompactView = true;
                     }
-                    ArtistListBox.ItemContainerStyle = style;
+                    ArtistListBox.ItemContainerStyle = newStyle;
                     break;
                 case ("PlayListChangeView"):
                     if (_playlistsCompactView)
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 110.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
                         _playlistsCompactView = false;
                     }
                     else
                     {
-                        style.Setters.Add(new Setter(ListBoxItem.HeightProperty, 60.0));
+                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
                         _playlistsCompactView = true;
                     }
 
-                    MyPlayLists.ItemContainerStyle = style;
+                    MyPlayLists.ItemContainerStyle = newStyle;
                     break;
             }
+        }
+
+        private void ChangeTheme(object sender, RoutedEventArgs e)
+        {
+            PopupConfig.IsOpen = true;
         }
     }
 }

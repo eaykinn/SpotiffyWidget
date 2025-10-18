@@ -7,7 +7,7 @@
     <Border Background="#22FFFFFF"
             Margin="0"
             Padding="5"
-            CornerRadius="12"
+            CornerRadius="5"
             HorizontalAlignment="Stretch" >
         <Grid>
             <Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
                 <Image x:Name="Cover"  Stretch="Uniform" MaxWidth="109"/>
             </Border>
 
-            <TextBlock x:Name="Name" Grid.Column="1" Grid.Row="0" Text="" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Foreground="Black" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Label x:Name="Name" Grid.Column="1" Grid.Row="0" Background="Transparent"  BorderBrush="{x:Null}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,0,10,0"/>
             <Button VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" Margin="0,0,5,0" Height="35" Width="35" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignBottomGeometry}" />
           
         </Grid>
