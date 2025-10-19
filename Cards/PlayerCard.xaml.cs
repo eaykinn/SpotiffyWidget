@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,7 @@ public partial class PlayerCard : UserControl
 {
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly DispatcherTimer uiTimer = new();
+    private string TrackId;
     private CancellationTokenSource? _volumeCts;
 
     public PlayerCard()
@@ -39,10 +41,10 @@ public partial class PlayerCard : UserControl
         uiTimer.Start();
 
         await Task.Delay(1000);
-        await GetPlayBackVolumeAsync();
+        await GetPlayBackStateAsync();
     }
 
-    private async Task GetPlayBackVolumeAsync()
+    public async Task GetPlayBackStateAsync()
     {
         await _semaphore.WaitAsync();
         try
@@ -108,6 +110,25 @@ public partial class PlayerCard : UserControl
                 {
                     var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
                     IconElement.SetGeometry(PlayPauseButton, geometry);
+                }
+
+                if (playBackState.Track.Id != null)
+                {
+                    TrackId = playBackState.Track.Id;
+                    var response = await TracksRequests.CheckTracksIsSaved(
+                        Properties.Access.Default.AccessToken,
+                        playBackState.Track.Id,
+                        cancellationToken
+                    );
+
+                    if (response.First() == true)
+                    {
+                        LikeSongButton.IsChecked = true;
+                    }
+                    else
+                    {
+                        LikeSongButton.IsChecked = false;
+                    }
                 }
             }
             catch (OperationCanceledException oce)
@@ -186,6 +207,8 @@ public partial class PlayerCard : UserControl
         {
             _semaphore.Release();
         }
+
+        await GetPlayBackStateAsync();
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
@@ -206,12 +229,14 @@ public partial class PlayerCard : UserControl
 
             Reset();
             var cancellationToken = Token;
-            await PlayerRequests.Next(Access.Default.AccessToken, cancellationToken);
+            var response = await PlayerRequests.Next(Access.Default.AccessToken, cancellationToken);
         }
         finally
         {
             _semaphore.Release();
         }
+
+        await GetPlayBackStateAsync();
     }
 
     private async void PreviousButton_Click(object sender, RoutedEventArgs e)
@@ -228,17 +253,22 @@ public partial class PlayerCard : UserControl
             Reset();
             var cancellationToken = Token;
 
-            await PlayerRequests.Previous(Access.Default.AccessToken, cancellationToken);
+            var response = await PlayerRequests.Previous(
+                Access.Default.AccessToken,
+                cancellationToken
+            );
         }
         finally
         {
             _semaphore.Release();
         }
+
+        await GetPlayBackStateAsync();
     }
 
     private async void ShowVolumeSlider(object sender, MouseEventArgs e)
     {
-        await GetPlayBackVolumeAsync();
+        await GetPlayBackStateAsync();
         VolumePopup.IsOpen = true;
     }
 
@@ -473,5 +503,74 @@ public partial class PlayerCard : UserControl
             _semaphore.Release();
         }
         return true;
+    }
+
+    private async void LikeSongButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (LikeSongButton.IsChecked == null)
+            return;
+
+        if (LikeSongButton.IsChecked == true)
+        {
+            await LikeSong(this.TrackId);
+        }
+        else
+        {
+            await UnlikeSong(this.TrackId);
+        }
+    }
+
+    private async Task LikeSong(string TrackId)
+    {
+        if (!await SpotifyAuth.GrantAccess())
+            return;
+
+        if (!await SpotifyAuth.CheckDevice())
+            return;
+
+        CancellationService.Reset();
+        var cancellationToken = CancellationService.Token;
+        var body = new { ids = new string[] { TrackId } };
+        var response = await TracksRequests.LikeSong(
+            Properties.Access.Default.AccessToken,
+            body,
+            cancellationToken
+        );
+
+        if (!response)
+        {
+            Growl.Warning("Error occured");
+        }
+        else
+        {
+            Growl.Info("Added to liked songs");
+        }
+    }
+
+    private async Task UnlikeSong(string TrackId)
+    {
+        if (!await SpotifyAuth.GrantAccess())
+            return;
+
+        if (!await SpotifyAuth.CheckDevice())
+            return;
+
+        CancellationService.Reset();
+        var cancellationToken = CancellationService.Token;
+        var body = new { ids = new string[] { TrackId } };
+        var response = await TracksRequests.RemoveSong(
+            Properties.Access.Default.AccessToken,
+            body,
+            cancellationToken
+        );
+
+        if (!response)
+        {
+            Growl.Warning("Error occured");
+        }
+        else
+        {
+            Growl.Info("Added to liked songs");
+        }
     }
 }

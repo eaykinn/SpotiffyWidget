@@ -50,5 +50,22 @@ namespace SpotiffyWidget.Requests
                 return false;
             return true;
         }
+
+        public static async Task<List<bool>> CheckTracksIsSaved(
+            string accessToken,
+            string body,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Tracks.IsTracksSaved + "?ids=" + body;
+
+            var response = await SpotifyApiHelper.SendRequestAsync<List<bool>>(
+                url,
+                accessToken,
+                cancellationToken
+            );
+
+            return response;
+        }
     }
 }

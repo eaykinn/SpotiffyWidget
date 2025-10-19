@@ -26,5 +26,8 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("context")]
         public Context Context { get; set; }
+
+        [JsonProperty("item")]
+        public Track Track { get; set; }
     }
 }

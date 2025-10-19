@@ -32,6 +32,7 @@ namespace SpotiffyWidget.Cards
     {
         public string TrackUri { get; set; }
         public string TrackId { get; set; }
+        public bool IsTrackSaved { get; set; }
 
         public TrackCard()
         {
@@ -56,6 +57,14 @@ namespace SpotiffyWidget.Cards
                 body,
                 cancellationToken
             );
+
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            var playerCard = mainWindow?.FindName("PlayerCard") as PlayerCard;
+
+            if (playerCard != null)
+            {
+                await playerCard.GetPlayBackStateAsync();
+            }
         }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -83,12 +92,11 @@ namespace SpotiffyWidget.Cards
             if (!response)
             {
                 Growl.Warning("Error occured");
-            }else
+            }
+            else
             {
                 Growl.Info("Added to queue");
-                
             }
-
         }
 
         private async void AddQueueButton_Click(object sender, RoutedEventArgs e)
@@ -113,6 +121,32 @@ namespace SpotiffyWidget.Cards
                 cancellationToken
             );
 
+            if (!response)
+            {
+                Growl.Warning("Error occured");
+            }
+            else
+            {
+                Growl.Info("Added to liked songs");
+            }
+        }
+
+        private async Task UnlikeSong(string TrackId)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+            var body = new { ids = new string[] { TrackId } };
+            var response = await TracksRequests.RemoveSong(
+                Properties.Access.Default.AccessToken,
+                body,
+                cancellationToken
+            );
 
             if (!response)
             {
@@ -121,13 +155,18 @@ namespace SpotiffyWidget.Cards
             else
             {
                 Growl.Info("Added to liked songs");
-
             }
         }
 
         private async void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            await LikeSong(this.TrackId);
+            if (LikeButton.IsChecked == null)
+                return;
+
+            if (LikeButton.IsChecked == true)
+                await LikeSong(TrackId);
+            else
+                await UnlikeSong(TrackId);
         }
     }
 }

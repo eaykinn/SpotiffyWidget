@@ -212,7 +212,7 @@
                                 
                                 </Button>
                             </StackPanel>
-                            <Button Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}"></Button>
+                            <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
                             <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
                                      Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
                                      MouseDoubleClick="TracksDoubleClick"

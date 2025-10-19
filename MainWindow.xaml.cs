@@ -182,6 +182,7 @@ namespace SpotiffyWidget
 
             try
             {
+                int indx = -1;
                 // 5) All tracks
                 var allTracks = await Requests.ProfileRequests.GetTracksAsync(
                     Properties.Access.Default.AccessToken,
@@ -195,12 +196,15 @@ namespace SpotiffyWidget
                 {
                     foreach (var s in allTracks)
                     {
+                        indx += 1;
                         TrackCard card = new TrackCard();
                         card.Name.Content = s.Track.Name;
                         card.Artist.Content = s.Track.Artists.FirstOrDefault().Name;
                         card.Album.Content = s.Track.Album.Name;
                         card.TrackUri = s.Track.Uri;
                         card.TrackId = s.Track.Id;
+                        card.IsTrackSaved = true;
+                        card.LikeButton.IsChecked = true;
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Track.Album.Images.FirstOrDefault().Url)
                         );
@@ -324,6 +328,8 @@ namespace SpotiffyWidget
                         card.Album.Content = s.Album.Name;
                         card.TrackUri = s.Uri;
                         card.TrackId = s.Id;
+                        card.LikeButton.IsChecked = true;
+                        card.IsTrackSaved = true;
                         card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
                             new Uri(s.Album.Images.FirstOrDefault().Url)
                         );
@@ -465,6 +471,7 @@ namespace SpotiffyWidget
                 switch (type)
                 {
                     case "track":
+                        int indx = -1;
                         TracksListBox.Items.Clear();
                         LoadingPanel.Visibility = Visibility.Visible;
 
@@ -475,6 +482,15 @@ namespace SpotiffyWidget
                             cancellationToken
                         );
                         searchTracks = searchTracks.Where(p => p != null).ToList();
+
+                        string ids = string.Join(",", searchTracks.Select(t => t.Id));
+
+                        var tracksSaved = await TracksRequests.CheckTracksIsSaved(
+                            Properties.Access.Default.AccessToken,
+                            ids,
+                            cancellationToken
+                        );
+
                         Dispatcher.Invoke(() =>
                         {
                             TracksListBox.Items.Clear();
@@ -482,12 +498,15 @@ namespace SpotiffyWidget
                             MyTopTracks.IsChecked = false;
                             foreach (var s in searchTracks)
                             {
+                                indx += 1;
                                 TrackCard card = new TrackCard();
                                 card.Name.Content = s.Name ?? "";
                                 card.Artist.Content = s.Artists.FirstOrDefault().Name ?? "";
                                 card.Album.Content = s.Album.Name ?? "";
                                 card.TrackUri = s.Uri;
                                 card.TrackId = s.Id;
+                                card.IsTrackSaved = tracksSaved[indx];
+                                card.LikeButton.IsChecked = tracksSaved[indx];
                                 if (s.Album.Images.Count != 0)
                                 {
                                     card.Cover.Source =
@@ -632,17 +651,19 @@ namespace SpotiffyWidget
             System.Windows.Input.MouseButtonEventArgs e
         )
         {
-            if (TracksListBox.SelectedItem is TrackCard selectedCard)
+            var tracksListBoxItem = TracksListBox.SelectedItem as ListBoxItem;
+
+            if (tracksListBoxItem?.Content is TrackCard selectedCard)
             {
-                string trackUri = selectedCard.TrackUri;
-                if (!string.IsNullOrEmpty(trackUri))
+                if (!string.IsNullOrEmpty(selectedCard.TrackUri))
                 {
-                    await PlayTrack(trackUri);
+                    string[] trackUris = new string[] { selectedCard.TrackUri };
+                    await PlayTrack(trackUris);
                 }
             }
         }
 
-        private async Task PlayTrack(string trackUri)
+        private async Task PlayTrack(string[] trackUris)
         {
             if (!await SpotifyAuth.GrantAccess())
                 return;
@@ -650,7 +671,7 @@ namespace SpotiffyWidget
             if (!await SpotifyAuth.CheckDevice())
                 return;
 
-            var body = new { uris = new string[] { trackUri } };
+            var body = new { uris = trackUris };
 
             CancellationService.Reset();
             var cancellationToken = CancellationService.Token;
@@ -660,11 +681,14 @@ namespace SpotiffyWidget
                 body,
                 cancellationToken
             );
+
+            await PlayerCard.GetPlayBackStateAsync();
         }
 
         private void ChangeView_Click(object sender, RoutedEventArgs e)
         {
-            if (!(sender is Button button) || !(button.Tag is string targetListName)) return;
+            if (!(sender is Button button) || !(button.Tag is string targetListName))
+                return;
 
             bool isCompact;
             string targetState;
@@ -696,7 +720,10 @@ namespace SpotiffyWidget
                 // Iterate through items to find ListBoxItems and change their visual state
                 for (int i = 0; i < targetListBox.Items.Count; i++)
                 {
-                    if (targetListBox.ItemContainerGenerator.ContainerFromIndex(i) is ListBoxItem item)
+                    if (
+                        targetListBox.ItemContainerGenerator.ContainerFromIndex(i)
+                        is ListBoxItem item
+                    )
                     {
                         // Find the root element of the template where the VisualStates are defined.
                         var templateRoot = item.Template.FindName("Bd", item) as FrameworkElement;
@@ -711,6 +738,30 @@ namespace SpotiffyWidget
         private void ChangeTheme(object sender, RoutedEventArgs e)
         {
             PopupConfig.IsOpen = !PopupConfig.IsOpen;
+        }
+
+        private async void TrackPlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            var tracksList = new System.Collections.Generic.List<string>();
+
+            foreach (var item in TracksListBox.Items)
+            {
+                if (
+                    item is ListBoxItem listBoxItem
+                    && listBoxItem.Content is TrackCard selectedCard
+                )
+                {
+                    if (!string.IsNullOrEmpty(selectedCard.TrackUri))
+                    {
+                        tracksList.Add(selectedCard.TrackUri);
+                    }
+                }
+            }
+
+            if (tracksList.Count > 0)
+            {
+                await PlayTrack(tracksList.ToArray());
+            }
         }
     }
 }

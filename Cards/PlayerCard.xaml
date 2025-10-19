@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:hc="https://handyorg.github.io/handycontrol">
 
-
     <UserControl.Resources>
         <Style x:Key="ActiveButtonStyle" TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
@@ -66,7 +65,7 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="8*"/>
                 <ColumnDefinition Width="1"/>
-                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="11*"/>
                 <ColumnDefinition Width="3"/>
             </Grid.ColumnDefinitions>
 
@@ -80,9 +79,9 @@
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="13*" MinHeight="18"/>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="17*" MinHeight="20"/>
+                <RowDefinition Height="18*" MinHeight="20"/>
                 <RowDefinition Height="3"/>
-                <RowDefinition Height="12*" MinHeight="12"/>
+                <RowDefinition Height="11*" MinHeight="12"/>
                 <RowDefinition Height="3" />
             </Grid.RowDefinitions>
 
@@ -107,9 +106,9 @@
             <ToggleButton x:Name="RepeatModeButton" Grid.Column="13" Grid.Row="9" VerticalAlignment="Center" IsThreeState="True" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}" Click="RepeatModeButton_Click"></ToggleButton>
 
 
-            <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CalendarGeometry}"></Button>
-            <Button x:Name="LikeSongButton" Grid.Column="17" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource RotateRightGeometry}"></Button>
-            <Button x:Name="AddQueueButton" Grid.Column="17" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DropperGeometry}"></Button>
+            <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource LyricsIcon}"></Button>
+            <ToggleButton x:Name="LikeSongButton" Grid.Column="17" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}" Tag="{StaticResource HeartIcon}" Click="LikeSongButton_Click"></ToggleButton>
+            <Button x:Name="ShowQueueButton" Grid.Column="17" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ShowQueueIcon}"></Button>
             <CheckBox Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Left" >
                 <Label Height="20" FontSize="9" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,0,0,0" Content="Stop when session is locked" BorderBrush="{x:Null}" Background="{x:Null}"></Label>
             </CheckBox>
@@ -135,10 +134,6 @@
                
             </StackPanel>
   
-          
-
-
-
         </Grid>
     </Border>
 </UserControl>
