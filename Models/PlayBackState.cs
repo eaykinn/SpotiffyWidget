@@ -23,5 +23,8 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("repeat_state")]
         public string RepeatState { get; set; }
+
+        [JsonProperty("context")]
+        public Context Context { get; set; }
     }
 }

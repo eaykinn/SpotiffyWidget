@@ -11,8 +11,8 @@
            ShowTitle="True"
            Height="762"
            Width="450"
-           MinWidth="380"
-           MinHeight="440"
+           MinWidth="400"
+           MinHeight="470"
            WindowStyle="None">
     <hc:Window.NonClientAreaContent>
         <Grid>
@@ -76,7 +76,7 @@
     <hc:Window.Resources>
         <Style x:Key="DynamicHeightListBoxItem" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,2,0,2" />
+            <Setter Property="Margin" Value="10,2,2,2" />
             <Setter Property="MaxHeight" Value="110" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -87,6 +87,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 MaxHeight="{TemplateBinding MaxHeight}"
                                 Padding="{TemplateBinding Padding}"
+                                CornerRadius="5"
                                 SnapsToDevicePixels="true">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="ViewStates">
@@ -171,6 +172,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*" MinHeight="40" />
+                                <RowDefinition Height="1*" MinHeight="30"/>
                                 <RowDefinition Height="10*" />
                             </Grid.RowDefinitions>
 
@@ -205,12 +207,13 @@
                                 <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center"
                                               Padding="5,0,5,0" Margin="10,0,0,0"
                                               SearchStarted="TrackSearchBar_SearchStarted" />
-                                <Button x:Name="TrackChangeView" Tag="TracksListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
+                                <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
                                         Margin="5,3,0,3">
                                 
                                 </Button>
                             </StackPanel>
-                            <ListBox BorderBrush="Transparent" Grid.Row="1" Grid.ColumnSpan="6" Margin="0,0,0,0"
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}"></Button>
+                            <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
                                      Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
                                      MouseDoubleClick="TracksDoubleClick"
                                      ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
