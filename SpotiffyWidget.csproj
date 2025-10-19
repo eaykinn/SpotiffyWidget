@@ -45,7 +45,4 @@
       <LastGenOutput>Access.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Icons\" />
-  </ItemGroup>
 </Project>

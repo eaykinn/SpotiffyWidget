@@ -205,9 +205,9 @@
                                 <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center"
                                               Padding="5,0,5,0" Margin="10,0,0,0"
                                               SearchStarted="TrackSearchBar_SearchStarted" />
-                                <Button x:Name="TrackChangeView" Tag="TracksListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}"
+                                <Button x:Name="TrackChangeView" Tag="TracksListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
                                         Margin="5,3,0,3">
-                                    :=
+                                
                                 </Button>
                             </StackPanel>
                             <ListBox BorderBrush="Transparent" Grid.Row="1" Grid.ColumnSpan="6" Margin="0,0,0,0"
@@ -251,9 +251,9 @@
                                 <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0"
                                               SearchStarted="ArtistSearchBar_SearchStarted" VerticalAlignment="Center"
                                               Padding="5,0,5,0" />
-                                <Button x:Name="ArtistChangeView" Tag="ArtistListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}"
+                                <Button x:Name="ArtistChangeView"  Tag="ArtistListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
                                         Margin="5,3,0,3">
-                                    :=
+                               
                                 </Button>
                             </StackPanel>
                             <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Row="1"
@@ -294,9 +294,9 @@
                                 <hc:SearchBar x:Name="PlayListSearchBar" MinWidth="100" Margin="10,0,0,0"
                                               HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                               Padding="5,0,5,0" SearchStarted="PlayListSearchBar_SearchStarted" />
-                                <Button x:Name="PlayListChangeView" Tag="MyPlayLists" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}"
+                                <Button x:Name="PlayListChangeView" Tag="MyPlayLists" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
                                         Margin="5,3,0,3"> 
-                                    :=
+                                
                                 </Button>
                             </StackPanel>
                             <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0"

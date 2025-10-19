@@ -17,5 +17,11 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("device")]
         public Device Device { get; set; }
+
+        [JsonProperty("shuffle_state")]
+        public bool ShuffleState { get; set; }
+
+        [JsonProperty("repeat_state")]
+        public string RepeatState { get; set; }
     }
 }

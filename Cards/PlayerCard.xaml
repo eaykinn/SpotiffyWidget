@@ -2,6 +2,47 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:hc="https://handyorg.github.io/handycontrol">
+
+
+    <UserControl.Resources>
+        <Style x:Key="ActiveButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="Transparent">
+                            <Path x:Name="Icon"
+                              Data="{TemplateBinding Tag}"   
+                              Fill="{TemplateBinding Foreground}"
+                              Stretch="Uniform"
+                              Width="18"
+                              Height="18"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Aktifken -->
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource PrimaryBrush}"/>
+                            </Trigger>
+
+                            <!-- Pasifken -->
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource PrimaryTextBrush}"/>
+                            </Trigger>
+
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource PrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+
+
+
     <Border Margin="0"
             Padding="0"
            
@@ -59,11 +100,11 @@
                 <Label VerticalAlignment="Center" x:Name="AlbumName" BorderBrush="{x:Null}" Background="Transparent" FontSize="10" FontWeight="Bold" Padding="0,0,0,0"></Label>
             </hc:RunningBlock>
 
-            <Button x:Name="ShuffleButton" Grid.Column="5" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ShuffleButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AlignVCenterGeometry}"></Button>
-            <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ErrorGeometry}"></Button>
-            <Button x:Name="PlayPauseButton" Grid.Column="9" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayPauseButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CheckedGeometry}"></Button>
-            <Button x:Name="NextButton" Grid.Column="11" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DropperGeometry}"></Button>
-            <Button x:Name="RepeatModeButton" Grid.Column="13" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource SearchGeometry}"></Button>
+            <ToggleButton x:Name="ShuffleButton" Grid.Column="5" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ShuffleButton_Click"  Style="{StaticResource ActiveButtonStyle}" Tag="{StaticResource ShuffleIcon}"></ToggleButton>
+            <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PreviousIcon}"></Button>
+            <Button x:Name="PlayPauseButton" Grid.Column="9" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayPauseButton_Click" Padding="0,0,0,0" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}"></Button>
+            <Button x:Name="NextButton" Grid.Column="11" Grid.Row="9" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource NextIcon}"></Button>
+            <ToggleButton x:Name="RepeatModeButton" Grid.Column="13" Grid.Row="9" VerticalAlignment="Center" IsThreeState="True" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}" Click="RepeatModeButton_Click"></ToggleButton>
 
 
             <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource CalendarGeometry}"></Button>
@@ -90,7 +131,7 @@
                     </Border>
                  
                 </Popup>
-                    <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource AudioGeometry}"></Button>
+                    <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource SoundMidIcon}"></Button>
                
             </StackPanel>
   

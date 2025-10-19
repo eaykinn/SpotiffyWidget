@@ -187,12 +187,30 @@ namespace SpotiffyWidget.Requests
         }
 
         public static async Task<bool> SeekTo(
-           string accessToken,
-           int position,
-           CancellationToken cancellationToken
-       )
+            string accessToken,
+            int position,
+            CancellationToken cancellationToken
+        )
         {
             string url = SpotifyEndPoints.Player.SeekToToPosition + "?position_ms=" + position;
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                null,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
+        }
+
+        public static async Task<bool> RepeatMode(
+            string accessToken,
+            string context,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.Repeat + "?state=" + context;
             var response = await SpotifyApiHelper.PutAsync(
                 url,
                 null,

@@ -3,12 +3,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using HandyControl.Controls;
+using HandyControl.Tools.Extension;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Properties;
 using SpotiffyWidget.Requests;
+using static HandyControl.Tools.Interop.InteropValues;
 using static SpotiffyWidget.Helpers.CancellationService;
 
 namespace SpotiffyWidget.Cards;
@@ -61,8 +65,50 @@ public partial class PlayerCard : UserControl
                 if (playBackState?.Device != null)
                     await Dispatcher.InvokeAsync(() =>
                     {
+                        int volume = playBackState.Device.VolumePercent;
+
+                        VolumeIconChange(volume);
+
                         VolumeSlider.Value = playBackState.Device.VolumePercent;
+
+                        if (playBackState.ShuffleState)
+                        {
+                            ShuffleButton.IsChecked = true;
+                        }
+                        else
+                        {
+                            ShuffleButton.IsChecked = false;
+                        }
+
+                        if (playBackState.RepeatState == "off")
+                        {
+                            RepeatModeButton.IsChecked = false;
+                            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
+                        }
+                        else if (playBackState.RepeatState == "track")
+                        {
+                            RepeatModeButton.IsChecked = true;
+                            RepeatModeButton.Tag = Application.Current.FindResource(
+                                "RepeatTrackIcon"
+                            );
+                        }
+                        else
+                        {
+                            RepeatModeButton.IsChecked = null;
+                            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
+                        }
                     });
+
+                if (playBackState.IsPlaying)
+                {
+                    var geometry = (Geometry)Application.Current.FindResource("PauseIcon");
+                    IconElement.SetGeometry(PlayPauseButton, geometry);
+                }
+                else
+                {
+                    var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
+                    IconElement.SetGeometry(PlayPauseButton, geometry);
+                }
             }
             catch (OperationCanceledException oce)
             {
@@ -124,11 +170,15 @@ public partial class PlayerCard : UserControl
             if (playBackState.IsPlaying)
             {
                 await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
+                var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
+                IconElement.SetGeometry(PlayPauseButton, geometry);
                 uiTimer.Stop();
             }
             else
             {
                 await PlayerRequests.Play(Access.Default.AccessToken, null, cancellationToken);
+                var geometry = (Geometry)Application.Current.FindResource("PauseIcon");
+                IconElement.SetGeometry(PlayPauseButton, geometry);
                 uiTimer.Start();
             }
         }
@@ -203,6 +253,30 @@ public partial class PlayerCard : UserControl
         _ = SetVolumeAsync(volume);
     }
 
+    private void VolumeIconChange(int volume)
+    {
+        if (volume <= 0)
+        {
+            var geometry = (Geometry)Application.Current.FindResource("SoundMuteIcon");
+            IconElement.SetGeometry(VolumeButton, geometry);
+        }
+        else if (volume > 0 && volume <= 33)
+        {
+            var geometry = (Geometry)Application.Current.FindResource("SoundLowIcon");
+            IconElement.SetGeometry(VolumeButton, geometry);
+        }
+        else if (volume > 33 && volume <= 66)
+        {
+            var geometry = (Geometry)Application.Current.FindResource("SoundMidIcon");
+            IconElement.SetGeometry(VolumeButton, geometry);
+        }
+        else if (volume > 66)
+        {
+            var geometry = (Geometry)Application.Current.FindResource("SoundHighIcon");
+            IconElement.SetGeometry(VolumeButton, geometry);
+        }
+    }
+
     private async Task SetVolumeAsync(double volume)
     {
         await _semaphore.WaitAsync();
@@ -240,13 +314,26 @@ public partial class PlayerCard : UserControl
         }
         finally
         {
+            VolumeIconChange((int)volume);
             _semaphore.Release();
         }
     }
 
     private void ShuffleButton_Click(object sender, RoutedEventArgs e)
     {
-        _ = ShuffleAsync(true);
+        var btn = sender as ToggleButton;
+        if (btn == null)
+            return;
+
+        // Basıldığında aktif hale getir (Foreground rengi değişir)
+        if (btn.IsChecked == true)
+        {
+            _ = ShuffleAsync(true);
+        }
+        else
+        {
+            _ = ShuffleAsync(false);
+        }
     }
 
     private async Task ShuffleAsync(bool isShuffle)
@@ -321,5 +408,53 @@ public partial class PlayerCard : UserControl
     {
         if (!VolumePopup.IsMouseOver && !VolumeButton.IsMouseOver)
             VolumePopup.IsOpen = false;
+    }
+
+    private void RepeatModeButton_Click(object sender, RoutedEventArgs e)
+    {
+        var btn = sender as ToggleButton;
+        if (btn == null)
+            return;
+
+        // Basıldığında aktif hale getir (Foreground rengi değişir)
+        if (btn.IsChecked == true)
+        {
+            RepeatModeButton.Tag = Application.Current.FindResource("RepeatTrackIcon");
+            _ = RepeatAsync("track");
+        }
+        else if (btn.IsChecked == null)
+        {
+            _ = RepeatAsync("context");
+            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
+        }
+        else
+        {
+            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
+            _ = RepeatAsync("off");
+        }
+    }
+
+    private async Task RepeatAsync(string context)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+            Reset();
+            var cancellationToken = Token;
+
+            var response = await PlayerRequests.RepeatMode(
+                Access.Default.AccessToken,
+                context,
+                cancellationToken
+            );
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 }
