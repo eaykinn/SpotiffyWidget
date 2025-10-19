@@ -336,28 +336,35 @@ public partial class PlayerCard : UserControl
         }
     }
 
-    private async Task ShuffleAsync(bool isShuffle)
+    private async Task<bool> ShuffleAsync(bool isShuffle)
     {
         await _semaphore.WaitAsync();
         try
         {
             if (!await SpotifyAuth.GrantAccess())
-                return;
+                return false;
             if (!await SpotifyAuth.CheckDevice())
-                return;
+                return false;
             Reset();
             var cancellationToken = Token;
 
-            await PlayerRequests.ShufflePlayBack(
+            var response = await PlayerRequests.ShufflePlayBack(
                 Access.Default.AccessToken,
                 isShuffle,
                 cancellationToken
             );
+
+            if (!response)
+            {
+                _semaphore.Release();
+                return false;
+            }
         }
         finally
         {
             _semaphore.Release();
         }
+        return true;
     }
 
     private async void PlayerSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -410,7 +417,7 @@ public partial class PlayerCard : UserControl
             VolumePopup.IsOpen = false;
     }
 
-    private void RepeatModeButton_Click(object sender, RoutedEventArgs e)
+    private async void RepeatModeButton_Click(object sender, RoutedEventArgs e)
     {
         var btn = sender as ToggleButton;
         if (btn == null)
@@ -419,30 +426,33 @@ public partial class PlayerCard : UserControl
         // Basıldığında aktif hale getir (Foreground rengi değişir)
         if (btn.IsChecked == true)
         {
-            RepeatModeButton.Tag = Application.Current.FindResource("RepeatTrackIcon");
-            _ = RepeatAsync("track");
+            bool isSuccess = await RepeatAsync("track");
+            if (isSuccess)
+                RepeatModeButton.Tag = Application.Current.FindResource("RepeatTrackIcon");
         }
         else if (btn.IsChecked == null)
         {
-            _ = RepeatAsync("context");
-            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
+            bool isSuccess = await RepeatAsync("context");
+            if (isSuccess)
+                RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
         }
         else
         {
-            RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
-            _ = RepeatAsync("off");
+            bool isSuccess = await RepeatAsync("off");
+            if (isSuccess)
+                RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
         }
     }
 
-    private async Task RepeatAsync(string context)
+    private async Task<bool> RepeatAsync(string context)
     {
         await _semaphore.WaitAsync();
         try
         {
             if (!await SpotifyAuth.GrantAccess())
-                return;
+                return false;
             if (!await SpotifyAuth.CheckDevice())
-                return;
+                return false;
             Reset();
             var cancellationToken = Token;
 
@@ -451,10 +461,17 @@ public partial class PlayerCard : UserControl
                 context,
                 cancellationToken
             );
+
+            if (!response)
+            {
+                _semaphore.Release();
+                return false;
+            }
         }
         finally
         {
             _semaphore.Release();
         }
+        return true;
     }
 }

@@ -15,8 +15,8 @@
                               Data="{TemplateBinding Tag}"   
                               Fill="{TemplateBinding Foreground}"
                               Stretch="Uniform"
-                              Width="18"
-                              Height="18"/>
+                              Width="20"
+                              Height="20"/>
                         </Border>
 
                         <ControlTemplate.Triggers>
