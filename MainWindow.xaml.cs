@@ -43,7 +43,7 @@ namespace SpotiffyWidget
         {
             if (e.OriginalSource is Button button)
             {
-                PopupConfig.IsOpen = false;
+                PopupConfig.IsOpen = false; // Close popup after a selection
                 if (button.Tag is ApplicationTheme tag)
                 {
                     ((App)Application.Current).UpdateTheme(tag);
@@ -664,78 +664,53 @@ namespace SpotiffyWidget
 
         private void ChangeView_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as FrameworkElement;
-            string name = btn?.Name;
+            if (!(sender is Button button) || !(button.Tag is string targetListName)) return;
 
-            Style existingStyle = null;
+            bool isCompact;
+            string targetState;
 
-            switch (name)
+            // Determine which view is being toggled and set the new state
+            switch (targetListName)
             {
-                case "TrackChangeView":
-                    existingStyle = TracksListBox.ItemContainerStyle;
+                case "TracksListBox":
+                    _isTracksCompactView = !_isTracksCompactView;
+                    isCompact = _isTracksCompactView;
                     break;
-                case "ArtistChangeView":
-                    existingStyle = ArtistListBox.ItemContainerStyle;
+                case "ArtistListBox":
+                    _artistsCompactView = !_artistsCompactView;
+                    isCompact = _artistsCompactView;
                     break;
-                case "PlayListChangeView":
-                    existingStyle = MyPlayLists.ItemContainerStyle;
+                case "MyPlayLists":
+                    _playlistsCompactView = !_playlistsCompactView;
+                    isCompact = _playlistsCompactView;
                     break;
+                default:
+                    return; // Unknown target
             }
 
-            if (existingStyle == null)
-                existingStyle = new Style(typeof(ListBoxItem));
+            targetState = isCompact ? "CompactView" : "NormalView";
 
-            var newStyle = new Style(typeof(ListBoxItem), existingStyle);
-
-            switch (name)
+            // Find the ListBox control by its name
+            if (this.FindName(targetListName) is ListBox targetListBox)
             {
-                case ("TrackChangeView"):
-                    if (_isTracksCompactView)
+                // Iterate through items to find ListBoxItems and change their visual state
+                for (int i = 0; i < targetListBox.Items.Count; i++)
+                {
+                    if (targetListBox.ItemContainerGenerator.ContainerFromIndex(i) is ListBoxItem item)
                     {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
-                        _isTracksCompactView = false;
+                        // Find the root element of the template where the VisualStates are defined.
+                        var templateRoot = item.Template.FindName("Bd", item) as FrameworkElement;
+                        if (templateRoot != null)
+                            // Use GoToElementState to apply the state to the specific element within the item's template.
+                            VisualStateManager.GoToElementState(templateRoot, targetState, true);
                     }
-                    else
-                    {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
-                        _isTracksCompactView = true;
-                    }
-
-                    TracksListBox.ItemContainerStyle = newStyle;
-                    break;
-                case ("ArtistChangeView"):
-                    if (_artistsCompactView)
-                    {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
-                        _artistsCompactView = false;
-                    }
-                    else
-                    {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
-                        _artistsCompactView = true;
-                    }
-                    ArtistListBox.ItemContainerStyle = newStyle;
-                    break;
-                case ("PlayListChangeView"):
-                    if (_playlistsCompactView)
-                    {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 110.0));
-                        _playlistsCompactView = false;
-                    }
-                    else
-                    {
-                        newStyle.Setters.Add(new Setter(ListBoxItem.MaxHeightProperty, 65.0));
-                        _playlistsCompactView = true;
-                    }
-
-                    MyPlayLists.ItemContainerStyle = newStyle;
-                    break;
+                }
             }
         }
 
         private void ChangeTheme(object sender, RoutedEventArgs e)
         {
-            PopupConfig.IsOpen = true;
+            PopupConfig.IsOpen = !PopupConfig.IsOpen;
         }
     }
 }
