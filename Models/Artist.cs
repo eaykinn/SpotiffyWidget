@@ -13,6 +13,9 @@ namespace SpotiffyWidget.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [JsonProperty("href")]
         public string Href { get; set; }
 
@@ -21,5 +24,14 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("images")]
         public List<Image> Images { get; set; }
+
+        [JsonProperty("popularity")]
+        public int Popularity { get; set; }
+
+        [JsonProperty("genres")]
+        public List<string> Genres { get; set; }
+
+        [JsonProperty("followers")]
+        public object Followers { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SpotiffyWidget.Models;
+using SpotiffyWidget.Pages;
 
 namespace SpotiffyWidget.Cards
 {
@@ -21,9 +22,21 @@ namespace SpotiffyWidget.Cards
     /// </summary>
     public partial class ArtistCard : UserControl
     {
+        public string ArtistId { get; set; }
+
         public ArtistCard()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var mw = Application.Current.MainWindow as MainWindow;
+            if (mw != null)
+            {
+                mw.MainArtistsFrame.Navigate(new ArtistDetailPage(ArtistId));
+                ;
+            }
         }
     }
 }

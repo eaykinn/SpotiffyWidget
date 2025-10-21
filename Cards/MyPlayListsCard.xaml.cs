@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SpotiffyWidget.Models;
+using SpotiffyWidget.Pages;
+using SpotiffyWidget.SpotifyEndPoints;
 
 namespace SpotiffyWidget.Cards
 {
@@ -21,9 +23,25 @@ namespace SpotiffyWidget.Cards
     /// </summary>
     public partial class MyPlayListsCard : UserControl
     {
+        public string Id { get; set; }
+        public string Type { get; set; }
+
         public MyPlayListsCard()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (Type == "Album")
+            {
+                var mw = Application.Current.MainWindow as MainWindow;
+                if (mw != null)
+                {
+                    mw.MainArtistsFrame.Navigate(new TracksPage(Id));
+                    ;
+                }
+            }
         }
     }
 }

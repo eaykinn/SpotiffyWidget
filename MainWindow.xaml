@@ -9,7 +9,7 @@
            Title="Spotify Desktop Widget"
            WindowStartupLocation="CenterScreen"
            ShowTitle="True"
-           Height="762"
+           Height="770"
            Width="450"
            MinWidth="400"
            MinHeight="470"
@@ -217,54 +217,7 @@
                                      Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
                                      MouseDoubleClick="TracksDoubleClick"
                                      ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
-
                         </Grid>
-                    </hc:TabItem>
-
-                    <hc:TabItem Header="Artists">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" MinHeight="40" />
-                                <RowDefinition Height="10*" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" HorizontalAlignment="Left"
-                                        VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
-
-                                <hc:ButtonGroup x:Name="ArtistRadioButton" Style="{StaticResource ButtonGroupSolid}">
-                                    <RadioButton x:Name="MyTopArtists" Click="ArtistsRadioButton_Click">My Top Artists</RadioButton>
-                                    <RadioButton x:Name="SearchedArtist" Click="ArtistsRadioButton_Click"
-                                                 IsEnabled="False">
-                                        Search Results
-                                    </RadioButton>
-                                </hc:ButtonGroup>
-
-                            </StackPanel>
-                            <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right"
-                                        Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-                                <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0"
-                                              SearchStarted="ArtistSearchBar_SearchStarted" VerticalAlignment="Center"
-                                              Padding="5,0,5,0" />
-                                <Button x:Name="ArtistChangeView"  Tag="ArtistListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
-                                        Margin="5,3,0,3">
-                               
-                                </Button>
-                            </StackPanel>
-                            <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Row="1"
-                                     Grid.ColumnSpan="6" HorizontalContentAlignment="Stretch" x:Name="ArtistListBox"
-                                     ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
-                        </Grid>
-
-
                     </hc:TabItem>
 
                     <hc:TabItem Header="PlayLists">
@@ -310,6 +263,11 @@
 
                     </hc:TabItem>
 
+                    <hc:TabItem Header="Artists">
+                               <!-- Sayfa Gösterici -->
+                        <Frame x:Name="MainArtistsFrame" NavigationUIVisibility="Hidden"/>
+                      
+                    </hc:TabItem>
                 </hc:TabControl>
 
             </Border>
