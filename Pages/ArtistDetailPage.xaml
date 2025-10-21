@@ -49,7 +49,7 @@
             <TextBlock x:Name="ArtistName" FontSize="22"  Foreground="White">ArtistName</TextBlock>
         </Border>
 
-        <DataGrid x:Name="DataGridArtistInfo" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Popularity" Binding="{Binding Popularity}" Width="*"/>
                 <DataGridTextColumn Header="Genres" Binding="{Binding Genres}" Width="*"/>
