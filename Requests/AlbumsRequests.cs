@@ -28,5 +28,23 @@ namespace SpotiffyWidget.Requests
 
             return tracks.Items;
         }
+
+        public static async Task<Album> GetAlbum(
+            string accessToken,
+            string id,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.AlbumEndpoints.AlbumTracks + "/" + id;
+            var album = await SpotifyApiHelper.SendRequestAsync<Album>(
+                url,
+                accessToken,
+                cancellationToken
+            );
+
+            album ??= new Album();
+
+            return album;
+        }
     }
 }

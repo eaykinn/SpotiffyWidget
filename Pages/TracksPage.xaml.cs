@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -25,13 +26,13 @@ namespace SpotiffyWidget.Pages
     {
         private bool _isTracksCompactView = false;
 
-        public TracksPage(string id)
+        public TracksPage(string id, string trackImageUri)
         {
             InitializeComponent();
-            LoadTracks(id);
+            LoadTracks(id, trackImageUri);
         }
 
-        private async void LoadTracks(string id)
+        private async void LoadTracks(string id, string trackImageUri)
         {
             // TODO: Implement track loading logic
             if (!await SpotifyAuth.GrantAccess())
@@ -46,13 +47,28 @@ namespace SpotiffyWidget.Pages
                 cancellationToken
             );
 
+            var album = await AlbumsRequests.GetAlbum(
+                Properties.Access.Default.AccessToken,
+                id,
+                cancellationToken
+            );
+
+            AlbumName.Content = album.Name;
+            ArtistName.Content = album.Artists.FirstOrDefault().Name;
+            TrackCount.Content = tracks.Count() + " Songs";
+            BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+
             foreach (var s in tracks)
             {
                 TrackCard card = new TrackCard();
+
                 card.Name.Content = s.Name;
-                card.Artist.Content = s.Artists.FirstOrDefault().Name;
+                card.Artist.Content =
+                    $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
                 card.TrackUri = s.Uri;
                 card.TrackId = s.Id;
+                card.Cover.Source = imageSource;
+
                 //card.LikeButton.IsChecked = true;
                 //card.IsTrackSaved = true;
 
@@ -110,7 +126,27 @@ namespace SpotiffyWidget.Pages
         private void TrackSearchBar_SearchStarted(
             object sender,
             HandyControl.Data.FunctionEventArgs<string> e
-        ) { }
+        )
+        {
+            string searchText = TrackSearchBar.Text.ToLower();
+
+            foreach (ListBoxItem item in TracksListBox.Items)
+            {
+                if (item.Content is TrackCard t)
+                {
+                    var nameLabel = t.FindName("Name") as Label;
+                    if (nameLabel != null)
+                    {
+                        string name = nameLabel.Content.ToString().ToLower();
+
+                        // Eşleşme varsa göster, yoksa gizle
+                        item.Visibility = name.Contains(searchText)
+                            ? Visibility.Visible
+                            : Visibility.Collapsed;
+                    }
+                }
+            }
+        }
 
         private void TrackPlayButton_Click(object sender, RoutedEventArgs e) { }
 

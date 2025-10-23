@@ -72,7 +72,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" MinHeight="40" />
-            <RowDefinition Height="1*" MinHeight="30"/>
+            <RowDefinition Height="1*" MinHeight="40"/>
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
 
@@ -90,7 +90,7 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right"
+        <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right"
                 VerticalAlignment="Center" Orientation="Horizontal" Grid.ColumnSpan="4"
                 Margin="10,3,10,3">
             <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center"
@@ -101,8 +101,26 @@
 
             </Button>
         </StackPanel>
-        <Button Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" Click="Button_Click"></Button>
-        <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
+        <Button Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" Click="Button_Click" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+
+        <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
+        <Label x:Name="TrackCount" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="11" BorderBrush="{x:Null}" FontWeight="Bold"></Label>
+        <StackPanel  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <Label x:Name="ArtistName" FontSize="12" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
+            <Label BorderBrush="{x:Null}" Padding="0,0,0,0"> - </Label>
+            <Label x:Name="AlbumName" FontSize="12" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
+        </StackPanel>
+
         <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
              Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
              MouseDoubleClick="TracksDoubleClick"

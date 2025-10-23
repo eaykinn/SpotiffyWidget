@@ -23,5 +23,8 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("release_date")]
         public string ReleaseDate { get; set; }
+
+        [JsonProperty("artists")]
+        public List<Artist> Artists { get; set; }
     }
 }

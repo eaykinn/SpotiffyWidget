@@ -25,6 +25,7 @@ namespace SpotiffyWidget.Cards
     {
         public string Id { get; set; }
         public string Type { get; set; }
+        public string ImageUri { get; set; }
 
         public MyPlayListsCard()
         {
@@ -38,7 +39,7 @@ namespace SpotiffyWidget.Cards
                 var mw = Application.Current.MainWindow as MainWindow;
                 if (mw != null)
                 {
-                    mw.MainArtistsFrame.Navigate(new TracksPage(Id));
+                    mw.MainArtistsFrame.Navigate(new TracksPage(Id, ImageUri));
                     ;
                 }
             }

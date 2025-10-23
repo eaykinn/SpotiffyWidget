@@ -53,6 +53,7 @@ namespace SpotiffyWidget.Pages
             public string CoverUrl { get; set; }
             public string Id { get; set; }
             public string Type { get; set; }
+            public string ImageUri { get; set; }
         }
 
         public ArtistDetailPage(string ArtistId)
@@ -125,6 +126,7 @@ namespace SpotiffyWidget.Pages
                         CoverUrl = album.Image.FirstOrDefault().Url,
                         ReleaseDate = album.ReleaseDate,
                         Id = album.Id,
+                        ImageUri = album.Image.FirstOrDefault().Url,
                     }
                 );
             }
@@ -136,6 +138,7 @@ namespace SpotiffyWidget.Pages
             card.Cover.Source = new BitmapImage(new Uri(Albums[_currentOffset].CoverUrl));
             card.Id = Albums[_currentOffset].Id;
             card.Type = "Album";
+            card.ImageUri = Albums[_currentOffset].CoverUrl;
 
             AlbumCard.Child = card;
         }
@@ -153,6 +156,7 @@ namespace SpotiffyWidget.Pages
                 card.Cover.Source = new BitmapImage(new Uri(Albums[_currentOffset].CoverUrl));
                 card.Id = Albums[_currentOffset].Id;
                 card.Type = "Album";
+                card.ImageUri = Albums[_currentOffset].CoverUrl;
 
                 AlbumCard.Child = card;
             }
@@ -170,8 +174,9 @@ namespace SpotiffyWidget.Pages
                 card.Owner.Content = Albums[_currentOffset].ReleaseDate;
                 card.Cover.Source = new BitmapImage(new Uri(Albums[_currentOffset].CoverUrl));
                 card.Id = Albums[_currentOffset].Id;
-                AlbumCard.Child = card;
                 card.Type = "Album";
+                card.ImageUri = Albums[_currentOffset].CoverUrl;
+                AlbumCard.Child = card;
             }
         }
     }
