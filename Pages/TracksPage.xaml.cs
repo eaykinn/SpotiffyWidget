@@ -148,7 +148,49 @@ namespace SpotiffyWidget.Pages
             }
         }
 
-        private void TrackPlayButton_Click(object sender, RoutedEventArgs e) { }
+        private async Task PlayTrack(string[] trackUris)
+        {
+            if (!await SpotifyAuth.GrantAccess())
+                return;
+
+            if (!await SpotifyAuth.CheckDevice())
+                return;
+
+            var body = new { uris = trackUris };
+
+            CancellationService.Reset();
+            var cancellationToken = CancellationService.Token;
+
+            await PlayerRequests.Play(
+                Properties.Access.Default.AccessToken,
+                body,
+                cancellationToken
+            );
+        }
+
+        private async void TrackPlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            var tracksList = new System.Collections.Generic.List<string>();
+
+            foreach (var item in TracksListBox.Items)
+            {
+                if (
+                    item is ListBoxItem listBoxItem
+                    && listBoxItem.Content is TrackCard selectedCard
+                )
+                {
+                    if (!string.IsNullOrEmpty(selectedCard.TrackUri))
+                    {
+                        tracksList.Add(selectedCard.TrackUri);
+                    }
+                }
+            }
+
+            if (tracksList.Count > 0)
+            {
+                await PlayTrack(tracksList.ToArray());
+            }
+        }
 
         private void TracksDoubleClick(object sender, MouseButtonEventArgs e) { }
 

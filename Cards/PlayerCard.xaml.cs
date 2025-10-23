@@ -164,6 +164,17 @@ public partial class PlayerCard : UserControl
         PlayerSlider.Interval = 1;
         PlayerSlider.Maximum = NPSMLibFunctions.MaxSeconds;
         PlayerSlider.Value = NPSMLibFunctions.CurrentSecond;
+
+        if (NPSMLibFunctions.IsPlaying)
+        {
+            var geometry = (Geometry)Application.Current.FindResource("PauseIcon");
+            IconElement.SetGeometry(PlayPauseButton, geometry);
+        }
+        else
+        {
+            var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
+            IconElement.SetGeometry(PlayPauseButton, geometry);
+        }
     }
 
     private async void PlayPause()

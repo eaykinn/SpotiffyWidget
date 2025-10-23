@@ -20,6 +20,7 @@ namespace SpotiffyWidget.Helpers
         public static string CurrentTime { get; set; }
         public static int MaxSeconds { get; set; }
         public static int CurrentSecond { get; set; }
+        public static bool IsPlaying { get; set; }
 
         private static double _lastPosition = -1;
         private static DateTime _lastUpdate = DateTime.Now;
@@ -77,6 +78,18 @@ namespace SpotiffyWidget.Helpers
 
             try
             {
+                var mediaPBI = _dataSource.GetMediaPlaybackInfo();
+                var mediaPBState = mediaPBI.PlaybackState;
+
+                if (mediaPBState == MediaPlaybackState.Playing)
+                {
+                    IsPlaying = true;
+                }
+                else
+                {
+                    IsPlaying = false;
+                }
+
                 var timeline = _dataSource.GetMediaTimelineProperties();
 
                 // Spotify'dan yeni pozisyon gelmiş mi kontrol et
@@ -88,20 +101,26 @@ namespace SpotiffyWidget.Helpers
                     // Yeni veri yok → biz arttıralım
                     if ((DateTime.Now - _lastUpdate).TotalSeconds >= 1)
                     {
-                        CurrentSecond++;
-                        if (CurrentSecond > MaxSeconds)
-                            CurrentSecond = MaxSeconds;
+                        if (IsPlaying)
+                        {
+                            CurrentSecond++;
+                            if (CurrentSecond > MaxSeconds)
+                                CurrentSecond = MaxSeconds;
 
-                        _lastUpdate = DateTime.Now;
+                            _lastUpdate = DateTime.Now;
+                        }
                     }
                 }
                 else
                 {
                     // Yeni veri geldi → normal güncelle
-                    CurrentSecond = (int)timeline.Position.TotalSeconds;
-                    MaxSeconds = (int)timeline.EndTime.TotalSeconds;
-                    _lastPosition = timeline.Position.TotalSeconds;
-                    _lastUpdate = DateTime.Now;
+                    if (IsPlaying)
+                    {
+                        CurrentSecond = (int)timeline.Position.TotalSeconds;
+                        MaxSeconds = (int)timeline.EndTime.TotalSeconds;
+                        _lastPosition = timeline.Position.TotalSeconds;
+                        _lastUpdate = DateTime.Now;
+                    }
                     InitializeSession();
                 }
 
