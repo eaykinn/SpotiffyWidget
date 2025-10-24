@@ -34,9 +34,14 @@ namespace SpotiffyWidget.Pages
         private bool _artistsCompactView = false;
         private bool _playlistsCompactView = false;
 
+        // Remove or comment out the following line in the ArtistsPage constructor:
+        // this.NavigationCacheMode = System.Windows.Navigation.NavigationCacheMode.Required;
+
+        // Fixed constructor:
         public ArtistsPage()
         {
             InitializeComponent();
+
             LoadTopArtists();
         }
 
@@ -48,7 +53,9 @@ namespace SpotiffyWidget.Pages
                 switch (buttonname)
                 {
                     case "My Top Artists":
+
                         LoadTopArtists();
+
                         break;
                 }
                 ArtistSearchBar.Text = "";
@@ -141,6 +148,7 @@ namespace SpotiffyWidget.Pages
             finally
             {
                 LoadingPanel.Visibility = Visibility.Collapsed;
+                MyTopArtists.IsChecked = true;
             }
         }
 

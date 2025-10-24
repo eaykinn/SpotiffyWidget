@@ -584,4 +584,55 @@ public partial class PlayerCard : UserControl
             Growl.Info("Added to liked songs");
         }
     }
+
+    private void StopMusicCB_Click(object sender, RoutedEventArgs e)
+    {
+        if (StopMusicCB.IsChecked == true)
+        {
+            SystemEventHelper.StartListening();
+            SystemEventHelper.OnSystemEvent += SystemEventHelper_OnSystemEvent;
+        }
+        else
+        {
+            SystemEventHelper.OnSystemEvent -= SystemEventHelper_OnSystemEvent;
+            SystemEventHelper.StopListening();
+        }
+    }
+
+    private async void SystemEventHelper_OnSystemEvent(string state)
+    {
+        Reset();
+        var cancellationToken = Token;
+        var playBackState = await PlayerRequests.GetPlayBackState(
+            Access.Default.AccessToken,
+            cancellationToken
+        );
+        if (playBackState == null)
+            return;
+
+        switch (state)
+        {
+            case "SessionLock":
+            {
+                if (playBackState.IsPlaying)
+                {
+                    await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
+                    var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
+                    IconElement.SetGeometry(PlayPauseButton, geometry);
+                    uiTimer.Stop();
+                }
+                break;
+            }
+            case "Sleep":
+
+                if (playBackState.IsPlaying)
+                {
+                    await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
+                    var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
+                    IconElement.SetGeometry(PlayPauseButton, geometry);
+                    uiTimer.Stop();
+                }
+                break;
+        }
+    }
 }

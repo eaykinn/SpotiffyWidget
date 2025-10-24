@@ -26,5 +26,8 @@ namespace SpotiffyWidget.Models
 
         [JsonProperty("tracks")]
         public TrackInfo TrackInfo { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 }

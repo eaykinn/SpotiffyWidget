@@ -1,0 +1,125 @@
+﻿<Page x:Class="SpotiffyWidget.Pages.PlayListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:hc="https://handyorg.github.io/handycontrol"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SpotiffyWidget.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="PlayListPage">
+
+    <Page.Resources>
+        <Style x:Key="DynamicHeightListBoxItem" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="10,2,2,2" />
+            <Setter Property="MaxHeight" Value="110" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            MaxHeight="{TemplateBinding MaxHeight}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="5"
+                            SnapsToDevicePixels="true">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ViewStates">
+                                    <VisualState x:Name="NormalView">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Bd"
+                                                         Storyboard.TargetProperty="MaxHeight" To="110"
+                                                         Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="CompactView">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Bd"
+                                                         Storyboard.TargetProperty="MaxHeight" To="65"
+                                                         Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Kural 1: Öğe seçili DEĞİLKEN fare üzerine gelirse, gri yap -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsSelected" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                            </MultiTrigger>
+
+                            <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" MinHeight="40" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+
+        </Grid.ColumnDefinitions>
+        <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Grid.Column="0" Grid.Row="0" Panel.ZIndex="11" Grid.ColumnSpan="6" Grid.RowSpan="2">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
+                <TextBlock Text="Loading..."
+                               Margin="0,0,0,0"
+                               FontSize="14"
+                               HorizontalAlignment="Center" />
+            </StackPanel>
+        </hc:TransitioningContentControl>
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" HorizontalAlignment="Left"
+                VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
+
+            <hc:ButtonGroup x:Name="PlayListRadioButton" Style="{StaticResource ButtonGroupSolid}">
+                <RadioButton x:Name="MyPlayListsRadioButton" Click="PlaylistRadioButton_Click">My Play Lists</RadioButton>
+                <RadioButton x:Name="SearchedPlayListsRadioButton" IsEnabled="False">Search Results</RadioButton>
+            </hc:ButtonGroup>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right"
+                Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
+            <hc:SearchBar x:Name="PlayListSearchBar" MinWidth="100" Margin="10,0,0,0"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                      Padding="5,0,5,0" SearchStarted="PlayListSearchBar_SearchStarted" />
+            <Button x:Name="PlayListChangeView" Tag="MyPlayLists" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
+                Margin="5,3,0,3">
+
+            </Button>
+        </StackPanel>
+        <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0"
+             HorizontalContentAlignment="Stretch" x:Name="MyPlayLists" Grid.Row="1"
+             Grid.Column="0" Grid.ColumnSpan="6"
+             ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
+    </Grid>
+</Page>

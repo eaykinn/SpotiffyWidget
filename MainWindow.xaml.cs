@@ -21,18 +21,15 @@ namespace SpotiffyWidget
 {
     public partial class MainWindow
     {
-        private bool _tracksOnLoad;
-        private bool _playlistsOnLoad;
+        private bool _tracksOnLoad = true;
+        private bool _playlistsOnLoad = true; // Bunu ekle
+        private bool _artistsOnLoad = true;
 
         private bool _isTracksCompactView = false;
-        private bool _playlistsCompactView = false;
 
         public MainWindow()
         {
             InitializeComponent();
-            _tracksOnLoad = true;
-
-            _playlistsOnLoad = true;
         }
 
         #region Change Theme
@@ -124,67 +121,6 @@ namespace SpotiffyWidget
                         listboxItem.Padding = new Thickness(0, 0, 0, 0);
                         listboxItem.Content = card;
                         TracksListBox.Items.Add(listboxItem);
-                    }
-                });
-            }
-            catch (OperationCanceledException oce)
-            {
-                // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
-                if (cancellationToken.IsCancellationRequested)
-                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-                else
-                    Growl.Warning(
-                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                    );
-            }
-            catch (Exception ex)
-            {
-                Growl.Error(ex.Message);
-            }
-            finally
-            {
-                LoadingPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private async void LoadMyPlayLists()
-        {
-            if (!await SpotifyAuth.GrantAccess())
-                return;
-
-            CancellationService.Reset();
-            var cancellationToken = CancellationService.Token;
-            MyPlayLists.Items.Clear();
-            LoadingPanel.Visibility = Visibility.Visible;
-
-            try
-            {
-                // 4) Playlists
-                var playlists = await Requests.ProfileRequests.GetUsersPlaylists(
-                    Properties.Access.Default.AccessToken,
-                    cancellationToken
-                );
-                cancellationToken.ThrowIfCancellationRequested();
-
-                // Tek seferde UI güncellemesi
-                Dispatcher.Invoke(() =>
-                {
-                    foreach (var s in playlists)
-                    {
-                        MyPlayListsCard card = new MyPlayListsCard();
-                        card.PlayListName.Content = s.Name;
-                        card.Owner.Content = s.Owner.DisplayName;
-                        card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
-                            new Uri(s.Images.FirstOrDefault().Url)
-                        );
-                        card.NumberOfTracks.Content = s.TrackInfo.Total.ToString() + " Songs";
-
-                        var listboxItem = new ListBoxItem();
-                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
-                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
-                        listboxItem.Content = card;
-
-                        MyPlayLists.Items.Add(listboxItem);
                     }
                 });
             }
@@ -301,17 +237,21 @@ namespace SpotiffyWidget
                             break;
 
                         case "PlayLists":
-                            if (_playlistsOnLoad)
                             {
-                                _playlistsOnLoad = false;
-                                PlayListSearchBar.Text = "";
-                                MyPlayListsRadioButton.IsChecked = true;
-                                LoadMyPlayLists();
+                                if (_playlistsOnLoad) // Sadece ilk kez tıklandığında yükle
+                                {
+                                    _playlistsOnLoad = false; // Bayrağı kapat
+                                    MainPlayListsFrame.Navigate(new PlayListPage());
+                                }
                             }
                             break;
                         case "Artists":
                         {
-                            MainArtistsFrame.Navigate(new ArtistsPage());
+                            if (_artistsOnLoad) // Sadece ilk kez tıklandığında yükle
+                            {
+                                _artistsOnLoad = false;
+                                MainArtistsFrame.Navigate(new ArtistsPage());
+                            }
 
                             break;
                         }
@@ -345,16 +285,6 @@ namespace SpotiffyWidget
         )
         {
             SearchStarted("track");
-        }
-
-        private void PlayListSearchBar_SearchStarted(
-            object sender,
-            HandyControl.Data.FunctionEventArgs<string> e
-        )
-        {
-            SearchStarted("playlist");
-            MyPlayListsRadioButton.IsChecked = false;
-            SearchedPlayListsRadioButton.IsChecked = true;
         }
 
         private async void SearchStarted(string type)
@@ -423,45 +353,6 @@ namespace SpotiffyWidget
                             }
                         });
                         break;
-
-                    case "playlist":
-                        MyPlayLists.Items.Clear();
-                        LoadingPanel.Visibility = Visibility.Visible;
-                        var searchPlayLists = await Requests.SearchRequests.Search<Playlist>(
-                            Properties.Access.Default.AccessToken,
-                            PlayListSearchBar.Text,
-                            "playlist",
-                            cancellationToken
-                        );
-
-                        searchPlayLists = searchPlayLists.Where(p => p != null).ToList();
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            foreach (var s in searchPlayLists)
-                            {
-                                MyPlayListsCard card = new MyPlayListsCard();
-                                card.PlayListName.Content = s.Name ?? "";
-                                card.Owner.Content = s.Owner.DisplayName ?? "";
-                                if (s.Images.Count != 0)
-                                {
-                                    card.Cover.Source =
-                                        new System.Windows.Media.Imaging.BitmapImage(
-                                            new Uri(s.Images.FirstOrDefault().Url)
-                                        );
-                                }
-                                card.NumberOfTracks.Content =
-                                    s.TrackInfo.Total.ToString() + " Songs";
-
-                                var listboxItem = new ListBoxItem();
-                                listboxItem.Margin = new Thickness(0, 2, 0, 2);
-                                listboxItem.Padding = new Thickness(0, 0, 0, 0);
-                                listboxItem.Content = card;
-
-                                MyPlayLists.Items.Add(listboxItem);
-                            }
-                        });
-                        break;
                 }
             }
             catch (OperationCanceledException oce)
@@ -484,21 +375,6 @@ namespace SpotiffyWidget
         }
         #endregion
 
-
-        private void PlaylistRadioButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is RadioButton rb)
-            {
-                string buttonname = rb.Content.ToString();
-                switch (buttonname)
-                {
-                    case "My Play Lists":
-                        LoadMyPlayLists();
-                        break;
-                }
-                PlayListSearchBar.Text = "";
-            }
-        }
 
         private async void TracksDoubleClick(
             object sender,
@@ -553,10 +429,6 @@ namespace SpotiffyWidget
                 case "TracksListBox":
                     _isTracksCompactView = !_isTracksCompactView;
                     isCompact = _isTracksCompactView;
-                    break;
-                case "MyPlayLists":
-                    _playlistsCompactView = !_playlistsCompactView;
-                    isCompact = _playlistsCompactView;
                     break;
                 default:
                     return; // Unknown target
