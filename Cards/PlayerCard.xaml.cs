@@ -599,6 +599,21 @@ public partial class PlayerCard : UserControl
         }
     }
 
+    private void PreventSleepMode_Click(object sender, RoutedEventArgs e)
+    {
+        if (PowerModeCB.IsChecked == true)
+        {   
+            PowerHelper.PreventSleep();
+            Growl.Info("Sleep Mode Disabled");
+            
+        }
+        else
+        {
+            PowerHelper.AllowSleep();
+            Growl.Info("Sleep Mode Enabled");
+            
+        }
+    }
     private async void SystemEventHelper_OnSystemEvent(string state)
     {
         Reset();
