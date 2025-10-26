@@ -43,7 +43,7 @@ namespace SpotiffyWidget
                     {
                         PopupElement = picker,
                         WindowStartupLocation = WindowStartupLocation.CenterScreen,
-
+                        AllowsTransparency = true,
                         WindowStyle = WindowStyle.None,
 
                         MinWidth = 0,

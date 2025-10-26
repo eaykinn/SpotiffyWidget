@@ -12,7 +12,7 @@
            Height="770"
            Width="450"
            MinWidth="400"
-           MinHeight="470"
+           MinHeight="280"
         
            Icon="/Resources/spwB.ico">
 
@@ -24,7 +24,7 @@
             <Button Grid.Row="0" Click="ChangeTheme" HorizontalAlignment="Left" Margin="20,3,0,3"
                     Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource ConfigGeometry}" />
-            <Popup  Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}"
+            <Popup  Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
                    HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
                         Effect="{StaticResource EffectShadow2}">
@@ -43,7 +43,7 @@
                         </StackPanel>
 
                         <hc:Divider Width="200" Margin="0,10" Content="Accent Color" />
-                        <StackPanel  Margin="0,0,0,10" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel  Margin="0,0,0,10" HorizontalAlignment="Center" Orientation="Horizontal" >
                             <Button Tag="{Binding ElementName=primaryBorder, Path=Background}"
                                     Style="{StaticResource ButtonCustom}">
                                 <Border Name="primaryBorder" Background="#2196F3" Width="32" Height="21"
@@ -69,7 +69,7 @@
                                         BorderBrush="{DynamicResource BorderBrush}" />
                             </Button>
                         </StackPanel>
-                        <Button HorizontalAlignment="Stretch" Tag="Picker" Content="More Colors" Margin="10" />
+                        <Button HorizontalAlignment="Stretch" Tag="Picker"  Content="More Colors" Margin="10" />
                     </StackPanel>
                 </Border>
             </Popup>
@@ -139,7 +139,7 @@
             </Setter>
         </Style>
     </hc:BlurWindow.Resources>
-    <Border Padding="10">
+    <Border Padding="5">
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -148,9 +148,9 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1" />
-                <RowDefinition Height="20*" MinHeight="200" />
+                <RowDefinition Height="20*" MinHeight="220" />
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="40*" MinHeight="180" />
+                <RowDefinition Height="40*"/>
             </Grid.RowDefinitions>
 
             <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade"
@@ -164,7 +164,10 @@
                 </StackPanel>
             </hc:TransitioningContentControl>
 
-            <cards:PlayerCard x:Name="PlayerCard" Grid.Column="0" Grid.Row="1"/>
+            <Border  Grid.Column="0" Grid.Row="1" CornerRadius="5"  Style="{StaticResource BorderRegion}">
+                <cards:PlayerCard x:Name="PlayerCard"/>
+            </Border>
+
             <Border Grid.Row="3" Grid.Column="0" CornerRadius="5"  Style="{StaticResource BorderRegion}">
                 <Frame x:Name="TabsFrame" NavigationUIVisibility="Hidden" />
             </Border>
