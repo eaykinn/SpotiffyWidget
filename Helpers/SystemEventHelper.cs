@@ -1,70 +1,69 @@
 ﻿using System;
 using Microsoft.Win32;
 
-namespace SpotiffyWidget.Helpers
+namespace SpotiffyWidget.Helpers;
+
+public static class SystemEventHelper
 {
-    public static class SystemEventHelper
+    private static bool _isListening;
+    // Bu event'ler üzerinden dışarıya bilgi geçebilirsin
+
+    public static event Action<string>? OnSystemEvent;
+
+    /// <summary>
+    ///     Olayları dinlemeye başlar.
+    /// </summary>
+    public static void StartListening()
     {
-        // Bu event'ler üzerinden dışarıya bilgi geçebilirsin
-        public static event Action<string>? OnSystemEvent;
+        if (_isListening)
+            return;
 
-        private static bool _isListening = false;
+        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        _isListening = true;
+    }
 
-        /// <summary>
-        /// Olayları dinlemeye başlar.
-        /// </summary>
-        public static void StartListening()
+    /// <summary>
+    ///     Dinlemeyi durdurur (önemli: bellek sızıntısı olmaması için).
+    /// </summary>
+    public static void StopListening()
+    {
+        if (!_isListening)
+            return;
+
+        SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+        _isListening = false;
+    }
+
+    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    {
+        switch (e.Reason)
         {
-            if (_isListening)
-                return;
+            case SessionSwitchReason.SessionLock:
+                OnSystemEvent?.Invoke("SessionLock");
+                break;
 
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-            _isListening = true;
+            case SessionSwitchReason.SessionUnlock:
+                OnSystemEvent?.Invoke("SessionUnlock");
+                break;
         }
+    }
 
-        /// <summary>
-        /// Dinlemeyi durdurur (önemli: bellek sızıntısı olmaması için).
-        /// </summary>
-        public static void StopListening()
+    private static void SystemEvents_PowerModeChanged(
+        object sender,
+        PowerModeChangedEventArgs e
+    )
+    {
+        switch (e.Mode)
         {
-            if (!_isListening)
-                return;
+            case PowerModes.Suspend:
+                OnSystemEvent?.Invoke("Sleep");
+                break;
 
-            SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
-            SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
-            _isListening = false;
-        }
-
-        private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            switch (e.Reason)
-            {
-                case SessionSwitchReason.SessionLock:
-                    OnSystemEvent?.Invoke("SessionLock");
-                    break;
-
-                case SessionSwitchReason.SessionUnlock:
-                    OnSystemEvent?.Invoke("SessionUnlock");
-                    break;
-            }
-        }
-
-        private static void SystemEvents_PowerModeChanged(
-            object sender,
-            PowerModeChangedEventArgs e
-        )
-        {
-            switch (e.Mode)
-            {
-                case PowerModes.Suspend:
-                    OnSystemEvent?.Invoke("Sleep");
-                    break;
-
-                case PowerModes.Resume:
-                    OnSystemEvent?.Invoke("Wake");
-                    break;
-            }
+            case PowerModes.Resume:
+                OnSystemEvent?.Invoke("Wake");
+                break;
         }
     }
 }

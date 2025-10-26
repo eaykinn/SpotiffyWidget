@@ -9,12 +9,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using HandyControl.Controls;
-using HandyControl.Tools.Extension;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Pages;
 using SpotiffyWidget.Properties;
 using SpotiffyWidget.Requests;
-using static HandyControl.Tools.Interop.InteropValues;
 using static SpotiffyWidget.Helpers.CancellationService;
 
 namespace SpotiffyWidget.Cards;
@@ -27,7 +25,6 @@ public partial class PlayerCard : UserControl
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly DispatcherTimer uiTimer = new();
     private string TrackId;
-    private CancellationTokenSource? _volumeCts;
 
     public PlayerCard()
     {
@@ -68,20 +65,16 @@ public partial class PlayerCard : UserControl
                 if (playBackState?.Device != null)
                     await Dispatcher.InvokeAsync(() =>
                     {
-                        int volume = playBackState.Device.VolumePercent;
+                        var volume = playBackState.Device.VolumePercent;
 
                         VolumeIconChange(volume);
 
                         VolumeSlider.Value = playBackState.Device.VolumePercent;
 
                         if (playBackState.ShuffleState)
-                        {
                             ShuffleButton.IsChecked = true;
-                        }
                         else
-                        {
                             ShuffleButton.IsChecked = false;
-                        }
 
                         if (playBackState.RepeatState == "off")
                         {
@@ -117,19 +110,15 @@ public partial class PlayerCard : UserControl
                 {
                     TrackId = playBackState.Track.Id;
                     var response = await TracksRequests.CheckTracksIsSaved(
-                        Properties.Access.Default.AccessToken,
+                        Access.Default.AccessToken,
                         playBackState.Track.Id,
                         cancellationToken
                     );
 
-                    if (response.First() == true)
-                    {
+                    if (response.First())
                         LikeSongButton.IsChecked = true;
-                    }
                     else
-                    {
                         LikeSongButton.IsChecked = false;
-                    }
                 }
             }
             catch (OperationCanceledException oce)
@@ -369,13 +358,9 @@ public partial class PlayerCard : UserControl
 
         // Basıldığında aktif hale getir (Foreground rengi değişir)
         if (btn.IsChecked == true)
-        {
             _ = ShuffleAsync(true);
-        }
         else
-        {
             _ = ShuffleAsync(false);
-        }
     }
 
     private async Task<bool> ShuffleAsync(bool isShuffle)
@@ -406,6 +391,7 @@ public partial class PlayerCard : UserControl
         {
             _semaphore.Release();
         }
+
         return true;
     }
 
@@ -468,19 +454,19 @@ public partial class PlayerCard : UserControl
         // Basıldığında aktif hale getir (Foreground rengi değişir)
         if (btn.IsChecked == true)
         {
-            bool isSuccess = await RepeatAsync("track");
+            var isSuccess = await RepeatAsync("track");
             if (isSuccess)
                 RepeatModeButton.Tag = Application.Current.FindResource("RepeatTrackIcon");
         }
         else if (btn.IsChecked == null)
         {
-            bool isSuccess = await RepeatAsync("context");
+            var isSuccess = await RepeatAsync("context");
             if (isSuccess)
                 RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
         }
         else
         {
-            bool isSuccess = await RepeatAsync("off");
+            var isSuccess = await RepeatAsync("off");
             if (isSuccess)
                 RepeatModeButton.Tag = Application.Current.FindResource("RepeatIcon");
         }
@@ -514,6 +500,7 @@ public partial class PlayerCard : UserControl
         {
             _semaphore.Release();
         }
+
         return true;
     }
 
@@ -523,13 +510,9 @@ public partial class PlayerCard : UserControl
             return;
 
         if (LikeSongButton.IsChecked == true)
-        {
-            await LikeSong(this.TrackId);
-        }
+            await LikeSong(TrackId);
         else
-        {
-            await UnlikeSong(this.TrackId);
-        }
+            await UnlikeSong(TrackId);
     }
 
     private async Task LikeSong(string TrackId)
@@ -540,23 +523,19 @@ public partial class PlayerCard : UserControl
         if (!await SpotifyAuth.CheckDevice())
             return;
 
-        CancellationService.Reset();
-        var cancellationToken = CancellationService.Token;
-        var body = new { ids = new string[] { TrackId } };
+        Reset();
+        var cancellationToken = Token;
+        var body = new { ids = new[] { TrackId } };
         var response = await TracksRequests.LikeSong(
-            Properties.Access.Default.AccessToken,
+            Access.Default.AccessToken,
             body,
             cancellationToken
         );
 
         if (!response)
-        {
             Growl.Warning("Error occured");
-        }
         else
-        {
             Growl.Info("Added to liked songs");
-        }
     }
 
     private async Task UnlikeSong(string TrackId)
@@ -567,23 +546,19 @@ public partial class PlayerCard : UserControl
         if (!await SpotifyAuth.CheckDevice())
             return;
 
-        CancellationService.Reset();
-        var cancellationToken = CancellationService.Token;
-        var body = new { ids = new string[] { TrackId } };
+        Reset();
+        var cancellationToken = Token;
+        var body = new { ids = new[] { TrackId } };
         var response = await TracksRequests.RemoveSong(
-            Properties.Access.Default.AccessToken,
+            Access.Default.AccessToken,
             body,
             cancellationToken
         );
 
         if (!response)
-        {
             Growl.Warning("Error occured");
-        }
         else
-        {
             Growl.Info("Added to liked songs");
-        }
     }
 
     private void StopMusicCB_Click(object sender, RoutedEventArgs e)
@@ -636,6 +611,7 @@ public partial class PlayerCard : UserControl
                     IconElement.SetGeometry(PlayPauseButton, geometry);
                     uiTimer.Stop();
                 }
+
                 break;
             }
             case "Sleep":
@@ -647,6 +623,7 @@ public partial class PlayerCard : UserControl
                     IconElement.SetGeometry(PlayPauseButton, geometry);
                     uiTimer.Stop();
                 }
+
                 break;
         }
     }
@@ -654,9 +631,6 @@ public partial class PlayerCard : UserControl
     private async void ShowQueueButton_Click(object sender, RoutedEventArgs e)
     {
         var mw = Application.Current.MainWindow as MainWindow;
-        if (mw != null)
-        {
-            mw.TabsFrame.Navigate(new TracksPage("", "", 2));
-        }
+        if (mw != null) mw.TabsFrame.Navigate(new TracksPage("", "", 2));
     }
 }
