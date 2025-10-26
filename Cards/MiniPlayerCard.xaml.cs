@@ -585,7 +585,7 @@ namespace SpotiffyWidget.Cards
                 mainw.MiniPlayerBorder.Visibility = Visibility.Collapsed;
                 mainw.TabsBorder.Visibility = Visibility.Visible;
                 mainw.ShowNonClientArea = true;
-                mainw.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                mainw.Topmost = false;
             });
         }
 

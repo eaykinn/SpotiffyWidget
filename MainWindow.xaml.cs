@@ -122,6 +122,7 @@ namespace SpotiffyWidget
                 MiniPlayerBorder.Visibility = Visibility.Visible;
                 MiniPlayerBorder.Padding = new Thickness(0.0, 0.0, 0.0, 0.0);
                 TabsBorder.Visibility = Visibility.Collapsed;
+                this.Topmost = true;
 
                 this.ShowNonClientArea = false;
             });
