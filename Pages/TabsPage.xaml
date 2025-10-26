@@ -71,7 +71,7 @@
     </Page.Resources>
 
     <Grid>
-        <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"
+        <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True" 
                Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"
                Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Stretch"
                SelectionChanged="TabControl_SelectionChanged">

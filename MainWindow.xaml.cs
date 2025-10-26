@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using HandyControl.Controls;
+using HandyControl.Data;
 using HandyControl.Themes;
 using HandyControl.Tools;
 using SpotiffyWidget.Helpers;
@@ -16,6 +17,8 @@ namespace SpotiffyWidget
         {
             InitializeComponent();
             TabsFrame.Navigate(new TabsPage());
+            var app = (App)Application.Current;
+            app.SetCustomBlurValue(); // Uygulama başlatıldığında bulanıklık
         }
 
         #region Change Theme
@@ -40,8 +43,9 @@ namespace SpotiffyWidget
                     {
                         PopupElement = picker,
                         WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                        AllowsTransparency = true,
+
                         WindowStyle = WindowStyle.None,
+
                         MinWidth = 0,
                         MinHeight = 0,
                         Title = "Select Accent Color",
@@ -65,6 +69,34 @@ namespace SpotiffyWidget
         private void ChangeTheme(object sender, RoutedEventArgs e)
         {
             PopupConfig.IsOpen = !PopupConfig.IsOpen;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e) { }
+
+        private void MenuItemOpen(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            this.Activate();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            // Uygulamayı kapatma işlemini iptal et
+            e.Cancel = true;
+
+            // Pencereyi gizle
+            this.Hide();
+
+            // Baloncuk bildirimi göster (isteğe bağlı)
+            NotifyIcon.ShowBalloonTip(
+                "Spotify Widget",
+                "App running background...",
+                NotifyIconInfoType.Info,
+                "TrayIcon"
+            );
+
+            base.OnClosing(e);
         }
     }
 }

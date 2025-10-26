@@ -6,20 +6,51 @@ namespace SpotiffyWidget
 {
     public partial class App : Application
     {
-        internal void UpdateTheme(ApplicationTheme theme)
+        //internal void UpdateTheme(ApplicationTheme theme)
+        //{
+        //    if (ThemeManager.Current.ApplicationTheme != theme)
+        //    {
+        //        ThemeManager.Current.ApplicationTheme = theme;
+        //    }
+        //}
+
+        //internal void UpdateAccent(Brush accent)
+        //{
+        //    if (ThemeManager.Current.AccentColor != accent)
+        //    {
+        //        ThemeManager.Current.AccentColor = accent;
+        //    }
+        //}
+
+        public void SetCustomBlurValue()
         {
-            if (ThemeManager.Current.ApplicationTheme != theme)
-            {
-                ThemeManager.Current.ApplicationTheme = theme;
-            }
+            // DOĞRU KOD:
+            Application.Current.Resources["BlurGradientValue"] = 0x99FF0000u;
         }
 
-        internal void UpdateAccent(Brush accent)
+        // App constructor'ı (veya OnStartup) içine eklemiştin
+        public App()
         {
-            if (ThemeManager.Current.AccentColor != accent)
-            {
-                ThemeManager.Current.AccentColor = accent;
-            }
+            // Constructor'ın olmadığı varsayılan bir proje için OnStartup daha garantidir
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            SetCustomBlurValue(); // İlk açılışta ayarla
+        }
+
+        // Bu metotlar sende zaten vardı
+        internal void UpdateTheme(ApplicationTheme theme)
+        {
+            ThemeManager.Current.ApplicationTheme = theme;
+            SetCustomBlurValue(); // Tema değişince TEKRAR ayarla
+        }
+
+        internal void UpdateAccent(Brush brush)
+        {
+            ThemeManager.Current.AccentColor = brush;
+            SetCustomBlurValue(); // Renk değişince TEKRAR ayarla
         }
     }
 }
