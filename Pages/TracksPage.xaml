@@ -116,9 +116,9 @@
         <Label x:Name="TrackCount" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="11" BorderBrush="{x:Null}" FontWeight="Bold"></Label>
         <StackPanel  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
 
-            <Label x:Name="ArtistName" FontSize="12" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
+            <Label x:Name="ArtistName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
             <Label BorderBrush="{x:Null}" Padding="0,0,0,0"> - </Label>
-            <Label x:Name="AlbumName" FontSize="12" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
+            <Label x:Name="AlbumName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
         </StackPanel>
 
         <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"

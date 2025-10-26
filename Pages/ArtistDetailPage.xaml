@@ -64,7 +64,7 @@
 
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6">
 
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -78,8 +78,9 @@
                         <RowDefinition Height="4*"/>
 
                     </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" VerticalContentAlignment="Center"  Content="Albums"></Label>
+                    
+                    
+                    <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" FontWeight="Bold" BorderBrush="{x:Null}" FontSize="14" VerticalContentAlignment="Center"  Content="Albums"></Label>
                     <Button Grid.Column="0" MaxHeight="30" Click="Button_Click_1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
                         <Button.RenderTransform>
                             <TransformGroup>
@@ -91,7 +92,7 @@
                         </Button.RenderTransform> P
                     </Button>
 
-                    <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1"  VerticalAlignment="Stretch">
+                    <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{StaticResource SecondaryBorderBrush}">
 
                     </Border>
 

@@ -61,7 +61,7 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0">
-                <Image x:Name="Cover"  Stretch="Uniform" />
+                <Image x:Name="Cover"  Stretch="UniformToFill" />
             </Border>
             <Label x:Name="Name" Grid.Column="1" Grid.Row="0" BorderBrush="{x:Null}" Background="Transparent" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,0,10,0"/>
             <Label x:Name="Artist" Grid.Column="1" Grid.Row="1" BorderBrush="{x:Null}" Background="Transparent" FontSize="10" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0"/>

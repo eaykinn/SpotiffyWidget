@@ -129,7 +129,7 @@
             <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center"
                     HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
-                    hc:IconElement.Geometry="{StaticResource LyricsIcon}" />
+                    hc:IconElement.Geometry="{StaticResource LyricsIcon}" Click="LyricsButton_Click" />
             <ToggleButton x:Name="LikeSongButton" Grid.Column="17" Grid.Row="3" VerticalAlignment="Center"
                           HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}"
                           Tag="{StaticResource HeartIcon}" Click="LikeSongButton_Click" />

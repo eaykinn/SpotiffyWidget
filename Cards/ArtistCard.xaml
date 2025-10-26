@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" ClipToBounds="True">
-                <Image x:Name="Cover"  Stretch="Uniform" MaxWidth="109"/>
+                <Image x:Name="Cover"  Stretch="UniformToFill" MaxWidth="109"/>
             </Border>
 
             <Label x:Name="Name" Grid.Column="1" Grid.Row="0" Background="Transparent"  BorderBrush="{x:Null}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,0,10,0"/>

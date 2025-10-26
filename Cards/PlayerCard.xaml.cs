@@ -631,6 +631,27 @@ public partial class PlayerCard : UserControl
     private async void ShowQueueButton_Click(object sender, RoutedEventArgs e)
     {
         var mw = Application.Current.MainWindow as MainWindow;
-        if (mw != null) mw.TabsFrame.Navigate(new TracksPage("", "", 2));
+        if (mw != null)
+            mw.TabsFrame.Navigate(new TracksPage("", "", 2));
+    }
+
+    private async void LyricsButton_Click(object sender, RoutedEventArgs e)
+    {
+        GetLyrics();
+    }
+
+    private async void GetLyrics()
+    {
+        GeniusApi gnApiToken = new GeniusApi();
+        string lyrics = await gnApiToken.SearchSongAsync(
+            SongName.Content.ToString() ?? "",
+            ArtistName.Content.ToString() ?? ""
+        );
+
+        var mw = Application.Current.MainWindow as MainWindow;
+        if (mw != null)
+            mw.TabsFrame.Navigate(
+                new LyricsPage(ArtistName.Content.ToString(), SongName.Content.ToString(), lyrics)
+            );
     }
 }

@@ -282,7 +282,17 @@ namespace SpotiffyWidget.Pages
             }
         }
 
-        private void TracksDoubleClick(object sender, MouseButtonEventArgs e) { }
+        private async void TracksDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var tracksListBoxItem = TracksListBox.SelectedItem as ListBoxItem;
+
+            if (tracksListBoxItem?.Content is TrackCard selectedCard)
+                if (!string.IsNullOrEmpty(selectedCard.TrackUri))
+                {
+                    var trackUris = new[] { selectedCard.TrackUri };
+                    await PlayTrack(trackUris);
+                }
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
