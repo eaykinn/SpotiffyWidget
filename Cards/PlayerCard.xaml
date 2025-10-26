@@ -108,7 +108,7 @@
 
             <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource LyricsIcon}"></Button>
             <ToggleButton x:Name="LikeSongButton" Grid.Column="17" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}" Tag="{StaticResource HeartIcon}" Click="LikeSongButton_Click"></ToggleButton>
-            <Button x:Name="ShowQueueButton" Grid.Column="17" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ShowQueueIcon}"></Button>
+            <Button x:Name="ShowQueueButton" Grid.Column="17" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ShowQueueIcon}" Click="ShowQueueButton_Click"></Button>
             <CheckBox x:Name="StopMusicCB" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Left" Click="StopMusicCB_Click" >
                 <Label Height="20" FontSize="9" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,0,0,0" Content="Stop when session is locked" BorderBrush="{x:Null}" Background="{x:Null}"></Label>
             </CheckBox>

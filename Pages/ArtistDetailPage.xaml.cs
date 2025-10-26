@@ -68,8 +68,8 @@ namespace SpotiffyWidget.Pages
             var mw = Application.Current.MainWindow as MainWindow;
             if (mw != null)
             {
-                if (mw.MainArtistsFrame.CanGoBack)
-                    mw.MainArtistsFrame.GoBack();
+                if (mw.TabsFrame.CanGoBack)
+                    mw.TabsFrame.GoBack();
             }
         }
 

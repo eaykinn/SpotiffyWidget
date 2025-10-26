@@ -39,7 +39,7 @@ namespace SpotiffyWidget.Cards
                 var mw = Application.Current.MainWindow as MainWindow;
                 if (mw != null)
                 {
-                    mw.MainArtistsFrame.Navigate(new TracksPage(Id, ImageUri, true));
+                    mw.TabsFrame.Navigate(new TracksPage(Id, ImageUri, 0));
                     ;
                 }
             }
@@ -49,7 +49,7 @@ namespace SpotiffyWidget.Cards
                 var mw = Application.Current.MainWindow as MainWindow;
                 if (mw != null)
                 {
-                    mw.MainPlayListsFrame.Navigate(new TracksPage(Id, ImageUri, false));
+                    mw.TabsFrame.Navigate(new TracksPage(Id, ImageUri, 1));
                     ;
                 }
             }

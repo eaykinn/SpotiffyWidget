@@ -21,7 +21,8 @@ namespace SpotiffyWidget.SpotifyEndPoints
         public static string Shuffle { get; } = "https://api.spotify.com/v1/me/player/shuffle";
 
         public static string Queue { get; } = "https://api.spotify.com/v1/me/player/queue";
-        public static string SeekToToPosition { get; } = "https://api.spotify.com/v1/me/player/seek";
+        public static string SeekToToPosition { get; } =
+            "https://api.spotify.com/v1/me/player/seek";
 
         public static string Devices { get; } = "https://api.spotify.com/v1/me/player/devices";
         public static string Next { get; } = "https://api.spotify.com/v1/me/player/next";

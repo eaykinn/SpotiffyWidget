@@ -164,7 +164,7 @@
             <cards:PlayerCard x:Name="PlayerCard" Grid.Column="0" Grid.Row="1" />
             <Border Grid.Row="3" Grid.Column="0" CornerRadius="5" Style="{StaticResource BorderRegion}">
 
-                <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"
+                <!--<hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"
                                Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"
                                Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Stretch"
                                SelectionChanged="TabControl_SelectionChanged">
@@ -221,18 +221,19 @@
                     </hc:TabItem>
 
                     <hc:TabItem Header="Artists">
-                               <!-- Sayfa Gösterici -->
+                              
                         <Frame x:Name="MainArtistsFrame" NavigationUIVisibility="Hidden"/>
                       
                     </hc:TabItem>
 
                     <hc:TabItem Header="PlayLists">
-                        <!-- Sayfa Gösterici -->
+                      
                         <Frame x:Name="MainPlayListsFrame" NavigationUIVisibility="Hidden"/>
 
                     </hc:TabItem>
-                </hc:TabControl>
+                </hc:TabControl> -->
 
+                <Frame x:Name="TabsFrame" NavigationUIVisibility="Hidden"/>
             </Border>
 
 

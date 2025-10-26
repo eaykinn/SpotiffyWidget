@@ -13,9 +13,11 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
 using SpotiffyWidget.Cards;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Models;
+using SpotiffyWidget.Properties;
 using SpotiffyWidget.Requests;
 
 namespace SpotiffyWidget.Pages
@@ -26,16 +28,16 @@ namespace SpotiffyWidget.Pages
     public partial class TracksPage : Page
     {
         private bool _isTracksCompactView = false;
-        private bool IsFromAlbum;
+        private int IsFromWhere;
 
-        public TracksPage(string id, string trackImageUri, bool IsAlbum)
+        public TracksPage(string id, string trackImageUri, int IsFromWhere)
         {
-            IsFromAlbum = IsAlbum;
+            this.IsFromWhere = IsFromWhere;
             InitializeComponent();
-            LoadTracks(id, trackImageUri, IsAlbum);
+            LoadTracks(id, trackImageUri, IsFromWhere);
         }
 
-        private async void LoadTracks(string id, string trackImageUri, bool IsAlbum)
+        private async void LoadTracks(string id, string trackImageUri, int IsFromWhere)
         {
             // TODO: Implement track loading logic
             if (!await SpotifyAuth.GrantAccess())
@@ -44,44 +46,66 @@ namespace SpotiffyWidget.Pages
             CancellationService.Reset();
             var cancellationToken = CancellationService.Token;
             var tracks = new List<Track>();
-            if (IsAlbum)
+
+            switch (IsFromWhere)
             {
-                tracks = await AlbumsRequests.GetAlbumTracks(
-                    Properties.Access.Default.AccessToken,
-                    id,
-                    cancellationToken
-                );
+                case 0: // Album
+                {
+                    tracks = await AlbumsRequests.GetAlbumTracks(
+                        Properties.Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
 
-                var album = await AlbumsRequests.GetAlbum(
-                    Properties.Access.Default.AccessToken,
-                    id,
-                    cancellationToken
-                );
+                    var album = await AlbumsRequests.GetAlbum(
+                        Properties.Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
 
-                AlbumName.Content = album.Name;
-                ArtistName.Content = album.Artists.FirstOrDefault().Name;
-            }
-            else
-            {
-                var Profiletracks = await PlayListsRequests.GetPlayListTracks(
-                    Properties.Access.Default.AccessToken,
-                    id,
-                    cancellationToken
-                );
-                var playlist = await PlayListsRequests.GetPlayList(
-                    Properties.Access.Default.AccessToken,
-                    id,
-                    cancellationToken
-                );
+                    AlbumName.Content = album.Name;
+                    ArtistName.Content = album.Artists.FirstOrDefault().Name;
+                    break;
+                }
+                case 1: // Playlist
+                {
+                    var Profiletracks = await PlayListsRequests.GetPlayListTracks(
+                        Properties.Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
+                    var playlist = await PlayListsRequests.GetPlayList(
+                        Properties.Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
 
-                tracks = Profiletracks
-                    .Where(x => x.Track != null)
-                    .Select(pt => pt.Track)
-                    .Take(50)
-                    .ToList();
+                    tracks = Profiletracks
+                        .Where(x => x.Track != null)
+                        .Select(pt => pt.Track)
+                        .Take(50)
+                        .ToList();
 
-                AlbumName.Content = playlist.Name;
-                ArtistName.Content = playlist.Owner.DisplayName;
+                    AlbumName.Content = playlist.Name;
+                    ArtistName.Content = playlist.Owner.DisplayName;
+                    break;
+                }
+                case 2:
+                {
+                    var queue = await PlayerRequests.GetUserQueue(
+                        Access.Default.AccessToken,
+                        cancellationToken
+                    );
+
+                    if (queue.QueueTrack == null)
+                        return;
+                    tracks = queue.QueueTrack.ToList();
+                    tracks = tracks.Where(x => x.Id != null).Take(50).ToList();
+
+                    AlbumName.Content = "Queue";
+                    ArtistName.Content = "User's";
+                    break;
+                }
             }
 
             string ids = string.Join(",", tracks.Select(t => t.Id));
@@ -93,7 +117,10 @@ namespace SpotiffyWidget.Pages
             );
 
             TrackCount.Content = tracks.Count() + " Songs";
-            BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+            if (trackImageUri != "")
+            {
+                BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+            }
 
             foreach (var s in tracks)
             {
@@ -101,7 +128,7 @@ namespace SpotiffyWidget.Pages
 
                 card.Name.Content = s.Name;
 
-                if (IsAlbum)
+                if (IsFromWhere == 1)
                 {
                     card.Artist.Content =
                         $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
@@ -116,7 +143,19 @@ namespace SpotiffyWidget.Pages
 
                 card.TrackUri = s.Uri;
                 card.TrackId = s.Id;
-                card.Cover.Source = imageSource;
+                if (trackImageUri == "")
+                {
+                    BitmapImage img = new BitmapImage(
+                        new Uri(tracks[tracks.IndexOf(s)].Album.Images.FirstOrDefault().Url)
+                    );
+                    card.Cover.Source = img;
+                }
+                else
+                {
+                    BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+                    card.Cover.Source = imageSource;
+                }
+
                 card.IsTrackSaved = tracksSaved[tracks.IndexOf(s)] ? true : false;
                 card.LikeButton.IsChecked = tracksSaved[tracks.IndexOf(s)] ? true : false;
 
@@ -250,16 +289,8 @@ namespace SpotiffyWidget.Pages
             var mw = Application.Current.MainWindow as MainWindow;
             if (mw != null)
             {
-                if (IsFromAlbum)
-                {
-                    if (mw.MainArtistsFrame.CanGoBack)
-                        mw.MainArtistsFrame.GoBack();
-                }
-                else
-                {
-                    if (mw.MainPlayListsFrame.CanGoBack)
-                        mw.MainPlayListsFrame.GoBack();
-                }
+                if (mw.TabsFrame.CanGoBack)
+                    mw.TabsFrame.GoBack();
             }
         }
     }

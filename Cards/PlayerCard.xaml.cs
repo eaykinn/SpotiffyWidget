@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using HandyControl.Controls;
 using HandyControl.Tools.Extension;
 using SpotiffyWidget.Helpers;
+using SpotiffyWidget.Pages;
 using SpotiffyWidget.Properties;
 using SpotiffyWidget.Requests;
 using static HandyControl.Tools.Interop.InteropValues;
@@ -602,18 +603,17 @@ public partial class PlayerCard : UserControl
     private void PreventSleepMode_Click(object sender, RoutedEventArgs e)
     {
         if (PowerModeCB.IsChecked == true)
-        {   
+        {
             PowerHelper.PreventSleep();
             Growl.Info("Sleep Mode Disabled");
-            
         }
         else
         {
             PowerHelper.AllowSleep();
             Growl.Info("Sleep Mode Enabled");
-            
         }
     }
+
     private async void SystemEventHelper_OnSystemEvent(string state)
     {
         Reset();
@@ -648,6 +648,15 @@ public partial class PlayerCard : UserControl
                     uiTimer.Stop();
                 }
                 break;
+        }
+    }
+
+    private async void ShowQueueButton_Click(object sender, RoutedEventArgs e)
+    {
+        var mw = Application.Current.MainWindow as MainWindow;
+        if (mw != null)
+        {
+            mw.TabsFrame.Navigate(new TracksPage("", "", 2));
         }
     }
 }

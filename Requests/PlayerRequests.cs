@@ -93,6 +93,22 @@ namespace SpotiffyWidget.Requests
             return playBackState;
         }
 
+        public static async Task<QueueResponse> GetUserQueue(
+            string accessToken,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Player.Queue;
+            var queue = await SpotifyApiHelper.SendRequestAsync<QueueResponse>(
+                url,
+                accessToken,
+                cancellationToken
+            );
+            if (queue == null)
+                return new QueueResponse();
+            return queue;
+        }
+
         public static async Task<bool> Next(string accessToken, CancellationToken cancellationToken)
         {
             object body = null;
