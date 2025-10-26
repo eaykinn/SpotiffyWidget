@@ -8,27 +8,33 @@
            mc:Ignorable="d"
            Title="Spotify Desktop Widget"
            WindowStartupLocation="CenterScreen"
-           ShowTitle="True"
+           ShowTitle="False"
            Height="770"
            Width="450"
            MinHeight="530"
            MinWidth="400"
+           MaxHeight = "900"
+           MaxWidth = "600"
+          
+           ShowMinButton="False"
+           ShowMaxButton="False"
+
            Icon="/Resources/spwB.ico">
 
 
     <hc:Window.NonClientAreaContent>
-        <Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 
 
-            <Button Grid.Row="0" Click="ChangeTheme" HorizontalAlignment="Left" Margin="20,3,0,3"
+            <Button Click="ChangeTheme" 
                     Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource ConfigGeometry}" />
 
-            <Button Grid.Row="0" Click="ChangeSize" HorizontalAlignment="Right" Margin="20,3,0,3"
+            <Button Click="ChangeSize" Width="36"
                     Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                    hc:IconElement.Geometry="{StaticResource ConfigGeometry}" />
+                    hc:IconElement.Geometry="{StaticResource MinimizeIcon}" />
             
-            <Popup  Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
+            <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
                    HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
                         Effect="{StaticResource EffectShadow2}">
@@ -77,8 +83,10 @@
                     </StackPanel>
                 </Border>
             </Popup>
-        </Grid>
-
+        </StackPanel>
+        
+        
+        
     </hc:Window.NonClientAreaContent>
    
     <hc:Window.Resources>
