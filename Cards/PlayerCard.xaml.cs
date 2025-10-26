@@ -106,7 +106,7 @@ public partial class PlayerCard : UserControl
                     IconElement.SetGeometry(PlayPauseButton, geometry);
                 }
 
-                if (playBackState.Track.Id != null)
+                if (playBackState.Track != null)
                 {
                     TrackId = playBackState.Track.Id;
                     var response = await TracksRequests.CheckTracksIsSaved(

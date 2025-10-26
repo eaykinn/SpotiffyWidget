@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using HandyControl.Controls;
 using HandyControl.Data;
@@ -13,6 +16,8 @@ namespace SpotiffyWidget
 {
     public partial class MainWindow
     {
+        private bool _isMiniSize = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -97,6 +102,30 @@ namespace SpotiffyWidget
             );
 
             base.OnClosing(e);
+        }
+
+        private async void ChangeSize(object sender, RoutedEventArgs e)
+        {
+            await Dispatcher.InvokeAsync(() =>
+            {
+                this.Height = 120;
+                this.Width = 360;
+                this.MaxHeight = 120;
+                this.MaxWidth = 360;
+                this.MinHeight = 120;
+                this.MinWidth = 360;
+                MiniPlayerBorder.Height = 110;
+                MiniPlayerBorder.Width = 350;
+                PlayerRow.MinHeight = 0;
+                TabRow.MinHeight = 0;
+                PlayerBorder.Visibility = Visibility.Collapsed;
+                MiniPlayerBorder.Visibility = Visibility.Visible;
+                MiniPlayerBorder.Padding = new Thickness(0.0, 0.0, 0.0, 0.0);
+                TabsBorder.Visibility = Visibility.Collapsed;
+
+                this.ShowNonClientArea = false;
+            });
+            _isMiniSize = true;
         }
     }
 }
