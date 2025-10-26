@@ -25,7 +25,7 @@ namespace SpotiffyWidget
         public void SetCustomBlurValue()
         {
             // DOĞRU KOD:
-            Application.Current.Resources["BlurGradientValue"] = 0x99FF0000u;
+            Application.Current.Resources["BlurGradientValue"] = 0x66333333u;
         }
 
         // App constructor'ı (veya OnStartup) içine eklemiştin
