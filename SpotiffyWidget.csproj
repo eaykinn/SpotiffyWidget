@@ -11,6 +11,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <LangVersion>latest</LangVersion>
+    <ApplicationIcon>Resources\spwB.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;Core</DefineConstants>
@@ -19,10 +20,20 @@
     <DefineConstants>TRACE;Core</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\spwB.ico" />
+    <None Remove="Resources\spwS.ico" />
+    <None Remove="Resources\spwSS.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="HandyControls" Version="3.6.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NPSMLib" Version="0.9.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\spwB.ico" />
+    <Resource Include="Resources\spwS.ico" />
+    <Resource Include="Resources\spwSS.ico" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Cards\PlayerCard.xaml.cs">

@@ -13,7 +13,8 @@
            Width="450"
            MinWidth="400"
            MinHeight="470"
-           WindowStyle="None">
+           WindowStyle="None"
+           Icon="/Resources/spwB.ico">
     <hc:Window.NonClientAreaContent>
         <Grid>
 
