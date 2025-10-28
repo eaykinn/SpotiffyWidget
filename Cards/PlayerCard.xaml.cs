@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using HandyControl.Controls;
+using HandyControl.Data;
 using SpotiffyWidget.Helpers;
 using SpotiffyWidget.Pages;
 using SpotiffyWidget.Properties;
@@ -29,10 +30,9 @@ public partial class PlayerCard : UserControl
     public PlayerCard()
     {
         InitializeComponent();
-        Loaded += PlayerCard_Loaded;
     }
 
-    private async void PlayerCard_Loaded(object sender, RoutedEventArgs e)
+    private async void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         uiTimer.Interval = TimeSpan.FromMilliseconds(700);
         uiTimer.Tick += UpdateSongInfo;
@@ -40,6 +40,15 @@ public partial class PlayerCard : UserControl
 
         await Task.Delay(1000);
         await GetPlayBackStateAsync();
+
+        if (Properties.UserSettings.Default.CloseOnShutDown)
+        {
+            StopMusicCB.IsChecked = true;
+            StopMusic(true);
+        }
+
+        if (Properties.UserSettings.Default.PreventSleepMode)
+            PowerModeCB.IsChecked = true;
     }
 
     public async Task GetPlayBackStateAsync()
@@ -564,29 +573,58 @@ public partial class PlayerCard : UserControl
     private void StopMusicCB_Click(object sender, RoutedEventArgs e)
     {
         if (StopMusicCB.IsChecked == true)
+            StopMusic(true);
+        else
+            StopMusic(false);
+    }
+
+    private void StopMusic(bool isTrue)
+    {
+        if (isTrue)
         {
             SystemEventHelper.StartListening();
             SystemEventHelper.OnSystemEvent += SystemEventHelper_OnSystemEvent;
+
+            Properties.UserSettings.Default.CloseOnShutDown = true;
         }
         else
         {
             SystemEventHelper.OnSystemEvent -= SystemEventHelper_OnSystemEvent;
             SystemEventHelper.StopListening();
+
+            Properties.UserSettings.Default.CloseOnShutDown = false;
         }
+
+        Properties.UserSettings.Default.Save();
     }
 
     private void PreventSleepMode_Click(object sender, RoutedEventArgs e)
     {
         if (PowerModeCB.IsChecked == true)
         {
+            PreventSleepMode(true);
+        }
+        else
+        {
+            PreventSleepMode(false);
+        }
+    }
+
+    private void PreventSleepMode(bool isTrue)
+    {
+        if (isTrue)
+        {
             PowerHelper.PreventSleep();
             Growl.Info("Sleep Mode Disabled");
+            Properties.UserSettings.Default.PreventSleepMode = true;
         }
         else
         {
             PowerHelper.AllowSleep();
             Growl.Info("Sleep Mode Enabled");
+            Properties.UserSettings.Default.PreventSleepMode = false;
         }
+        Properties.UserSettings.Default.Save();
     }
 
     private async void SystemEventHelper_OnSystemEvent(string state)
@@ -653,5 +691,22 @@ public partial class PlayerCard : UserControl
             mw.TabsFrame.Navigate(
                 new LyricsPage(ArtistName.Content.ToString(), SongName.Content.ToString(), lyrics)
             );
+    }
+
+    private void MenuItem_Click(object sender, RoutedEventArgs e) { }
+
+    private void DownloadMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        string imageName = NPSMLibFunctions.ArtistName + "_" + NPSMLibFunctions.AlbumName + ".png";
+        string path = "C:\\Users\\USER\\Downloads\\" + imageName;
+
+        if (SaveImageSource.SaveImage(NPSMLibFunctions.Image, @path))
+        {
+            Growl.Info("Image donwloaded.");
+        }
+        else
+        {
+            Growl.Warning("Image donwloading failed.");
+        }
     }
 }

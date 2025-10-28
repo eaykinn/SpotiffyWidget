@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,9 +22,61 @@ namespace SpotiffyWidget
         public MainWindow()
         {
             InitializeComponent();
-            TabsFrame.Navigate(new TabsPage());
-            var app = (App)Application.Current;
-            app.SetCustomBlurValue(); // Uygulama başlatıldığında bulanıklık
+
+            Growl.SetGrowlParent(this, true);
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                TabsFrame.Navigate(new TabsPage());
+                var app = (App)Application.Current;
+                //app.SetCustomBlurValue(); // Uygulama başlatıldığında bulanıklık
+                await WindowLoaded();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+        }
+
+        private async Task WindowLoaded()
+        {
+            var accentColor = ColorConverterHelper.ToSolidColorBrush(
+                Properties.UserSettings.Default.AccentColor
+            );
+            ((App)Application.Current).UpdateAccent(accentColor);
+
+            if (Properties.UserSettings.Default.Theme == "Dark")
+            {
+                ((App)Application.Current).UpdateTheme(ApplicationTheme.Dark);
+            }
+            else
+            {
+                ((App)Application.Current).UpdateTheme(ApplicationTheme.Light);
+            }
+
+            if (!Properties.UserSettings.Default.AppSize)
+                await ChangeToMiniSize();
+
+            if (Properties.UserSettings.Default.OpenSpotifyAtStart)
+            {
+                OpenSpotifyCB.IsChecked = true;
+                Process.Start("spotify.exe");
+            }
+
+            if (Properties.UserSettings.Default.AllwaysOnTop)
+            {
+                AlwaysOnTopCB.IsChecked = true;
+                this.Topmost = true;
+            }
+
+            if (Properties.UserSettings.Default.PlaceOnDesktop)
+            {
+                PlaceOnDesktopCB.IsChecked = true;
+                DesktopHelper.SetAsDesktopChild(this);
+            }
         }
 
         #region Change Theme
@@ -36,10 +89,17 @@ namespace SpotiffyWidget
                 if (button.Tag is ApplicationTheme tag)
                 {
                     ((App)Application.Current).UpdateTheme(tag);
+                    Properties.UserSettings.Default.Theme = tag.ToString();
+                    Properties.UserSettings.Default.Save();
                 }
                 else if (button.Tag is Brush accentTag)
                 {
                     ((App)Application.Current).UpdateAccent(accentTag);
+
+                    SolidColorBrush solidBrush = accentTag as SolidColorBrush;
+                    Properties.UserSettings.Default.AccentColor =
+                        ColorConverterHelper.ToDrawingColor(solidBrush);
+                    Properties.UserSettings.Default.Save();
                 }
                 else if (button.Tag is "Picker")
                 {
@@ -50,7 +110,6 @@ namespace SpotiffyWidget
                         WindowStartupLocation = WindowStartupLocation.CenterScreen,
                         AllowsTransparency = true,
                         WindowStyle = WindowStyle.None,
-
                         MinWidth = 0,
                         MinHeight = 0,
                         Title = "Select Accent Color",
@@ -59,6 +118,9 @@ namespace SpotiffyWidget
                     picker.Confirmed += delegate
                     {
                         ((App)Application.Current).UpdateAccent(picker.SelectedBrush);
+                        Properties.UserSettings.Default.AccentColor =
+                            ColorConverterHelper.ToDrawingColor(picker.SelectedBrush);
+                        Properties.UserSettings.Default.Save();
                         window.Close();
                     };
                     picker.Canceled += delegate
@@ -93,40 +155,117 @@ namespace SpotiffyWidget
             // Pencereyi gizle
             this.Hide();
 
-            // Baloncuk bildirimi göster (isteğe bağlı)
-            NotifyIcon.ShowBalloonTip(
-                "Spotify Widget",
-                "App running background...",
-                NotifyIconInfoType.Info,
-                "TrayIcon"
+            Growl.InfoGlobal(
+                new GrowlInfo
+                {
+                    Message = "Spotify Widget running background...",
+                    ShowDateTime = true,
+                    StaysOpen = false,
+                    WaitTime = 3,
+                    Token = "MainWindow",
+                }
             );
 
             base.OnClosing(e);
         }
 
-        private async void ChangeSize(object sender, RoutedEventArgs e)
+        private async void ChangeSizeClick(object sender, RoutedEventArgs e)
         {
-            await Dispatcher.InvokeAsync(() =>
-            {
-                this.Height = 120;
-                this.Width = 360;
-                this.MaxHeight = 120;
-                this.MaxWidth = 360;
-                this.MinHeight = 120;
-                this.MinWidth = 360;
-                MiniPlayerBorder.Height = 110;
-                MiniPlayerBorder.Width = 350;
-                PlayerRow.MinHeight = 0;
-                TabRow.MinHeight = 0;
-                PlayerBorder.Visibility = Visibility.Collapsed;
-                MiniPlayerBorder.Visibility = Visibility.Visible;
-                MiniPlayerBorder.Padding = new Thickness(0.0, 0.0, 0.0, 0.0);
-                TabsBorder.Visibility = Visibility.Collapsed;
-                this.Topmost = true;
+            await ChangeToMiniSize();
+        }
 
-                this.ShowNonClientArea = false;
-            });
+        private async Task ChangeToMiniSize()
+        {
+            //this.Height = 120;
+            //this.Width = 360;
+            //this.MaxHeight = 120;
+            //this.MaxWidth = 360;
+            //this.MinHeight = 120;
+            //this.MinWidth = 360;
+            //MiniPlayerBorder.Height = 110;
+            //MiniPlayerBorder.Width = 350;
+            //PlayerRow.MinHeight = 0;
+            //TabRow.MinHeight = 0;
+            //PlayerBorder.Visibility = Visibility.Collapsed;
+            //MiniPlayerBorder.Visibility = Visibility.Visible;
+            //MiniPlayerBorder.Padding = new Thickness(0.0, 0.0, 0.0, 0.0);
+            //TabsBorder.Visibility = Visibility.Collapsed;
+            //this.Topmost = true;
+
+            //this.ShowNonClientArea = false;
+
+            //this.UpdateLayout();
+            //this.InvalidateVisual();
+
+            var currentState = this.WindowState;
+            this.WindowState = WindowState.Minimized;
+
+            this.Height = 120;
+            this.Width = 360;
+            this.MaxHeight = 120;
+            this.MaxWidth = 360;
+            this.MinHeight = 120;
+            this.MinWidth = 360;
+            MiniPlayerBorder.Height = 110;
+            MiniPlayerBorder.Width = 350;
+            PlayerRow.MinHeight = 0;
+            TabRow.MinHeight = 0;
+            PlayerBorder.Visibility = Visibility.Collapsed;
+            MiniPlayerBorder.Visibility = Visibility.Visible;
+            MiniPlayerBorder.Padding = new Thickness(0.0);
+            TabsBorder.Visibility = Visibility.Collapsed;
+            this.Topmost = true;
+            this.ShowNonClientArea = false;
+
+            await Task.Delay(100);
+            this.WindowState = currentState;
+
             _isMiniSize = true;
+            Properties.UserSettings.Default.AppSize = false;
+            Properties.UserSettings.Default.Save();
+        }
+
+        private void PlaceOnDesktopCB_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlaceOnDesktopCB.IsChecked == true)
+            {
+                DesktopHelper.SetAsDesktopChild(this);
+                Properties.UserSettings.Default.PlaceOnDesktop = true;
+            }
+            else
+            {
+                Properties.UserSettings.Default.PlaceOnDesktop = false;
+            }
+            Properties.UserSettings.Default.Save();
+        }
+
+        private void OpenSpotifyCB_Click(object sender, RoutedEventArgs e)
+        {
+            if (OpenSpotifyCB.IsChecked == true)
+            {
+                Properties.UserSettings.Default.OpenSpotifyAtStart = true;
+            }
+            else
+            {
+                Properties.UserSettings.Default.OpenSpotifyAtStart = false;
+            }
+
+            Properties.UserSettings.Default.Save();
+        }
+
+        private void AlwaysOnTopCB_Click(object sender, RoutedEventArgs e)
+        {
+            if (AlwaysOnTopCB.IsChecked == true)
+            {
+                this.Topmost = true;
+                Properties.UserSettings.Default.AllwaysOnTop = true;
+            }
+            else
+            {
+                this.Topmost = false;
+                Properties.UserSettings.Default.AllwaysOnTop = true;
+            }
+            Properties.UserSettings.Default.Save();
         }
     }
 }

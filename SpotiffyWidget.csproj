@@ -50,11 +50,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Access.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\UserSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserSettings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\Access.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Access.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\UserSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>

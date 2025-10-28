@@ -19,21 +19,35 @@
            ShowMinButton="False"
            ShowMaxButton="False"
 
-           Icon="/Resources/spwB.ico">
+           Icon="/Resources/spwB.ico" Loaded="Window_Loaded">
 
 
     <hc:Window.NonClientAreaContent>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+            <Menu Padding="10,0,0,0">
+                <MenuItem  Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}">
+                    <MenuItem.Icon>
+                        <Viewbox>
+                            <Path Data="{DynamicResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
+                        </Viewbox>
+                    </MenuItem.Icon>
 
-
+                    <MenuItem Header="View Settings">
+                        <CheckBox x:Name="AlwaysOnTopCB" Click="AlwaysOnTopCB_Click" >Always On Top</CheckBox>
+                        <CheckBox x:Name="PlaceOnDesktopCB" Click="PlaceOnDesktopCB_Click">Place On Desktop</CheckBox>
+                       
+                    </MenuItem>
+                    <CheckBox x:Name="OpenSpotifyCB" Click="OpenSpotifyCB_Click">Open Spotify at Start</CheckBox>
+                </MenuItem>
+  
+            </Menu>
             <Button Click="ChangeTheme" 
-                    Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                    hc:IconElement.Geometry="{StaticResource ConfigGeometry}" />
+                   Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                   hc:IconElement.Geometry="{StaticResource PaletteIcon}" />
 
-            <Button Click="ChangeSize" Width="36"
-                    Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                    hc:IconElement.Geometry="{StaticResource MinimizeIcon}" />
-            
+            <Button Click="ChangeSizeClick" Width="36"
+                   Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                   hc:IconElement.Geometry="{StaticResource MinimizeIcon}" />
             <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
                    HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
                 <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
@@ -62,7 +76,7 @@
                             </Button>
                             <Button Tag="{Binding ElementName=warningBorder, Path=Background}"
                                     Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
-                                <Border Name="warningBorder" Background="{DynamicResource WarningBrush}" Width="32"
+                                <Border Name="warningBorder" Background="Orange" Width="32"
                                         Height="21" CornerRadius="2" BorderThickness="1"
                                         BorderBrush="{DynamicResource BorderBrush}" />
                             </Button>
@@ -74,7 +88,7 @@
                             </Button>
                             <Button Tag="{Binding ElementName=successBorder, Path=Background}"
                                     Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
-                                <Border Name="successBorder" Background="{DynamicResource SuccessBrush}" Width="32"
+                                <Border Name="successBorder" Background="ForestGreen" Width="32"
                                         Height="21" CornerRadius="2" BorderThickness="1"
                                         BorderBrush="{DynamicResource BorderBrush}" />
                             </Button>

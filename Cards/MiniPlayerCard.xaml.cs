@@ -38,10 +38,9 @@ namespace SpotiffyWidget.Cards
         public MiniPlayerCard()
         {
             InitializeComponent();
-            Loaded += PlayerCard_Loaded;
         }
 
-        private async void PlayerCard_Loaded(object sender, RoutedEventArgs e)
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             uiTimer.Interval = TimeSpan.FromMilliseconds(700);
             uiTimer.Tick += UpdateSongInfo;
@@ -587,6 +586,9 @@ namespace SpotiffyWidget.Cards
                 mainw.ShowNonClientArea = true;
                 mainw.Topmost = false;
             });
+
+            Properties.UserSettings.Default.AppSize = true;
+            Properties.UserSettings.Default.Save();
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
