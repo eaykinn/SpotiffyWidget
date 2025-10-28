@@ -38,7 +38,7 @@ public partial class PlayerCard : UserControl
         uiTimer.Tick += UpdateSongInfo;
         uiTimer.Start();
 
-        await Task.Delay(1000);
+        await Task.Delay(3000);
         await GetPlayBackStateAsync();
 
         if (Properties.UserSettings.Default.CloseOnShutDown)

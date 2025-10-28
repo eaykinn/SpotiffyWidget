@@ -46,7 +46,7 @@ namespace SpotiffyWidget.Cards
             uiTimer.Tick += UpdateSongInfo;
             uiTimer.Start();
 
-            await Task.Delay(1000);
+            await Task.Delay(6000);
             await GetPlayBackStateAsync();
         }
 

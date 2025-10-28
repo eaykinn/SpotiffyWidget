@@ -22,8 +22,6 @@ namespace SpotiffyWidget
         public MainWindow()
         {
             InitializeComponent();
-
-            Growl.SetGrowlParent(this, true);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)

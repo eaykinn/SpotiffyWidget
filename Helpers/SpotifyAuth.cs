@@ -55,8 +55,8 @@ namespace SpotiffyWidget.Helpers
                 + $"&response_type=code"
                 + $"&redirect_uri={Uri.EscapeDataString(redirectUri)}"
                 + $"&scope={Uri.EscapeDataString(scopes)}"
-                + $"&code_challenge={codeChallenge}"                 // Eklendi
-                + $"&code_challenge_method={codeChallengeMethod}";   // Eklendi
+                + $"&code_challenge={codeChallenge}" // Eklendi
+                + $"&code_challenge_method={codeChallengeMethod}"; // Eklendi
 
             Console.WriteLine("Go to this URL and authorize the application:");
             ProcessStartInfo linkx = new(authorizationUrl) { UseShellExecute = true };
@@ -117,13 +117,16 @@ namespace SpotiffyWidget.Helpers
                         new KeyValuePair<string, string>("grant_type", "authorization_code"),
                         new KeyValuePair<string, string>("code", code),
                         new KeyValuePair<string, string>("redirect_uri", redirectUri),
-                        new KeyValuePair<string, string>("client_id", Resources.ClientCredentials.ClientId), // Eklendi
-                        new KeyValuePair<string, string>("code_verifier", _pkceCodeVerifier) // Eklendi
+                        new KeyValuePair<string, string>(
+                            "client_id",
+                            Resources.ClientCredentials.ClientId
+                        ), // Eklendi
+                        new KeyValuePair<string, string>("code_verifier", _pkceCodeVerifier), // Eklendi
                     }
                 );
-                
+
                 // Kullanıldıktan sonra verifier'ı temizle
-                _pkceCodeVerifier = null; 
+                _pkceCodeVerifier = null;
                 // -------------------------------------------------
 
                 var response = await client.PostAsync(SpotifyEndPoints.Auth.TokenUrl, content);
@@ -168,7 +171,10 @@ namespace SpotiffyWidget.Helpers
                     {
                         new KeyValuePair<string, string>("grant_type", "refresh_token"),
                         new KeyValuePair<string, string>("refresh_token", refreshToken),
-                        new KeyValuePair<string, string>("client_id", Resources.ClientCredentials.ClientId) // Eklendi
+                        new KeyValuePair<string, string>(
+                            "client_id",
+                            Resources.ClientCredentials.ClientId
+                        ), // Eklendi
                     }
                 );
                 // -------------------------------------------------
@@ -296,7 +302,6 @@ namespace SpotiffyWidget.Helpers
             return true;
         }
 
-
         // --- PKCE için Gerekli Yardımcı Metodlar ---
         // Bu 3 metodu sınıfınızın içine (en alta) ekleyin.
 
@@ -331,10 +336,7 @@ namespace SpotiffyWidget.Helpers
         /// </summary>
         private static string Base64UrlEncode(byte[] input)
         {
-            return Convert.ToBase64String(input)
-                .Replace('+', '-')
-                .Replace('/', '_')
-                .TrimEnd('=');
+            return Convert.ToBase64String(input).Replace('+', '-').Replace('/', '_').TrimEnd('=');
         }
     }
 }
