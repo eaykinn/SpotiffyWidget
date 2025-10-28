@@ -186,7 +186,7 @@
                        StaysOpen="False"
                        Placement="Top"
                        PopupAnimation="Scroll"
-                      
+                       AllowsTransparency="True"
                        PlacementTarget="{Binding ElementName=VolumeButton}">
                     <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch"
                             Background="{DynamicResource SecondaryRegionBrush}" HorizontalAlignment="Stretch"
