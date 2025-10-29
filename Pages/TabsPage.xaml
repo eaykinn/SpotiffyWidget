@@ -6,6 +6,7 @@
       xmlns:hc="https://handyorg.github.io/handycontrol"
       xmlns:local="clr-namespace:SpotiffyWidget.Pages"
       mc:Ignorable="d" 
+  
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TabsPage">
     <Page.Resources>
@@ -53,7 +54,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                                <Setter TargetName="Bd" Property="Background" Value="#10000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
@@ -70,85 +71,87 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
-        <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"
-               Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"
-               Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Stretch"
-               SelectionChanged="TabControl_SelectionChanged">
-            <hc:TabItem Header="Tracks">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" MinHeight="40" />
-                        <RowDefinition Height="1*" MinHeight="30"/>
-                        <RowDefinition Height="10*" />
-                    </Grid.RowDefinitions>
+    <Border Background="#10000000" BorderBrush="{x:Null}" CornerRadius="10">
+        <Grid>
+            <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"  Background="Transparent" BorderBrush="{x:Null}"
+                   Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"
+                   Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Stretch"
+                   SelectionChanged="TabControl_SelectionChanged">
+                <hc:TabItem Header="Tracks"  Background="Transparent">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" MinHeight="40" />
+                            <RowDefinition Height="1*" MinHeight="30"/>
+                            <RowDefinition Height="10*" />
+                        </Grid.RowDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
 
-                    </Grid.ColumnDefinitions>
+                        </Grid.ColumnDefinitions>
 
-                    <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade"
-                                            Grid.Column="0" Grid.Row="3" Panel.ZIndex="11" Grid.ColumnSpan="6">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
-                            <TextBlock Text="Loading..."
-                               Margin="0,0,0,0"
-                               FontSize="14"
-                               HorizontalAlignment="Center" />
+                        <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade"
+                                                Grid.Column="0" Grid.Row="3" Panel.ZIndex="11" Grid.ColumnSpan="6">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
+                                <TextBlock Text="Loading..."
+                                   Margin="0,0,0,0"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                            </StackPanel>
+                        </hc:TransitioningContentControl>
+                        <StackPanel Background="Transparent" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left"
+                            VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
+                            <hc:ButtonGroup x:Name="TrackRadioButton" Style="{StaticResource ButtonGroupSolid}">
+                                <RadioButton x:Name="MyTracks" FontSize="11" Padding="5,0,5,0"
+                                     Click="TracksRadioButton_Click">
+                                    My Tracks
+                                </RadioButton>
+                                <RadioButton x:Name="MyTopTracks" FontSize="11" Padding="5,0,5,0"
+                                     Click="TracksRadioButton_Click">
+                                    My Top Tracks
+                                </RadioButton>
+
+                            </hc:ButtonGroup>
+
                         </StackPanel>
-                    </hc:TransitioningContentControl>
-                    <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left"
-                        VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
-                        <hc:ButtonGroup x:Name="TrackRadioButton" Style="{StaticResource ButtonGroupSolid}">
-                            <RadioButton x:Name="MyTracks" FontSize="11" Padding="5,0,5,0"
-                                 Click="TracksRadioButton_Click">
-                                My Tracks
-                            </RadioButton>
-                            <RadioButton x:Name="MyTopTracks" FontSize="11" Padding="5,0,5,0"
-                                 Click="TracksRadioButton_Click">
-                                My Top Tracks
-                            </RadioButton>
 
-                        </hc:ButtonGroup>
+                        <StackPanel Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Background="Transparent"
+                            VerticalAlignment="Center" Orientation="Horizontal" Grid.ColumnSpan="4"
+                            Margin="10,3,10,3">
+                            <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center" Background="Transparent" 
+                                  Padding="5,0,5,0" Margin="10,0,0,0"
+                                  SearchStarted="TrackSearchBar_SearchStarted" />
+                            <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
+                            Margin="5,3,0,3">
 
-                    </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
+                        <ListBox  Background="Transparent" BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
+                         Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
+                         MouseDoubleClick="TracksDoubleClick"
+                         ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
+                    </Grid>
+                </hc:TabItem>
 
-                    <StackPanel Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right"
-                        VerticalAlignment="Center" Orientation="Horizontal" Grid.ColumnSpan="4"
-                        Margin="10,3,10,3">
-                        <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center"
-                              Padding="5,0,5,0" Margin="10,0,0,0"
-                              SearchStarted="TrackSearchBar_SearchStarted" />
-                        <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
-                        Margin="5,3,0,3">
+                <hc:TabItem Header="Artists" Background="Transparent">
+                    <!-- Sayfa Gösterici -->
+                    <Frame x:Name="MainArtistsFrame" NavigationUIVisibility="Hidden" Background="Transparent" BorderBrush="{x:Null}"/>
 
-                        </Button>
-                    </StackPanel>
-                    <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
-                    <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
-                     Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
-                     MouseDoubleClick="TracksDoubleClick"
-                     ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
-                </Grid>
-            </hc:TabItem>
+                </hc:TabItem>
 
-            <hc:TabItem Header="Artists">
-                <!-- Sayfa Gösterici -->
-                <Frame x:Name="MainArtistsFrame" NavigationUIVisibility="Hidden"/>
+                <hc:TabItem Header="PlayLists" Background="Transparent">
+                    <!-- Sayfa Gösterici -->
+                    <Frame x:Name="MainPlayListsFrame" NavigationUIVisibility="Hidden" Background="Transparent" BorderBrush="{x:Null}"/>
 
-            </hc:TabItem>
-
-            <hc:TabItem Header="PlayLists">
-                <!-- Sayfa Gösterici -->
-                <Frame x:Name="MainPlayListsFrame" NavigationUIVisibility="Hidden"/>
-
-            </hc:TabItem>
-        </hc:TabControl>
-    </Grid>
+                </hc:TabItem>
+            </hc:TabControl>
+        </Grid>
+    </Border>
 </Page>

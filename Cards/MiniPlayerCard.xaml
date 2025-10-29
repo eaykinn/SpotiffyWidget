@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SpotiffyWidget.Cards"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              MaxHeight="110"
+             Background="Transparent"
              MaxWidth="350"
              mc:Ignorable="d" Loaded="UserControl_Loaded" IsVisibleChanged="UserControl_IsVisibleChanged">
 
@@ -47,6 +48,8 @@
     <Border Margin="0"
         Padding="0"
         CornerRadius="10"
+        Background="Transparent"
+        BorderBrush="{x:Null}"
         HorizontalAlignment="Stretch" >
         <Grid MouseLeftButtonDown="Border_MouseDown" Background="Transparent">
             <Grid.ColumnDefinitions>
@@ -86,10 +89,10 @@
             </Border>
             <StackPanel Grid.Column="5" Grid.Row="0" Grid.ColumnSpan="13" Grid.RowSpan="2" Orientation="Vertical" HorizontalAlignment="Left" >
 
-                <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left" 
+                <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left"  Background="Transparent"
                    FontSize="13" FontWeight="Bold" Padding="5,10,0,0" />
 
-                <Label x:Name="ArtistName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left"
+                <Label x:Name="ArtistName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="Transparent"
                    FontSize="11" FontWeight="Bold" Padding="5,0,0,1" />
               
             </StackPanel >

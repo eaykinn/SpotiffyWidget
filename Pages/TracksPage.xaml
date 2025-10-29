@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:SpotiffyWidget.Pages"
        xmlns:hc="https://handyorg.github.io/handycontrol"
       mc:Ignorable="d" 
+      Background="#10000000"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TracksPage">
     <Page.Resources>
@@ -53,7 +54,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                                <Setter TargetName="Bd" Property="Background" Value="#10000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
@@ -85,6 +86,18 @@
             <ColumnDefinition Width="1*" />
 
         </Grid.ColumnDefinitions>
+
+        <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Grid.Column="0" Grid.Row="0" Panel.ZIndex="11" Grid.ColumnSpan="6" Grid.RowSpan="3">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
+                <TextBlock Text="Loading..."
+                         Margin="0,0,0,0"
+                         FontSize="14"
+                         HorizontalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" />
+            </StackPanel>
+        </hc:TransitioningContentControl>
+        
         <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left"
                 VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
 
@@ -93,7 +106,7 @@
         <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right"
                 VerticalAlignment="Center" Orientation="Horizontal" Grid.ColumnSpan="4"
                 Margin="10,3,10,3">
-            <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center"
+            <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center" Background="Transparent"
                       Padding="5,0,5,0" Margin="10,0,0,0"
                       SearchStarted="TrackSearchBar_SearchStarted" />
             <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
@@ -113,15 +126,15 @@
         </Button>
 
         <Button x:Name="TrackPlayButton" Padding="0,0,0,0" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource PlayIcon}" Click="TrackPlayButton_Click"/>
-        <Label x:Name="TrackCount" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="11" BorderBrush="{x:Null}" FontWeight="Bold"></Label>
+        <Label x:Name="TrackCount" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="11" BorderBrush="{x:Null}" FontWeight="Bold" Background="Transparent"></Label>
         <StackPanel  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
 
-            <Label x:Name="ArtistName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
-            <Label BorderBrush="{x:Null}" Padding="0,0,0,0"> - </Label>
-            <Label x:Name="AlbumName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0"></Label>
+            <Label x:Name="ArtistName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0" Background="Transparent"></Label>
+            <Label BorderBrush="{x:Null}" Padding="0,0,0,0" Background="Transparent"> - </Label>
+            <Label x:Name="AlbumName" FontSize="13" FontWeight="Bold" BorderBrush="{x:Null}" Padding="0,0,0,0" Background="Transparent"></Label>
         </StackPanel>
 
-        <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0"
+        <ListBox BorderBrush="Transparent" Grid.Row="2" Grid.ColumnSpan="6" Margin="0,0,0,0" Background="Transparent"
              Padding="0,0,0,0" HorizontalContentAlignment="Stretch" x:Name="TracksListBox"
              MouseDoubleClick="TracksDoubleClick"
              ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />

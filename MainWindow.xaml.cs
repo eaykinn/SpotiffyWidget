@@ -30,7 +30,7 @@ namespace SpotiffyWidget
             {
                 TabsFrame.Navigate(new TabsPage());
                 var app = (App)Application.Current;
-                //app.SetCustomBlurValue(); // Uygulama başlatıldığında bulanıklık
+
                 await WindowLoaded();
             }
             catch (Exception ex)
@@ -46,6 +46,9 @@ namespace SpotiffyWidget
                 Properties.UserSettings.Default.AccentColor = System.Drawing.Color.BlueViolet;
             }
 
+            bool trasp = Properties.UserSettings.Default.Transparency;
+            int mica = Properties.UserSettings.Default.MicaEffect;
+
             var accentColor = ColorConverterHelper.ToSolidColorBrush(
                 Properties.UserSettings.Default.AccentColor
             );
@@ -54,10 +57,24 @@ namespace SpotiffyWidget
             if (Properties.UserSettings.Default.Theme == "Dark")
             {
                 ((App)Application.Current).UpdateTheme(ApplicationTheme.Dark);
+
+                BlurHelper.EnableMicaEffect(this, 1, mica);
             }
             else
             {
                 ((App)Application.Current).UpdateTheme(ApplicationTheme.Light);
+                BlurHelper.EnableMicaEffect(this, 0, mica);
+            }
+
+            if (trasp)
+            {
+                this.Background = Brushes.Transparent;
+                AllowTransparency.IsChecked = true;
+            }
+            else
+            {
+                this.ClearValue(BackgroundProperty);
+                AllowTransparency.IsChecked = false;
             }
 
             if (!Properties.UserSettings.Default.AppSize)
@@ -74,11 +91,35 @@ namespace SpotiffyWidget
                 AlwaysOnTopCB.IsChecked = true;
                 this.Topmost = true;
             }
+            else
+            {
+                AlwaysOnTopCB.IsChecked = false;
+                this.Topmost = false;
+            }
 
             if (Properties.UserSettings.Default.PlaceOnDesktop)
             {
                 PlaceOnDesktopCB.IsChecked = true;
                 DesktopHelper.SetAsDesktopChild(this);
+            }
+
+            switch (mica)
+            {
+                case 1:
+                {
+                    Mica.IsChecked = true;
+                    break;
+                }
+                case 2:
+                {
+                    MicaAlt.IsChecked = true;
+                    break;
+                }
+                case 3:
+                {
+                    Acrylic.IsChecked = true;
+                    break;
+                }
             }
         }
 
@@ -88,12 +129,23 @@ namespace SpotiffyWidget
         {
             if (e.OriginalSource is Button button)
             {
+                int mica = Properties.UserSettings.Default.MicaEffect;
+
                 PopupConfig.IsOpen = false; // Close popup after a selection
                 if (button.Tag is ApplicationTheme tag)
                 {
                     ((App)Application.Current).UpdateTheme(tag);
                     Properties.UserSettings.Default.Theme = tag.ToString();
                     Properties.UserSettings.Default.Save();
+
+                    if (Properties.UserSettings.Default.Theme == "Dark")
+                    {
+                        BlurHelper.EnableMicaEffect(this, 1, mica);
+                    }
+                    else
+                    {
+                        BlurHelper.EnableMicaEffect(this, 0, mica);
+                    }
                 }
                 else if (button.Tag is Brush accentTag)
                 {
@@ -181,27 +233,6 @@ namespace SpotiffyWidget
 
         private async Task ChangeToMiniSize()
         {
-            //this.Height = 120;
-            //this.Width = 360;
-            //this.MaxHeight = 120;
-            //this.MaxWidth = 360;
-            //this.MinHeight = 120;
-            //this.MinWidth = 360;
-            //MiniPlayerBorder.Height = 110;
-            //MiniPlayerBorder.Width = 350;
-            //PlayerRow.MinHeight = 0;
-            //TabRow.MinHeight = 0;
-            //PlayerBorder.Visibility = Visibility.Collapsed;
-            //MiniPlayerBorder.Visibility = Visibility.Visible;
-            //MiniPlayerBorder.Padding = new Thickness(0.0, 0.0, 0.0, 0.0);
-            //TabsBorder.Visibility = Visibility.Collapsed;
-            //this.Topmost = true;
-
-            //this.ShowNonClientArea = false;
-
-            //this.UpdateLayout();
-            //this.InvalidateVisual();
-
             var currentState = this.WindowState;
             this.WindowState = WindowState.Minimized;
 
@@ -268,8 +299,56 @@ namespace SpotiffyWidget
             else
             {
                 this.Topmost = false;
-                Properties.UserSettings.Default.AllwaysOnTop = true;
+                Properties.UserSettings.Default.AllwaysOnTop = false;
             }
+            Properties.UserSettings.Default.Save();
+        }
+
+        private void AllowTransparency_Click(object sender, RoutedEventArgs e)
+        {
+            if (AllowTransparency.IsChecked == true)
+            {
+                this.Background = Brushes.Transparent;
+                Properties.UserSettings.Default.Transparency = true;
+            }
+            else
+            {
+                this.ClearValue(BackgroundProperty);
+                Properties.UserSettings.Default.Transparency = false;
+            }
+            Properties.UserSettings.Default.Save();
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            int isDarkTheme;
+            if (Properties.UserSettings.Default.Theme == "Dark")
+            {
+                isDarkTheme = 1;
+            }
+            else
+            {
+                isDarkTheme = 0;
+            }
+
+            var radioButton = sender as RadioButton;
+
+            if (radioButton.Content.ToString() == "Mica")
+            {
+                BlurHelper.EnableMicaEffect(this, isDarkTheme, 1);
+                Properties.UserSettings.Default.MicaEffect = 1;
+            }
+            else if (radioButton.Content.ToString() == "Mica Alt")
+            {
+                BlurHelper.EnableMicaEffect(this, isDarkTheme, 2);
+                Properties.UserSettings.Default.MicaEffect = 2;
+            }
+            else if (radioButton.Content.ToString() == "Acrylic")
+            {
+                BlurHelper.EnableMicaEffect(this, isDarkTheme, 3);
+                Properties.UserSettings.Default.MicaEffect = 3;
+            }
+
             Properties.UserSettings.Default.Save();
         }
     }

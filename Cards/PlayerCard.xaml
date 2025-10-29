@@ -44,6 +44,7 @@
     <Border Margin="0"
             Padding="0"
             CornerRadius="10"
+            Background="#10000000"
             HorizontalAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -101,7 +102,7 @@
                 </Image>
             </Border>
 
-            <hc:RunningBlock BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9"
+            <hc:RunningBlock BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9" 
                              HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0"
                              Padding="5,0,0,0" AutoRun="True">
                 <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" Background="Transparent"
@@ -172,7 +173,7 @@
                    VerticalAlignment="Center">
                 0:00
             </Label>
-            <hc:PreviewSlider x:Name="PlayerSlider" Background="LightGray"
+            <hc:PreviewSlider x:Name="PlayerSlider" Background="White"
                               PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="5"
                               Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
                               SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter"

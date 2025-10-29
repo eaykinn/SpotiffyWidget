@@ -117,5 +117,29 @@ namespace SpotiffyWidget.Properties {
                 this["AllwaysOnTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Transparency {
+            get {
+                return ((bool)(this["Transparency"]));
+            }
+            set {
+                this["Transparency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int MicaEffect {
+            get {
+                return ((int)(this["MicaEffect"]));
+            }
+            set {
+                this["MicaEffect"] = value;
+            }
+        }
     }
 }

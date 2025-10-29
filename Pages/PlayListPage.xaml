@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SpotiffyWidget.Pages"
       mc:Ignorable="d" 
+      Background="Transparent"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="PlayListPage">
 
@@ -54,7 +55,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                                <Setter TargetName="Bd" Property="Background" Value="#10000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
@@ -71,9 +72,9 @@
         </Style>
     </Page.Resources>
 
-    
 
-    <Grid>
+    <Border Background="Transparent">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" MinHeight="40" />
             <RowDefinition Height="10*" />
@@ -95,10 +96,10 @@
                 <TextBlock Text="Loading..."
                                Margin="0,0,0,0"
                                FontSize="14"
-                               HorizontalAlignment="Center" />
+                               HorizontalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" />
             </StackPanel>
         </hc:TransitioningContentControl>
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" HorizontalAlignment="Left"
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent"
                 VerticalAlignment="Center" Margin="10,3,10,3" Orientation="Horizontal">
 
             <hc:ButtonGroup x:Name="PlayListRadioButton" Style="{StaticResource ButtonGroupSolid}">
@@ -107,9 +108,9 @@
             </hc:ButtonGroup>
         </StackPanel>
 
-        <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right"
+        <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Background="Transparent"
                 Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-            <hc:SearchBar x:Name="PlayListSearchBar" MinWidth="100" Margin="10,0,0,0"
+                <hc:SearchBar x:Name="PlayListSearchBar" MinWidth="100" Margin="10,0,0,0" Background="Transparent"
                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
                       Padding="5,0,5,0" SearchStarted="PlayListSearchBar_SearchStarted" />
             <Button x:Name="PlayListChangeView" Tag="MyPlayLists" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
@@ -117,9 +118,10 @@
 
             </Button>
         </StackPanel>
-        <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0"
+            <ListBox BorderBrush="Transparent" Background="Transparent" Margin="0,0,0,0" Padding="0,0,0,0"
              HorizontalContentAlignment="Stretch" x:Name="MyPlayLists" Grid.Row="1"
              Grid.Column="0" Grid.ColumnSpan="6"
              ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
     </Grid>
+    </Border>
 </Page>

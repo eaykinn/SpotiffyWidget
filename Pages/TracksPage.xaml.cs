@@ -39,6 +39,7 @@ namespace SpotiffyWidget.Pages
 
         private async void LoadTracks(string id, string trackImageUri, int IsFromWhere)
         {
+            LoadingPanel.Visibility = Visibility.Visible;
             // TODO: Implement track loading logic
             if (!await SpotifyAuth.GrantAccess())
                 return;
@@ -169,6 +170,8 @@ namespace SpotiffyWidget.Pages
 
                 TracksListBox.Items.Add(listboxItem);
             }
+
+            LoadingPanel.Visibility = Visibility.Hidden;
         }
 
         private void ChangeView_Click(object sender, RoutedEventArgs e)
