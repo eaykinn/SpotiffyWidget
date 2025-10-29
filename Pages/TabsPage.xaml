@@ -54,7 +54,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="#22000000" />
+                                <Setter TargetName="Bd" Property="Background" Value="#10000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
@@ -71,7 +71,7 @@
         </Style>
     </Page.Resources>
 
-    <Border Background="#22000000" BorderBrush="{x:Null}" CornerRadius="10">
+    <Border Background="#10000000" BorderBrush="{x:Null}" CornerRadius="10">
         <Grid>
             <hc:TabControl x:Name="MainTabs" IsScrollable="True" ShowScrollButton="True"  Background="Transparent" BorderBrush="{x:Null}"
                    Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"

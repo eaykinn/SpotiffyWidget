@@ -7,7 +7,7 @@
       xmlns:hc="https://handyorg.github.io/handycontrol"
       xmlns:cards="clr-namespace:SpotiffyWidget.Cards"
       mc:Ignorable="d" 
-      Background="#22000000"
+      Background="#10000000"
       d:DesignHeight="450" d:DesignWidth="300"
       Title="ArtistDetailPage">
 
@@ -51,7 +51,7 @@
             <TextBlock x:Name="ArtistName" FontSize="22"  Foreground="White">ArtistName</TextBlock>
         </Border>
 
-        <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True" BorderBrush="{x:Null}" Background="#22000000">
+            <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True" BorderBrush="{x:Null}" Background="#10000000">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="{x:Null}"/>
@@ -102,7 +102,7 @@
                         </Button.RenderTransform> P
                     </Button>
 
-                        <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{x:Null}" Background="#22000000">
+                        <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{x:Null}" Background="#10000000">
 
                     </Border>
 

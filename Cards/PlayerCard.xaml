@@ -44,7 +44,7 @@
     <Border Margin="0"
             Padding="0"
             CornerRadius="10"
-            Background="#22000000"
+            Background="#10000000"
             HorizontalAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -173,7 +173,7 @@
                    VerticalAlignment="Center">
                 0:00
             </Label>
-            <hc:PreviewSlider x:Name="PlayerSlider" Background="LightGray"
+            <hc:PreviewSlider x:Name="PlayerSlider" Background="White"
                               PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="5"
                               Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
                               SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter"

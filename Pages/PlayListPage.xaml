@@ -55,7 +55,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="#22000000" />
+                                <Setter TargetName="Bd" Property="Background" Value="#10000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
