@@ -7,10 +7,12 @@
       xmlns:hc="https://handyorg.github.io/handycontrol"
       xmlns:cards="clr-namespace:SpotiffyWidget.Cards"
       mc:Ignorable="d" 
+      Background="#22000000"
       d:DesignHeight="450" d:DesignWidth="300"
       Title="ArtistDetailPage">
 
     <ScrollViewer>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="35"/>
@@ -49,13 +51,21 @@
             <TextBlock x:Name="ArtistName" FontSize="22"  Foreground="White">ArtistName</TextBlock>
         </Border>
 
-        <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Popularity" Binding="{Binding Popularity}" Width="*"/>
+        <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True" BorderBrush="{x:Null}" Background="#22000000">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{x:Null}"/>
+                        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush }"/>
+                    </Style>
+                </DataGrid.RowStyle>
+            
+                <DataGrid.Columns>
+                <DataGridTextColumn Header="Popularity" Binding="{Binding Popularity}" Width="*" />
                 <DataGridTextColumn Header="Genres" Binding="{Binding Genres}" Width="*"/>
                 <DataGridTextColumn Header="Followers" Binding="{Binding Followers}" Width="*"/>
             </DataGrid.Columns>
-
+        
+            
         </DataGrid>
 
         <Border CornerRadius="7" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -78,9 +88,9 @@
                         <RowDefinition Height="4*"/>
 
                     </Grid.RowDefinitions>
-                    
-                    
-                    <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" FontWeight="Bold" BorderBrush="{x:Null}" FontSize="14" VerticalContentAlignment="Center"  Content="Albums"></Label>
+
+
+                        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" FontWeight="Bold" BorderBrush="{x:Null}" FontSize="14" VerticalContentAlignment="Center"  Content="Albums" Background="{x:Null}"></Label>
                     <Button Grid.Column="0" MaxHeight="30" Click="Button_Click_1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
                         <Button.RenderTransform>
                             <TransformGroup>
@@ -92,7 +102,7 @@
                         </Button.RenderTransform> P
                     </Button>
 
-                    <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{StaticResource SecondaryBorderBrush}">
+                        <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{x:Null}" Background="#22000000">
 
                     </Border>
 

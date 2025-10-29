@@ -48,7 +48,7 @@ public static class BlurHelper
         var windowHelper = new WindowInteropHelper(window);
         var accent = new AccentPolicy();
         accent.AccentState = (int)AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-        accent.GradientColor = unchecked((int)0x01FFFFFF); // ARGB (99 = alpha)
+        accent.GradientColor = unchecked((int)0x66333333); // ARGB (99 = alpha)
 
         var accentStructSize = Marshal.SizeOf(accent);
         var accentPtr = Marshal.AllocHGlobal(accentStructSize);

@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SpotiffyWidget.Pages"
       mc:Ignorable="d" 
+      Background="Transparent"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ArtistsPage">
 
@@ -54,7 +55,7 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                     <Condition Property="IsSelected" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                                <Setter TargetName="Bd" Property="Background" Value="#22000000" />
                             </MultiTrigger>
 
                             <!-- Kural 2: Öğe seçili ise (fare üzerinde olsun veya olmasın), ana tema rengi yap -->
@@ -96,7 +97,7 @@
                 <TextBlock Text="Loading..."
                                Margin="0,0,0,0"
                                FontSize="14"
-                               HorizontalAlignment="Center" />
+                               HorizontalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
             </StackPanel>
         </hc:TransitioningContentControl>
         
@@ -114,7 +115,7 @@
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right"
                 Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-            <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0"
+            <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0" Background="Transparent"
                       SearchStarted="ArtistSearchBar_SearchStarted" VerticalAlignment="Center"
                       Padding="5,0,5,0" />
             <Button x:Name="ArtistChangeView"  Tag="ArtistListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
@@ -122,7 +123,7 @@
 
             </Button>
         </StackPanel>
-        <ListBox BorderBrush="Transparent" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Row="1"
+        <ListBox BorderBrush="{x:Null}" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Row="1" Background="Transparent"
              Grid.ColumnSpan="6" HorizontalContentAlignment="Stretch" x:Name="ArtistListBox"
              ItemContainerStyle="{StaticResource DynamicHeightListBoxItem}" />
     </Grid>

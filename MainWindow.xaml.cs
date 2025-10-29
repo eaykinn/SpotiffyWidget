@@ -31,6 +31,7 @@ namespace SpotiffyWidget
                 TabsFrame.Navigate(new TabsPage());
                 var app = (App)Application.Current;
                 //app.SetCustomBlurValue(); // Uygulama başlatıldığında bulanıklık
+                BlurHelper.EnableBlur(this);
                 await WindowLoaded();
             }
             catch (Exception ex)

@@ -44,6 +44,7 @@
     <Border Margin="0"
             Padding="0"
             CornerRadius="10"
+            Background="#22000000"
             HorizontalAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -101,7 +102,7 @@
                 </Image>
             </Border>
 
-            <hc:RunningBlock BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9"
+            <hc:RunningBlock BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9" 
                              HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0"
                              Padding="5,0,0,0" AutoRun="True">
                 <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" Background="Transparent"
