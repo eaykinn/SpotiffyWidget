@@ -231,7 +231,7 @@ public partial class PlayerCard : UserControl
             _semaphore.Release();
         }
 
-        //await GetPlayBackStateAsync();
+        await GetPlayBackStateAsync();
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)

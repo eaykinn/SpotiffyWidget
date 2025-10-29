@@ -596,5 +596,13 @@ namespace SpotiffyWidget.Cards
             var mainw = (MainWindow)Application.Current.MainWindow;
             mainw.DragMove();
         }
+
+        private async void UserControl_IsVisibleChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e
+        )
+        {
+            await GetPlayBackStateAsync();
+        }
     }
 }

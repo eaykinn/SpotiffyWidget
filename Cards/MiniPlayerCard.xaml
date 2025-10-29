@@ -7,7 +7,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              MaxHeight="110"
              MaxWidth="350"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" IsVisibleChanged="UserControl_IsVisibleChanged">
 
     <UserControl.Resources>
         <Style x:Key="ActiveButtonStyle" TargetType="ToggleButton">
