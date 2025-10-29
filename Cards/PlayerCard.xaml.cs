@@ -200,14 +200,27 @@ public partial class PlayerCard : UserControl
 
             if (playBackState.IsPlaying)
             {
-                await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
+                var response = await PlayerRequests.Pause(
+                    Access.Default.AccessToken,
+                    null,
+                    cancellationToken
+                );
+                if (!response)
+                    return;
+
                 var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
                 IconElement.SetGeometry(PlayPauseButton, geometry);
                 uiTimer.Stop();
             }
             else
             {
-                await PlayerRequests.Play(Access.Default.AccessToken, null, cancellationToken);
+                var response = await PlayerRequests.Play(
+                    Access.Default.AccessToken,
+                    null,
+                    cancellationToken
+                );
+                if (!response)
+                    return;
                 var geometry = (Geometry)Application.Current.FindResource("PauseIcon");
                 IconElement.SetGeometry(PlayPauseButton, geometry);
                 uiTimer.Start();
@@ -218,7 +231,7 @@ public partial class PlayerCard : UserControl
             _semaphore.Release();
         }
 
-        await GetPlayBackStateAsync();
+        //await GetPlayBackStateAsync();
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
@@ -240,6 +253,9 @@ public partial class PlayerCard : UserControl
             Reset();
             var cancellationToken = Token;
             var response = await PlayerRequests.Next(Access.Default.AccessToken, cancellationToken);
+
+            if (response)
+                uiTimer.Start();
         }
         finally
         {
@@ -267,6 +283,8 @@ public partial class PlayerCard : UserControl
                 Access.Default.AccessToken,
                 cancellationToken
             );
+            if (response)
+                uiTimer.Start();
         }
         finally
         {

@@ -67,14 +67,22 @@ namespace SpotiffyWidget.Requests
             return response.IsSuccessStatusCode ? true : false;
         }
 
-        public static async Task Pause(
+        public static async Task<bool> Pause(
             string accessToken,
             object body,
             CancellationToken cancellationToken
         )
         {
             string url = SpotifyEndPoints.Player.Pause;
-            await SpotifyApiHelper.PutAsync(url, body, accessToken, cancellationToken);
+            var response = await SpotifyApiHelper.PutAsync(
+                url,
+                body,
+                accessToken,
+                cancellationToken
+            );
+            if (response == null)
+                return false;
+            return response.IsSuccessStatusCode ? true : false;
         }
 
         public static async Task<PlayBackState> GetPlayBackState(
