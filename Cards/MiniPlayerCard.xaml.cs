@@ -42,12 +42,15 @@ namespace SpotiffyWidget.Cards
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            uiTimer.Interval = TimeSpan.FromMilliseconds(700);
-            uiTimer.Tick += UpdateSongInfo;
-            uiTimer.Start();
+            if (this.Visibility == Visibility.Visible)
+            {
+                uiTimer.Interval = TimeSpan.FromMilliseconds(700);
+                uiTimer.Tick += UpdateSongInfo;
+                uiTimer.Start();
 
-            await Task.Delay(6000);
-            await GetPlayBackStateAsync();
+                await Task.Delay(3000);
+                await GetPlayBackStateAsync();
+            }
         }
 
         private void UpdateSongInfo(object? sender, EventArgs e)
