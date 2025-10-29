@@ -41,6 +41,11 @@ namespace SpotiffyWidget
 
         private async Task WindowLoaded()
         {
+            if (Properties.UserSettings.Default.AccentColor.IsEmpty)
+            {
+                Properties.UserSettings.Default.AccentColor = System.Drawing.Color.BlueViolet;
+            }
+
             var accentColor = ColorConverterHelper.ToSolidColorBrush(
                 Properties.UserSettings.Default.AccentColor
             );
@@ -116,8 +121,10 @@ namespace SpotiffyWidget
                     picker.Confirmed += delegate
                     {
                         ((App)Application.Current).UpdateAccent(picker.SelectedBrush);
-                        Properties.UserSettings.Default.AccentColor =
-                            ColorConverterHelper.ToDrawingColor(picker.SelectedBrush);
+
+                        var x = ColorConverterHelper.ToDrawingColor(picker.SelectedBrush);
+                        Properties.UserSettings.Default.AccentColor = x;
+
                         Properties.UserSettings.Default.Save();
                         window.Close();
                     };
@@ -198,13 +205,13 @@ namespace SpotiffyWidget
             var currentState = this.WindowState;
             this.WindowState = WindowState.Minimized;
 
-            this.Height = 120;
+            this.Height = 130;
             this.Width = 360;
-            this.MaxHeight = 120;
+            this.MaxHeight = 130;
             this.MaxWidth = 360;
-            this.MinHeight = 120;
+            this.MinHeight = 130;
             this.MinWidth = 360;
-            MiniPlayerBorder.Height = 110;
+            MiniPlayerBorder.Height = 120;
             MiniPlayerBorder.Width = 350;
             PlayerRow.MinHeight = 0;
             TabRow.MinHeight = 0;

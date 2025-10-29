@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SpotiffyWidget.Cards"
              xmlns:hc="https://handyorg.github.io/handycontrol"
-             MaxHeight="80"
+             MaxHeight="110"
              MaxWidth="350"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
 
@@ -74,9 +74,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1" />
                 <RowDefinition Height="3*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="1" />
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="0" />
+                <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
             
             <Border Background="Transparent" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4"
@@ -84,19 +84,14 @@
                 <Image x:Name="Cover" Stretch="Uniform" />
 
             </Border>
-            <StackPanel Grid.Column="5" Grid.Row="1" Grid.ColumnSpan="13" Orientation="Horizontal" HorizontalAlignment="Left">
-                <hc:RunningBlock BorderBrush="{x:Null}"
-                         HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0"
-                         Padding="5,0,0,0" AutoRun="True">
-                    <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" Background="Transparent"
-                   FontSize="11" FontWeight="Bold" Padding="0,0,0,0" />
-                </hc:RunningBlock>
-                <Label BorderBrush="{x:Null}" VerticalAlignment="Center" Padding="0,5,0,0" Content="/"></Label>
-                <hc:RunningBlock BorderBrush="{x:Null}" Background="Transparent" Grid.Column="12" HorizontalAlignment="Left" VerticalAlignment="Center"
-                         Padding="5,0,0,0" Margin="0,0,10,0" AutoRun="True">
-                    <Label x:Name="ArtistName" VerticalAlignment="Center" BorderBrush="{x:Null}" Background="Transparent"
-                   FontSize="11" FontWeight="Bold" Padding="0,0,0,0" />
-                </hc:RunningBlock>
+            <StackPanel Grid.Column="5" Grid.Row="0" Grid.ColumnSpan="13" Grid.RowSpan="2" Orientation="Vertical" HorizontalAlignment="Left" >
+
+                <Label x:Name="SongName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left" 
+                   FontSize="13" FontWeight="Bold" Padding="5,10,0,0" />
+
+                <Label x:Name="ArtistName" VerticalAlignment="Center" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left"
+                   FontSize="11" FontWeight="Bold" Padding="5,0,0,1" />
+              
             </StackPanel >
 
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Margin="0,0,0,0"  Padding="0,0,0,0" Background="Transparent">
@@ -135,19 +130,19 @@
            
          
             <Label x:Name="CurrentTime" Grid.Column="5" Grid.Row="2" Padding="5,0,0,0" BorderBrush="{x:Null}"
-               Background="Transparent" FontSize="9" FontWeight="Bold" HorizontalAlignment="Left"
+               Background="Transparent" FontSize="9" FontWeight="Bold" HorizontalAlignment="Left" 
                VerticalAlignment="Center">
                 0:00
             </Label>
             <Label x:Name="MaxTime" Grid.Column="17" Grid.Row="2" Padding="8,0,0,0" BorderBrush="{x:Null}"
-               Background="Transparent" FontSize="9" FontWeight="Bold" HorizontalAlignment="Left"
+               Background="Transparent" FontSize="9" FontWeight="Bold" HorizontalAlignment="Left" 
                VerticalAlignment="Center">
                 0:00
             </Label>
             <hc:PreviewSlider x:Name="PlayerSlider" Background="LightGray" Margin="0,0,0,0"
                           PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="7"
                           Grid.Row="2" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
-                          SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter"
+                          SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" 
                           DragOver="PlayerSlider_DragOver" />
 
             <StackPanel Orientation="Horizontal" Grid.Row="4"
