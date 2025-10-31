@@ -161,6 +161,59 @@
                     <Border MinHeight="30" Width="100" x:Name="VolumeSliderBorder" Visibility="Hidden"
                         Background="{DynamicResource SecondaryRegionBrush}" 
                         CornerRadius="10">
+                      
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Opacity" Value="0"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform X="-10"/>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsVisible}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Fade in -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 From="0" To="1" Duration="0:0:0.25"/>
+
+                                                    <!-- Yukarı kayma (inline easing) -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)"
+                                 From="-10" To="0" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+
+                                        <DataTrigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Fade out -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 From="1" To="0" Duration="0:0:0.25"/>
+
+                                                    <!-- Aşağı kayma -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)"
+                                 From="-10" To="0" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseIn"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
                         <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Horizontal" Maximum="100" Background="White"
                                       PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" 
                                        />

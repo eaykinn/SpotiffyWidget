@@ -187,6 +187,62 @@
                     <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch" Visibility="Hidden"
                             Background="{DynamicResource SecondaryRegionBrush}" HorizontalAlignment="Stretch"
                              CornerRadius="10">
+
+                        <Border.RenderTransform>
+                            <TranslateTransform Y="20"/>
+                        </Border.RenderTransform>
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Opacity" Value="0"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="20"/>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsVisible}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Fade in -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                         From="0" To="1" Duration="0:0:0.25"/>
+
+                                                    <!-- Yukarı kayma (inline easing) -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.Y)"
+                                                         From="20" To="0" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+
+                                        <DataTrigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Fade out -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                         From="1" To="0" Duration="0:0:0.25"/>
+
+                                                    <!-- Aşağı kayma -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.Y)"
+                                                         From="0" To="20" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseIn"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
                         <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Vertical" Maximum="100" Background="White"
                                           PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"
                                           HorizontalAlignment="Center" />
