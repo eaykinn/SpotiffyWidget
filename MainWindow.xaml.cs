@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using HandyControl.Controls;
 using HandyControl.Data;
 using HandyControl.Themes;
@@ -350,6 +351,38 @@ namespace SpotiffyWidget
             }
 
             Properties.UserSettings.Default.Save();
+        }
+
+        private async void TabsFrame_Navigated(
+            object sender,
+            System.Windows.Navigation.NavigationEventArgs e
+        )
+        {
+            if (TabsFrame.Content is Page page)
+            {
+                // Görsel dönüşüm ve opaklık sıfırla
+                var transform = new TranslateTransform { X = 80 }; // sağdan gelsin
+                page.RenderTransform = transform;
+                page.Opacity = 0;
+
+                // Bir tick bekle (UI render bitsin)
+                await Task.Delay(100);
+
+                // Fade + slide animasyonları
+                var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+                };
+
+                var slideIn = new DoubleAnimation(80, 0, TimeSpan.FromMilliseconds(300))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+                };
+
+                // Uygula
+                transform.BeginAnimation(TranslateTransform.XProperty, slideIn);
+                page.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            }
         }
     }
 }

@@ -213,7 +213,7 @@
             </Border>
 
             <Border Background="Transparent" x:Name="TabsBorder" Grid.Row="3" Grid.Column="0" CornerRadius="5" BorderBrush="{x:Null}" Style="{StaticResource BorderRegion}" Padding="0">
-                <Frame x:Name="TabsFrame" NavigationUIVisibility="Hidden" BorderBrush="{x:Null}"/>
+                <Frame x:Name="TabsFrame" NavigationUIVisibility="Hidden" BorderBrush="{x:Null}" Navigated="TabsFrame_Navigated"/>
             </Border>
 
 

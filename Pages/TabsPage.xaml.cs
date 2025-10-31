@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using HandyControl.Controls;
 using HandyControl.Data;
@@ -197,13 +199,13 @@ public partial class TabsPage : Page
                         break;
 
                     case "PlayLists":
-                    {
-                        if (_playlistsOnLoad) // Sadece ilk kez tıklandığında yükle
                         {
-                            _playlistsOnLoad = false; // Bayrağı kapat
-                            MainPlayListsFrame.Navigate(new PlayListPage());
+                            if (_playlistsOnLoad) // Sadece ilk kez tıklandığında yükle
+                            {
+                                _playlistsOnLoad = false; // Bayrağı kapat
+                                MainPlayListsFrame.Navigate(new PlayListPage());
+                            }
                         }
-                    }
                         break;
                     case "Artists":
                     {
@@ -238,11 +240,7 @@ public partial class TabsPage : Page
         }
     }
 
-
-    private async void TracksDoubleClick(
-        object sender,
-        MouseButtonEventArgs e
-    )
+    private async void TracksDoubleClick(object sender, MouseButtonEventArgs e)
     {
         var tracksListBoxItem = TracksListBox.SelectedItem as ListBoxItem;
 
@@ -267,11 +265,7 @@ public partial class TabsPage : Page
         CancellationService.Reset();
         var cancellationToken = CancellationService.Token;
 
-        await PlayerRequests.Play(
-            Access.Default.AccessToken,
-            body,
-            cancellationToken
-        );
+        await PlayerRequests.Play(Access.Default.AccessToken, body, cancellationToken);
 
         var mw = Application.Current.MainWindow as MainWindow;
 
@@ -303,10 +297,7 @@ public partial class TabsPage : Page
         if (FindName(targetListName) is ListBox targetListBox)
             // Iterate through items to find ListBoxItems and change their visual state
             for (var i = 0; i < targetListBox.Items.Count; i++)
-                if (
-                    targetListBox.ItemContainerGenerator.ContainerFromIndex(i)
-                    is ListBoxItem item
-                )
+                if (targetListBox.ItemContainerGenerator.ContainerFromIndex(i) is ListBoxItem item)
                 {
                     // Find the root element of the template where the VisualStates are defined.
                     var templateRoot = item.Template.FindName("Bd", item) as FrameworkElement;
@@ -321,22 +312,17 @@ public partial class TabsPage : Page
         var tracksList = new List<string>();
 
         foreach (var item in TracksListBox.Items)
-            if (
-                item is ListBoxItem listBoxItem
-                && listBoxItem.Content is TrackCard selectedCard
-            )
+            if (item is ListBoxItem listBoxItem && listBoxItem.Content is TrackCard selectedCard)
                 if (!string.IsNullOrEmpty(selectedCard.TrackUri))
                     tracksList.Add(selectedCard.TrackUri);
 
-        if (tracksList.Count > 0) await PlayTrack(tracksList.ToArray());
+        if (tracksList.Count > 0)
+            await PlayTrack(tracksList.ToArray());
     }
 
     #region Searchs
 
-    private void TrackSearchBar_SearchStarted(
-        object sender,
-        FunctionEventArgs<string> e
-    )
+    private void TrackSearchBar_SearchStarted(object sender, FunctionEventArgs<string> e)
     {
         SearchStarted("track");
     }
@@ -391,10 +377,9 @@ public partial class TabsPage : Page
                             card.IsTrackSaved = tracksSaved[indx];
                             card.LikeButton.IsChecked = tracksSaved[indx];
                             if (s.Album.Images.Count != 0)
-                                card.Cover.Source =
-                                    new BitmapImage(
-                                        new Uri(s.Album.Images.FirstOrDefault().Url)
-                                    );
+                                card.Cover.Source = new BitmapImage(
+                                    new Uri(s.Album.Images.FirstOrDefault().Url)
+                                );
 
                             var listboxItem = new ListBoxItem();
                             listboxItem.Margin = new Thickness(0, 2, 0, 2);
