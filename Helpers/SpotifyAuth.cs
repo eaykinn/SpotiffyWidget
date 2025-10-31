@@ -155,17 +155,6 @@ namespace SpotiffyWidget.Helpers
         {
             using (var client = new HttpClient())
             {
-                // --- PKCE Değişikliği: Basic Auth (ClientSecret) kaldırıldı ---
-                // var authHeader = Convert.ToBase64String(
-                //     Encoding.UTF8.GetBytes(
-                //         $"{Resources.ClientCredentials.ClientId}:{Resources.ClientCredentials.ClientSecret}"
-                //     )
-                // );
-                // client.DefaultRequestHeaders.Authorization =
-                //     new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeader);
-                // -----------------------------------------------------------
-
-                // --- PKCE Değişikliği: İstek gövdesi güncellendi ---
                 var content = new FormUrlEncodedContent(
                     new[]
                     {
@@ -185,9 +174,12 @@ namespace SpotiffyWidget.Helpers
                 {
                     SpTokens json = JsonSerializer.Deserialize<SpTokens>(responseContent);
                     Properties.Access.Default.AccessToken = json.access_token;
-                    // Not: Refresh token isteği bazen yeni bir refresh_token döndürebilir,
-                    // onu da saklamak iyi bir pratik olabilir, ancak Spotify'da bu genellikle aynı kalır.
-                    // if (json.refresh_token != null) { Properties.Access.Default.RefreshToken = json.refresh_token; }
+
+                    if (!string.IsNullOrEmpty(json.refresh_token))
+                    {
+                        Properties.Access.Default.RefreshToken = json.refresh_token;
+                    }
+
                     Properties.Access.Default.Save();
                     return json.access_token;
                 }
