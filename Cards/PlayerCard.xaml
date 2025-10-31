@@ -178,32 +178,27 @@
                               Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
                               SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter"
                               DragOver="PlayerSlider_DragOver" />
+            
+            
+            <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7"  Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
+            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
 
-            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical" Grid.Row="1" Grid.RowSpan="7"
-                        Background="Transparent"
-                        Grid.Column="17">
-
-                <Popup x:Name="VolumePopup"
-                       StaysOpen="False"
-                       Placement="Top"
-                       PopupAnimation="Scroll"
-                       AllowsTransparency="True"
-                       PlacementTarget="{Binding ElementName=VolumeButton}">
-                    <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch"
+      
+                    <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch" Visibility="Hidden"
                             Background="{DynamicResource SecondaryRegionBrush}" HorizontalAlignment="Stretch"
-                            CornerRadius="10">
+                             CornerRadius="10">
                         <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Vertical" Maximum="100" Background="White"
                                           PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"
                                           HorizontalAlignment="Center" />
                     </Border>
 
-                </Popup>
-                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center"
-                        HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
+                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" 
                         Foreground="{DynamicResource PrimaryTextBrush}"
-                        hc:IconElement.Geometry="{StaticResource SoundMidIcon}" />
+                        hc:IconElement.Geometry="{StaticResource SoundMidIcon}" Click="VolumeButton_Click" />
 
             </StackPanel>
+            </Border>
 
         </Grid>
     </Border>

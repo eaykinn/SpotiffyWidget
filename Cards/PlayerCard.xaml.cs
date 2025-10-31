@@ -48,7 +48,10 @@ public partial class PlayerCard : UserControl
         }
 
         if (Properties.UserSettings.Default.PreventSleepMode)
+        {
             PowerModeCB.IsChecked = true;
+            PreventSleepMode(true);
+        }
     }
 
     public async Task GetPlayBackStateAsync()
@@ -296,8 +299,8 @@ public partial class PlayerCard : UserControl
 
     private async void ShowVolumeSlider(object sender, MouseEventArgs e)
     {
+        VolumeSliderBorder.Visibility = Visibility.Visible;
         await GetPlayBackStateAsync();
-        VolumePopup.IsOpen = true;
     }
 
     //private void HideVolumeSlider(object sender, MouseEventArgs e)
@@ -458,18 +461,6 @@ public partial class PlayerCard : UserControl
     private void PlayerSlider_DragOver(object sender, DragEventArgs e)
     {
         uiTimer.Start();
-    }
-
-    private void StackPanel_MouseLeave(object sender, MouseEventArgs e)
-    {
-        if (!VolumePopup.IsMouseOver && !VolumeButton.IsMouseOver)
-            VolumePopup.IsOpen = false;
-    }
-
-    private void StackPanel_LostMouseCapture(object sender, MouseEventArgs e)
-    {
-        if (!VolumePopup.IsMouseOver && !VolumeButton.IsMouseOver)
-            VolumePopup.IsOpen = false;
     }
 
     private async void RepeatModeButton_Click(object sender, RoutedEventArgs e)
@@ -726,5 +717,16 @@ public partial class PlayerCard : UserControl
         {
             Growl.Warning("Image donwloading failed.");
         }
+    }
+
+    private async void VolumeButton_Click(object sender, RoutedEventArgs e)
+    {
+        VolumeSliderBorder.Visibility = Visibility.Hidden;
+        await SetVolumeAsync(0);
+    }
+
+    private void VolumePopup_MouseLeave(object sender, MouseEventArgs e)
+    {
+        VolumeSliderBorder.Visibility = Visibility.Hidden;
     }
 }

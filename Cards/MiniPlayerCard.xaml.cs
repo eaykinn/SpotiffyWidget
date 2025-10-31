@@ -206,8 +206,8 @@ namespace SpotiffyWidget.Cards
 
         private async void ShowVolumeSlider(object sender, MouseEventArgs e)
         {
+            VolumeSliderBorder.Visibility = Visibility.Visible;
             await GetPlayBackStateAsync();
-            VolumePopup.IsOpen = true;
         }
 
         private void PlayerSlider_DragEnter(object sender, MouseButtonEventArgs e)
@@ -606,6 +606,17 @@ namespace SpotiffyWidget.Cards
         )
         {
             await GetPlayBackStateAsync();
+        }
+
+        private void VolumePopup_MouseLeave(object sender, MouseEventArgs e)
+        {
+            VolumeSliderBorder.Visibility = Visibility.Hidden;
+        }
+
+        private async void VolumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            VolumeSliderBorder.Visibility = Visibility.Hidden;
+            await SetVolumeAsync(0);
         }
     }
 }

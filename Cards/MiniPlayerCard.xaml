@@ -148,35 +148,28 @@
                           SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" 
                           DragOver="PlayerSlider_DragOver" />
 
-            <StackPanel Orientation="Horizontal" Grid.Row="4"
-                    Background="Transparent"
-                    HorizontalAlignment="Left" 
-                    Grid.ColumnSpan="3"
-                    Grid.Column="5">
+            <Border x:Name="VolumePopUpBorder" Grid.ColumnSpan="8" Grid.Row="4" Grid.Column="5" Background="Transparent" HorizontalAlignment="Left"  MouseLeave="VolumePopup_MouseLeave">
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Left"
+                    Background="Transparent">
 
-                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" Height="35" Width="35"
+                <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" Height="35" Width="35" Click="VolumeButton_Click"
                     HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource SoundMidIcon}" />
 
-
-                <Popup x:Name="VolumePopup"
-                   StaysOpen="False"
-                   Placement="Right"
-                   PopupAnimation="Scroll"
-                   AllowsTransparency="True"
-                   PlacementTarget="{Binding ElementName=VolumeButton}">
-                    <Border MinHeight="30" Width="100" x:Name="VolumeSliderBorder" 
+                    <Border MinHeight="30" Width="100" x:Name="VolumeSliderBorder" Visibility="Hidden"
                         Background="{DynamicResource SecondaryRegionBrush}" 
                         CornerRadius="10">
                         <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Horizontal" Maximum="100" Background="White"
-                                      PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"
+                                      PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" 
                                        />
                     </Border>
 
-                </Popup>
+               
 
             </StackPanel>
+            </Border>
 
         </Grid>
     </Border>
