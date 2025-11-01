@@ -15,7 +15,7 @@
            MinWidth="400"
            MaxHeight = "900"
            MaxWidth = "600"
-           
+           ShowInTaskbar="False"
            WindowStyle="None"
            AllowsTransparency="True"
            ShowMinButton="False"
