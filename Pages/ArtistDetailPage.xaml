@@ -7,113 +7,114 @@
       xmlns:hc="https://handyorg.github.io/handycontrol"
       xmlns:cards="clr-namespace:SpotiffyWidget.Cards"
       mc:Ignorable="d" 
-      Background="#10000000"
       d:DesignHeight="450" d:DesignWidth="300"
       Title="ArtistDetailPage">
 
-    <ScrollViewer>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" MinWidth="35"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+    <Border CornerRadius="10" Background="#10000000">
+        <ScrollViewer>
 
-        </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" MinWidth="35"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="4*" MinHeight="40"/>
-            <RowDefinition Height="20*" MaxHeight="150"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="20*"/>
+                </Grid.ColumnDefinitions>
 
-
-        </Grid.RowDefinitions>
-
-        <Button Grid.Column="0" Grid.Row="0" Click="Button_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="180"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Button.RenderTransform> Back
-        </Button>
-        <Border CornerRadius="5" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" Padding="5,1,5,1"  HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Panel.ZIndex="3">
-            <Border.Background>
-                <SolidColorBrush Color="Black" Opacity="0.6"/>
-            </Border.Background>
-            <TextBlock x:Name="ArtistName" FontSize="22"  Foreground="White">ArtistName</TextBlock>
-        </Border>
-
-            <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True" BorderBrush="{x:Null}" Background="#10000000">
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Setter Property="Background" Value="{x:Null}"/>
-                        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush }"/>
-                    </Style>
-                </DataGrid.RowStyle>
-            
-                <DataGrid.Columns>
-                <DataGridTextColumn Header="Popularity" Binding="{Binding Popularity}" Width="*" />
-                <DataGridTextColumn Header="Genres" Binding="{Binding Genres}" Width="*"/>
-                <DataGridTextColumn Header="Followers" Binding="{Binding Followers}" Width="*"/>
-            </DataGrid.Columns>
-        
-            
-        </DataGrid>
-
-        <Border CornerRadius="7" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Image x:Name="ArtistImage"  Stretch="UniformToFill"></Image>
-        </Border>
-
-        <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6">
-
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="8*"/>
-                        <ColumnDefinition Width="1*"/>
-
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="4*"/>
-
-                    </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" MinHeight="40"/>
+                    <RowDefinition Height="20*" MaxHeight="150"/>
+                    <RowDefinition Height="15*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="20*"/>
 
 
-                        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" FontWeight="Bold" BorderBrush="{x:Null}" FontSize="14" VerticalContentAlignment="Center"  Content="Albums" Background="{x:Null}"></Label>
-                    <Button Grid.Column="0" MaxHeight="30" Click="Button_Click_1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
-                        <Button.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="180"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </Button.RenderTransform> P
-                    </Button>
+                </Grid.RowDefinitions>
 
-                        <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{x:Null}" Background="#10000000">
+                <Button Grid.Column="0" Grid.Row="0" Click="Button_Click" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="180"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Button.RenderTransform> Back
+                </Button>
+                <Border CornerRadius="5" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" Padding="5,1,5,1"  HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Panel.ZIndex="3">
+                    <Border.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.6"/>
+                    </Border.Background>
+                    <TextBlock x:Name="ArtistName" FontSize="22"  Foreground="White">ArtistName</TextBlock>
+                </Border>
 
+                <DataGrid x:Name="DataGridArtistInfo" VerticalAlignment="Top" Grid.Row="2" MaxHeight="110" Grid.Column="1" Grid.ColumnSpan="4" AutoGenerateColumns="False" IsReadOnly="True" BorderBrush="{x:Null}" Background="#10000000">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="{x:Null}"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush }"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Popularity" Binding="{Binding Popularity}" Width="*" />
+                        <DataGridTextColumn Header="Genres" Binding="{Binding Genres}" Width="*"/>
+                        <DataGridTextColumn Header="Followers" Binding="{Binding Followers}" Width="*"/>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+
+                <Border CornerRadius="7" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Image x:Name="ArtistImage"  Stretch="UniformToFill"></Image>
+                </Border>
+
+                <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6">
+
+                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="1*"/>
+
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="4*"/>
+
+                            </Grid.RowDefinitions>
+
+
+                            <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,0,3" FontWeight="Bold" BorderBrush="{x:Null}" FontSize="14" VerticalContentAlignment="Center"  Content="Albums" Background="{x:Null}"></Label>
+                            <Button Grid.Column="0" MaxHeight="30" Click="Button_Click_1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}" RenderTransformOrigin="0.5,0.5">
+                                <Button.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="180"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Button.RenderTransform> P
+                            </Button>
+
+                            <Border x:Name="AlbumCard" CornerRadius="7" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" VerticalAlignment="Stretch" BorderThickness="0.5" BorderBrush="{x:Null}" Background="#10000000">
+
+                            </Border>
+
+                            <Button MaxHeight="30" Click="Button_Click_2" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}">N</Button>
+                        </Grid>
                     </Border>
-
-                    <Button MaxHeight="30" Click="Button_Click_2" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource BackIcon}">N</Button>
-                </Grid>
-            </Border>
-        </StackPanel>
+                </StackPanel>
 
 
 
 
-    </Grid>
-    </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
+    </Border>
 </Page>

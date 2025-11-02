@@ -71,12 +71,14 @@
         </Style>
     </Page.Resources>
 
-    <Border Background="#10000000" BorderBrush="{x:Null}" CornerRadius="10">
+    <Border Background="#10000000"  CornerRadius="10">
+        
         <Grid>
-            <hc:TabControl x:Name="MainTabs"  IsScrollable="True" ShowScrollButton="True"  Background="Transparent" BorderBrush="{x:Null}"
+            <hc:TabControl x:Name="MainTabs"  IsScrollable="True" ShowScrollButton="True" BorderThickness="0" Background="Transparent"
                    Style="{StaticResource  TabControlInLine}" TabItemWidth="120" TabItemHeight="25"
                    Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Stretch"
-                   SelectionChanged="TabControl_SelectionChanged" >
+                   SelectionChanged="TabControl_SelectionChanged"
+                          >
                 <hc:TabItem Header="Tracks"  Background="Transparent">
                     <hc:TransitioningContentControl TransitionMode="Right2LeftWithFade">
                         <Grid>
@@ -127,7 +129,8 @@
                             Margin="10,3,10,3">
                                 <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center" Background="Transparent" 
                                   Padding="5,0,5,0" Margin="10,0,0,0"
-                                  SearchStarted="TrackSearchBar_SearchStarted" />
+                                  SearchStarted="TrackSearchBar_SearchStarted" >
+                                </hc:SearchBar>
                                 <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
                             Margin="5,3,0,3">
 

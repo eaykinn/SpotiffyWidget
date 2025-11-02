@@ -10,6 +10,46 @@
             Padding="5"
             CornerRadius="5"
             HorizontalAlignment="Stretch" >
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.7" Color="Black"/>
+        </Border.Effect>
+
+        <Border.RenderTransform>
+            <ScaleTransform x:Name="CardScale" ScaleX="1" ScaleY="1"/>
+        </Border.RenderTransform>
+
+
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="CardScale"
+                     Storyboard.TargetProperty="ScaleX"
+                     To="1.01"
+                     Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="CardScale"
+                     Storyboard.TargetProperty="ScaleY"
+                     To="1.01"
+                     Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="CardScale"
+                     Storyboard.TargetProperty="ScaleX"
+                     To="1.0"
+                     Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetName="CardScale"
+                     Storyboard.TargetProperty="ScaleY"
+                     To="1.0"
+                     Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>

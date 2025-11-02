@@ -179,7 +179,8 @@
             </Setter>
         </Style>
     </hc:Window.Resources>
-    <Border Padding="5" Background="#10000000">
+    <Border Padding="5" >
+
 
         <Grid >
             <Grid.ColumnDefinitions>

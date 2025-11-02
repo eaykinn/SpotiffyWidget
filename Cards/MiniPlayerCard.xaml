@@ -51,6 +51,9 @@
         Background="Transparent"
         BorderBrush="{x:Null}"
         HorizontalAlignment="Stretch" >
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="10" ShadowDepth="5" Opacity="0.7" Color="Black"/>
+        </Border.Effect>
         <Grid MouseLeftButtonDown="Border_MouseDown" Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="8*" />
