@@ -223,12 +223,12 @@
                               DragOver="PlayerSlider_DragOver" />
             
             
-            <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7"  Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
+            <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7" Background="Transparent" Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
             <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
 
       
-                    <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder" VerticalAlignment="Stretch" Visibility="Hidden"
-                            Background="{DynamicResource SecondaryRegionBrush}" HorizontalAlignment="Stretch"
+                    <Border MinHeight="100" Width="35" x:Name="VolumeSliderBorder"  VerticalAlignment="Stretch" Visibility="Hidden"
+                            Background="{DynamicResource SecondaryRegionBrush}" HorizontalAlignment="Stretch" Margin="0,0,0,5"
                              CornerRadius="10">
 
                         <Border.RenderTransform>
@@ -287,7 +287,7 @@
                             </Style>
                         </Border.Style>
                         <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Vertical" Maximum="100" Background="White"
-                                          PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"
+                                          PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" 
                                           HorizontalAlignment="Center" />
                     </Border>
 
