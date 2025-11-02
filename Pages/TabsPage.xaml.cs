@@ -89,13 +89,8 @@ public partial class TabsPage : Page
         }
         catch (OperationCanceledException oce)
         {
-            // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
-            if (cancellationToken.IsCancellationRequested)
-                Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-            else
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+            if (!cancellationToken.IsCancellationRequested)
+                Growl.Warning("Request timeout: " + oce.Message);
         }
         catch (Exception ex)
         {
@@ -155,13 +150,8 @@ public partial class TabsPage : Page
         }
         catch (OperationCanceledException oce)
         {
-            // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
-            if (cancellationToken.IsCancellationRequested)
-                Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-            else
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+            if (!cancellationToken.IsCancellationRequested)
+                Growl.Warning("Request timeout: " + oce.Message);
         }
         catch (Exception ex)
         {
@@ -394,12 +384,8 @@ public partial class TabsPage : Page
         }
         catch (OperationCanceledException oce)
         {
-            if (cancellationToken.IsCancellationRequested)
-                Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-            else
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+            if (!cancellationToken.IsCancellationRequested)
+                Growl.Warning("Request timeout: " + oce.Message);
         }
         catch (Exception ex)
         {

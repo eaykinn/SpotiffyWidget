@@ -71,9 +71,7 @@ public partial class ArtistsPage : Page
                     var card = new ArtistCard();
                     card.Name.Content = s.Name;
                     card.ArtistId = s.Id;
-                    card.Cover.Source = new BitmapImage(
-                        new Uri(s.Images.FirstOrDefault().Url)
-                    );
+                    card.Cover.Source = new BitmapImage(new Uri(s.Images.FirstOrDefault().Url));
 
                     var listboxItem = new ListBoxItem();
                     listboxItem.Margin = new Thickness(0, 2, 0, 2);
@@ -83,46 +81,11 @@ public partial class ArtistsPage : Page
                     ArtistListBox.Items.Add(listboxItem);
                 }
             });
-            // 3) Search
-            /*var searchArtists = await Requests.SearchRequests.Search<Artist>(
-                Properties.Access.Default.AccessToken,
-                "Imagine Dragons",
-                "artist",
-                cancellationToken
-            );
-            cancellationToken.ThrowIfCancellationRequested();
-            var searchArtistNames = searchArtists.Select(a => a.Name).ToList();
-
-
-
-
-            // Tek seferde UI güncellemesi
-            Dispatcher.Invoke(() =>
-            {
-                TracksListBox.Items.Clear();
-                foreach (var s in allTracks)
-                {
-                    TrackCard card = new TrackCard();
-                    card.Name.Text = s.Track.Name;
-                    card.Artist.Text = s.Track.Artists.FirstOrDefault().Name;
-                    card.Album.Text = s.Track.Album.Name;
-                    card.Cover.Source = new System.Windows.Media.Imaging.BitmapImage(
-                        new Uri(s.Track.Album.Images.FirstOrDefault().Url)
-                    );
-
-                    TracksListBox.Items.Add(card);
-                }
-            });*/
         }
         catch (OperationCanceledException oce)
         {
-            // Gerçekten bizim token'ımız tarafından iptal mi yoksa başka bir sebepten mi?
-            if (cancellationToken.IsCancellationRequested)
-                Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-            else
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+            if (!cancellationToken.IsCancellationRequested)
+                Growl.Warning("Request timeout: " + oce.Message);
         }
         catch (Exception ex)
         {
@@ -135,10 +98,7 @@ public partial class ArtistsPage : Page
         }
     }
 
-    private void ArtistSearchBar_SearchStarted(
-        object sender,
-        FunctionEventArgs<string> e
-    )
+    private void ArtistSearchBar_SearchStarted(object sender, FunctionEventArgs<string> e)
     {
         SearchStarted("artist");
         MyTopArtists.IsChecked = false;
@@ -175,10 +135,9 @@ public partial class ArtistsPage : Page
                             card.Name.Content = s.Name;
                             card.ArtistId = s.Id;
                             if (s.Images.Count != 0)
-                                card.Cover.Source =
-                                    new BitmapImage(
-                                        new Uri(s.Images.FirstOrDefault().Url)
-                                    );
+                                card.Cover.Source = new BitmapImage(
+                                    new Uri(s.Images.FirstOrDefault().Url)
+                                );
 
                             var listboxItem = new ListBoxItem();
                             listboxItem.Margin = new Thickness(0, 2, 0, 2);
@@ -193,12 +152,8 @@ public partial class ArtistsPage : Page
         }
         catch (OperationCanceledException oce)
         {
-            if (cancellationToken.IsCancellationRequested)
-                Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-            else
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+            if (!cancellationToken.IsCancellationRequested)
+                Growl.Warning("Request timeout: " + oce.Message);
         }
         catch (Exception ex)
         {
@@ -235,10 +190,7 @@ public partial class ArtistsPage : Page
         if (FindName(targetListName) is ListBox targetListBox)
             // Iterate through items to find ListBoxItems and change their visual state
             for (var i = 0; i < targetListBox.Items.Count; i++)
-                if (
-                    targetListBox.ItemContainerGenerator.ContainerFromIndex(i)
-                    is ListBoxItem item
-                )
+                if (targetListBox.ItemContainerGenerator.ContainerFromIndex(i) is ListBoxItem item)
                 {
                     // Find the root element of the template where the VisualStates are defined.
                     var templateRoot = item.Template.FindName("Bd", item) as FrameworkElement;

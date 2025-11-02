@@ -103,7 +103,7 @@
                                     <TextBlock Text="Loading..."
                                    Margin="0,0,0,0"
                                    FontSize="14"
-                                   HorizontalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                                   HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                 </StackPanel>
                             </hc:TransitioningContentControl>
                             <StackPanel Background="Transparent" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left"

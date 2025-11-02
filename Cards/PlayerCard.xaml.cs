@@ -135,12 +135,7 @@ public partial class PlayerCard : UserControl
             }
             catch (OperationCanceledException oce)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-
-                Growl.Warning(
-                    "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                );
+                Growl.Warning("Request Timeout: " + oce.Message);
             }
             catch (Exception ex)
             {
@@ -361,12 +356,8 @@ public partial class PlayerCard : UserControl
             }
             catch (OperationCanceledException oce)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    Growl.Info("İşlem kullanıcı tarafından iptal edildi.");
-                else
-                    Growl.Warning(
-                        "İstek zaman aşımına uğradı veya dışarıdan bir iptal oldu: " + oce.Message
-                    );
+                if (!cancellationToken.IsCancellationRequested)
+                    Growl.Warning("Request timeout: " + oce.Message);
             }
             catch (Exception ex)
             {
