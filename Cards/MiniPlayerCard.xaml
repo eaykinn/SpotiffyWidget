@@ -151,10 +151,10 @@
                           SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" 
                           DragOver="PlayerSlider_DragOver" />
 
-            <Border x:Name="VolumePopUpBorder" Grid.ColumnSpan="10" Grid.Row="4" Grid.Column="5" Background="Transparent" HorizontalAlignment="Left"  MouseLeave="VolumePopup_MouseLeave">
+            <Border x:Name="VolumePopUpBorder" Grid.ColumnSpan="10" Grid.Row="4" Grid.Column="5"  Background="{x:Null}" HorizontalAlignment="Left"  MouseLeave="VolumePopup_MouseLeave">
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Left"
-                    Background="Transparent">
+                        Background="{x:Null}">
 
                 <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" Height="35" Width="35" Click="VolumeButton_Click"
                     HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"

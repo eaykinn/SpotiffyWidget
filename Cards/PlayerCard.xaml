@@ -223,7 +223,7 @@
                               DragOver="PlayerSlider_DragOver" />
             
             
-            <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7" Background="Transparent" Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
+            <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7" Background="{x:Null}" Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
             <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
 
       
