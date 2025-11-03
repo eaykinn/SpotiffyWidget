@@ -11,7 +11,7 @@
            ShowTitle="False"
            Height="770"
            Width="450"
-           MinHeight="530"
+           MinHeight="650"
            MinWidth="400"
            MaxHeight = "900"
            MaxWidth = "600"
@@ -190,7 +190,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1" />
                 <RowDefinition x:Name="PlayerRow" Height="20*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="5" />
                 <RowDefinition x:Name="TabRow" Height="40*"/>
             </Grid.RowDefinitions>
 

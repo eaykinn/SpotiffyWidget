@@ -115,7 +115,7 @@
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Right"
                 Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-            <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0" Background="Transparent"
+            <hc:SearchBar x:Name="ArtistSearchBar" MinWidth="100" Margin="10,0,0,0"  BorderBrush="{DynamicResource PrimaryBrush}" Background="Transparent"
                       SearchStarted="ArtistSearchBar_SearchStarted" VerticalAlignment="Center"
                       Padding="5,0,5,0" />
             <Button x:Name="ArtistChangeView"  Tag="ArtistListBox" Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"

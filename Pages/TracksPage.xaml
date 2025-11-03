@@ -107,7 +107,7 @@
         <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right"
                 VerticalAlignment="Center" Orientation="Horizontal" Grid.ColumnSpan="4"
                 Margin="10,3,10,3">
-            <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center" Background="Transparent"
+                <hc:SearchBar x:Name="TrackSearchBar" MinWidth="100" VerticalAlignment="Center" BorderBrush="{DynamicResource PrimaryBrush}" Background="Transparent"
                       Padding="5,0,5,0" Margin="10,0,0,0"
                       SearchStarted="TrackSearchBar_SearchStarted" />
             <Button x:Name="TrackChangeView" Tag="TracksListBox"  Click="ChangeView_Click" Style="{StaticResource ButtonPrimary}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource ListIcon}"
