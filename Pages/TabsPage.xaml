@@ -71,7 +71,7 @@
         </Style>
     </Page.Resources>
 
-    <Border Background="#10000000"  CornerRadius="10">
+    <Border Background="#10000000" CornerRadius="10">
         
         <Grid>
             <hc:TabControl x:Name="MainTabs"  IsScrollable="True" ShowScrollButton="True" BorderThickness="0" Background="Transparent"
@@ -81,7 +81,7 @@
                           >
                 <hc:TabItem Header="Tracks"  Background="Transparent">
                     <hc:TransitioningContentControl TransitionMode="Right2LeftWithFade">
-                        <Grid>
+                        <Grid Margin="0,5,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*" MinHeight="40" />
                                 <RowDefinition Height="1*" MinHeight="30"/>
