@@ -179,5 +179,14 @@ namespace SpotiffyWidget.Pages
                 AlbumCard.Child = card;
             }
         }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            var mw = Application.Current.MainWindow as MainWindow;
+            if (mw != null)
+            {
+                mw.TabsFrame.Navigate(new TracksPage(_artistId, "", 3));
+            }
+        }
     }
 }

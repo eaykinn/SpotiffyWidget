@@ -208,7 +208,6 @@ public partial class PlayerCard : UserControl
 
                 var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
                 IconElement.SetGeometry(PlayPauseButton, geometry);
-                uiTimer.Stop();
             }
             else
             {
@@ -221,7 +220,6 @@ public partial class PlayerCard : UserControl
                     return;
                 var geometry = (Geometry)Application.Current.FindResource("PauseIcon");
                 IconElement.SetGeometry(PlayPauseButton, geometry);
-                uiTimer.Start();
             }
         }
         finally

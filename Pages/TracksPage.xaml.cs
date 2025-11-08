@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,6 +108,32 @@ namespace SpotiffyWidget.Pages
                     ArtistName.Content = "User's";
                     break;
                 }
+                case 3:
+                {
+                    var artist = await ArtistsRequests.GetArtist(
+                        Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
+
+                    var queue = await ArtistsRequests.GetArtistTopTracks(
+                        Access.Default.AccessToken,
+                        id,
+                        cancellationToken
+                    );
+
+                    if (queue == null)
+                    {
+                        LoadingPanel.Visibility = Visibility.Hidden;
+                        return;
+                    }
+                    tracks = queue;
+                    tracks = tracks.Where(x => x.Id != null).Take(50).ToList();
+
+                    AlbumName.Content = "Top Tracks";
+                    ArtistName.Content = artist.Name + "'s";
+                    break;
+                }
             }
 
             string ids = string.Join(",", tracks.Select(t => t.Id));
@@ -136,7 +163,10 @@ namespace SpotiffyWidget.Pages
                 }
                 else
                 {
-                    card.Artist.Content = s.Artists.FirstOrDefault().Name;
+                    card.Artist.Content =
+                        s.Artists?.FirstOrDefault().Name != null
+                            ? s.Artists.FirstOrDefault().Name
+                            : "";
 
                     card.Album.Content =
                         $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
@@ -144,17 +174,20 @@ namespace SpotiffyWidget.Pages
 
                 card.TrackUri = s.Uri;
                 card.TrackId = s.Id;
-                if (trackImageUri == "")
+                if (trackImageUri == "" && s.Album != null)
                 {
                     BitmapImage img = new BitmapImage(
-                        new Uri(tracks[tracks.IndexOf(s)].Album.Images.FirstOrDefault().Url)
+                        new Uri(s.Album?.Images.FirstOrDefault().Url)
                     );
                     card.Cover.Source = img;
                 }
                 else
                 {
-                    BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
-                    card.Cover.Source = imageSource;
+                    if (trackImageUri.Length > 0)
+                    {
+                        BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+                        card.Cover.Source = imageSource;
+                    }
                 }
 
                 card.IsTrackSaved = tracksSaved[tracks.IndexOf(s)] ? true : false;

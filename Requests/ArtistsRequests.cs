@@ -28,6 +28,22 @@ namespace SpotiffyWidget.Requests
             return artist;
         }
 
+        public static async Task<List<Track>> GetArtistTopTracks(
+            string accessToken,
+            string id,
+            CancellationToken cancellationToken
+        )
+        {
+            string url = SpotifyEndPoints.Artist.Artists + "/" + id + "/top-tracks";
+            var tracks = await SpotifyApiHelper.SendRequestAsync<ArtistTopTracks>(
+                url,
+                accessToken,
+                cancellationToken
+            );
+
+            return tracks.Tracks;
+        }
+
         public static async Task<List<Album>> GetArtistAlbums(
             string accessToken,
             string id,
