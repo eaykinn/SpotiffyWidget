@@ -70,7 +70,7 @@
         </Style>
     </Page.Resources>
 
-    <Border CornerRadius="10" Background="#10000000">
+    <Border CornerRadius="5" Background="Transparent">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>

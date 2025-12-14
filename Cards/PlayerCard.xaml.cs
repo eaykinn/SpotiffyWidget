@@ -40,18 +40,6 @@ public partial class PlayerCard : UserControl
 
         await Task.Delay(3000);
         await GetPlayBackStateAsync();
-
-        if (Properties.UserSettings.Default.CloseOnShutDown)
-        {
-            StopMusicCB.IsChecked = true;
-            StopMusic(true);
-        }
-
-        if (Properties.UserSettings.Default.PreventSleepMode)
-        {
-            PowerModeCB.IsChecked = true;
-            PreventSleepMode(true);
-        }
     }
 
     public async Task GetPlayBackStateAsync()
@@ -566,102 +554,6 @@ public partial class PlayerCard : UserControl
             Growl.Warning("Error occured");
         else
             Growl.Info("Added to liked songs");
-    }
-
-    private void StopMusicCB_Click(object sender, RoutedEventArgs e)
-    {
-        if (StopMusicCB.IsChecked == true)
-            StopMusic(true);
-        else
-            StopMusic(false);
-    }
-
-    private void StopMusic(bool isTrue)
-    {
-        if (isTrue)
-        {
-            SystemEventHelper.StartListening();
-            SystemEventHelper.OnSystemEvent += SystemEventHelper_OnSystemEvent;
-
-            Properties.UserSettings.Default.CloseOnShutDown = true;
-        }
-        else
-        {
-            SystemEventHelper.OnSystemEvent -= SystemEventHelper_OnSystemEvent;
-            SystemEventHelper.StopListening();
-
-            Properties.UserSettings.Default.CloseOnShutDown = false;
-        }
-
-        Properties.UserSettings.Default.Save();
-    }
-
-    private void PreventSleepMode_Click(object sender, RoutedEventArgs e)
-    {
-        if (PowerModeCB.IsChecked == true)
-        {
-            PreventSleepMode(true);
-        }
-        else
-        {
-            PreventSleepMode(false);
-        }
-    }
-
-    private void PreventSleepMode(bool isTrue)
-    {
-        if (isTrue)
-        {
-            PowerHelper.PreventSleep();
-            Growl.Info("Sleep Mode Disabled");
-            Properties.UserSettings.Default.PreventSleepMode = true;
-        }
-        else
-        {
-            PowerHelper.AllowSleep();
-            Growl.Info("Sleep Mode Enabled");
-            Properties.UserSettings.Default.PreventSleepMode = false;
-        }
-        Properties.UserSettings.Default.Save();
-    }
-
-    private async void SystemEventHelper_OnSystemEvent(string state)
-    {
-        Reset();
-        var cancellationToken = Token;
-        var playBackState = await PlayerRequests.GetPlayBackState(
-            Access.Default.AccessToken,
-            cancellationToken
-        );
-        if (playBackState == null)
-            return;
-
-        switch (state)
-        {
-            case "SessionLock":
-            {
-                if (playBackState.IsPlaying)
-                {
-                    await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
-                    var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
-                    IconElement.SetGeometry(PlayPauseButton, geometry);
-                    uiTimer.Stop();
-                }
-
-                break;
-            }
-            case "Sleep":
-
-                if (playBackState.IsPlaying)
-                {
-                    await PlayerRequests.Pause(Access.Default.AccessToken, null, cancellationToken);
-                    var geometry = (Geometry)Application.Current.FindResource("PlayIcon");
-                    IconElement.SetGeometry(PlayPauseButton, geometry);
-                    uiTimer.Stop();
-                }
-
-                break;
-        }
     }
 
     private async void ShowQueueButton_Click(object sender, RoutedEventArgs e)

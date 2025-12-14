@@ -30,10 +30,17 @@ namespace SpotiffyWidget.Pages
     {
         private bool _isTracksCompactView = false;
         private int IsFromWhere;
+        private List<Track> _allTracks = new List<Track>();
+        private Dictionary<string, bool> _savedTracksCache = new Dictionary<string, bool>();
+        private int _loadedCount = 0;
+        private const int BATCH_SIZE = 20; // Her seferinde 20 şarkı yükle
+        private bool _isLoading = false;
+        private string _trackImageUri = "";
 
         public TracksPage(string id, string trackImageUri, int IsFromWhere)
         {
             this.IsFromWhere = IsFromWhere;
+            _trackImageUri = trackImageUri;
             InitializeComponent();
             LoadTracks(id, trackImageUri, IsFromWhere);
         }
@@ -41,7 +48,7 @@ namespace SpotiffyWidget.Pages
         private async void LoadTracks(string id, string trackImageUri, int IsFromWhere)
         {
             LoadingPanel.Visibility = Visibility.Visible;
-            // TODO: Implement track loading logic
+
             if (!await SpotifyAuth.GrantAccess())
                 return;
 
@@ -49,162 +56,228 @@ namespace SpotiffyWidget.Pages
             var cancellationToken = CancellationService.Token;
             var tracks = new List<Track>();
 
-            switch (IsFromWhere)
+            try
             {
-                case 0: // Album
+                switch (IsFromWhere)
                 {
-                    tracks = await AlbumsRequests.GetAlbumTracks(
-                        Properties.Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-
-                    var album = await AlbumsRequests.GetAlbum(
-                        Properties.Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-
-                    AlbumName.Content = album.Name;
-                    ArtistName.Content = album.Artists.FirstOrDefault().Name;
-                    break;
-                }
-                case 1: // Playlist
-                {
-                    var Profiletracks = await PlayListsRequests.GetPlayListTracks(
-                        Properties.Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-                    var playlist = await PlayListsRequests.GetPlayList(
-                        Properties.Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-
-                    tracks = Profiletracks
-                        .Where(x => x.Track != null)
-                        .Select(pt => pt.Track)
-                        .Take(50)
-                        .ToList();
-
-                    AlbumName.Content = playlist.Name;
-                    ArtistName.Content = playlist.Owner.DisplayName;
-                    break;
-                }
-                case 2:
-                {
-                    var queue = await PlayerRequests.GetUserQueue(
-                        Access.Default.AccessToken,
-                        cancellationToken
-                    );
-
-                    if (queue.QueueTrack == null)
-                        return;
-                    tracks = queue.QueueTrack.ToList();
-                    tracks = tracks.Where(x => x.Id != null).Take(50).ToList();
-
-                    AlbumName.Content = "Queue";
-                    ArtistName.Content = "User's";
-                    break;
-                }
-                case 3:
-                {
-                    var artist = await ArtistsRequests.GetArtist(
-                        Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-
-                    var queue = await ArtistsRequests.GetArtistTopTracks(
-                        Access.Default.AccessToken,
-                        id,
-                        cancellationToken
-                    );
-
-                    if (queue == null)
+                    case 0: // Album
                     {
-                        LoadingPanel.Visibility = Visibility.Hidden;
-                        return;
+                        tracks = await AlbumsRequests.GetAlbumTracks(
+                            Properties.Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+
+                        var album = await AlbumsRequests.GetAlbum(
+                            Properties.Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+
+                        AlbumName.Content = album.Name;
+                        ArtistName.Content = album.Artists.FirstOrDefault().Name;
+                        break;
                     }
-                    tracks = queue;
-                    tracks = tracks.Where(x => x.Id != null).Take(50).ToList();
-
-                    AlbumName.Content = "Top Tracks";
-                    ArtistName.Content = artist.Name + "'s";
-                    break;
-                }
-            }
-
-            string ids = string.Join(",", tracks.Select(t => t.Id));
-
-            var tracksSaved = await TracksRequests.CheckTracksIsSaved(
-                Properties.Access.Default.AccessToken,
-                ids,
-                cancellationToken
-            );
-
-            TrackCount.Content = tracks.Count() + " Songs";
-            if (trackImageUri != "")
-            {
-                BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
-            }
-
-            foreach (var s in tracks)
-            {
-                TrackCard card = new TrackCard();
-
-                card.Name.Content = s.Name;
-
-                if (IsFromWhere == 1)
-                {
-                    card.Artist.Content =
-                        $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
-                }
-                else
-                {
-                    card.Artist.Content =
-                        s.Artists?.FirstOrDefault().Name != null
-                            ? s.Artists.FirstOrDefault().Name
-                            : "";
-
-                    card.Album.Content =
-                        $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
-                }
-
-                card.TrackUri = s.Uri;
-                card.TrackId = s.Id;
-                if (trackImageUri == "" && s.Album != null)
-                {
-                    BitmapImage img = new BitmapImage(
-                        new Uri(s.Album?.Images.FirstOrDefault().Url)
-                    );
-                    card.Cover.Source = img;
-                }
-                else
-                {
-                    if (trackImageUri.Length > 0)
+                    case 1: // Playlist
                     {
-                        BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
-                        card.Cover.Source = imageSource;
+                        var Profiletracks = await PlayListsRequests.GetPlayListTracks(
+                            Properties.Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+                        var playlist = await PlayListsRequests.GetPlayList(
+                            Properties.Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+
+                        tracks = Profiletracks
+                            .Where(x => x.Track != null)
+                            .Select(pt => pt.Track)
+                            .ToList();
+
+                        AlbumName.Content = playlist.Name;
+                        ArtistName.Content = playlist.Owner.DisplayName;
+                        break;
+                    }
+                    case 2: // Queue - en kritik durum
+                    {
+                        var queue = await PlayerRequests.GetUserQueue(
+                            Access.Default.AccessToken,
+                            cancellationToken
+                        );
+
+                        if (queue.QueueTrack == null)
+                            return;
+
+                        tracks = queue.QueueTrack.Where(x => x.Id != null).ToList();
+
+                        AlbumName.Content = "Queue";
+                        ArtistName.Content = "User's";
+                        break;
+                    }
+                    case 3: // Artist Top Tracks
+                    {
+                        var artist = await ArtistsRequests.GetArtist(
+                            Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+
+                        var queue = await ArtistsRequests.GetArtistTopTracks(
+                            Access.Default.AccessToken,
+                            id,
+                            cancellationToken
+                        );
+
+                        if (queue == null)
+                        {
+                            LoadingPanel.Visibility = Visibility.Hidden;
+                            return;
+                        }
+                        tracks = queue.Where(x => x.Id != null).ToList();
+
+                        AlbumName.Content = "Top Tracks";
+                        ArtistName.Content = artist.Name + "'s";
+                        break;
                     }
                 }
 
-                card.IsTrackSaved = tracksSaved[tracks.IndexOf(s)] ? true : false;
-                card.LikeButton.IsChecked = tracksSaved[tracks.IndexOf(s)] ? true : false;
+                _allTracks = tracks;
+                TrackCount.Content = tracks.Count + " Songs";
 
-                //card.LikeButton.IsChecked = true;
-                //card.IsTrackSaved = true;
-
-                var listboxItem = new ListBoxItem();
-                listboxItem.Margin = new Thickness(0, 2, 0, 2);
-                listboxItem.Padding = new Thickness(0, 0, 0, 0);
-                listboxItem.Content = card;
-
-                TracksListBox.Items.Add(listboxItem);
+                // İlk batch'i yükle
+                await LoadNextBatch(trackImageUri);
             }
+            catch (Exception ex)
+            {
+                HandyControl.Controls.Growl.Error($"Error loading tracks: {ex.Message}");
+            }
+            finally
+            {
+                LoadingPanel.Visibility = Visibility.Hidden;
+            }
+        }
 
-            LoadingPanel.Visibility = Visibility.Hidden;
+        private async Task LoadNextBatch(string trackImageUri)
+        {
+            if (_isLoading || _loadedCount >= _allTracks.Count)
+                return;
+
+            _isLoading = true;
+
+            try
+            {
+                // Yüklenecek şarkıların batch'ini al
+                var tracksToLoad = _allTracks
+                    .Skip(_loadedCount)
+                    .Take(BATCH_SIZE)
+                    .ToList();
+
+                if (tracksToLoad.Count == 0)
+                {
+                    _isLoading = false;
+                    return;
+                }
+
+                // Saved status kontrolü - batch halinde
+                CancellationService.Reset();
+                var cancellationToken = CancellationService.Token;
+
+                string ids = string.Join(",", tracksToLoad.Select(t => t.Id));
+                var tracksSaved = await TracksRequests.CheckTracksIsSaved(
+                    Properties.Access.Default.AccessToken,
+                    ids,
+                    cancellationToken
+                );
+
+                // Cache'e ekle
+                for (int i = 0; i < tracksToLoad.Count; i++)
+                {
+                    _savedTracksCache[tracksToLoad[i].Id] = tracksSaved[i];
+                }
+
+                // UI'a ekle (Dispatcher kullanarak)
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    foreach (var s in tracksToLoad)
+                    {
+                        TrackCard card = new TrackCard();
+
+                        card.Name.Content = s.Name;
+
+                        if (IsFromWhere == 1)
+                        {
+                            card.Artist.Content =
+                                $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
+                        }
+                        else
+                        {
+                            card.Artist.Content =
+                                s.Artists?.FirstOrDefault()?.Name ?? "";
+
+                            card.Album.Content =
+                                $"{(int)s.DurationMs / 60000}:{(s.DurationMs % 60000) / 1000:D2}";
+                        }
+
+                        card.TrackUri = s.Uri;
+                        card.TrackId = s.Id;
+
+                        // Cover image
+                        if (trackImageUri == "" && s.Album != null)
+                        {
+                            BitmapImage img = new BitmapImage(
+                                new Uri(s.Album?.Images.FirstOrDefault()?.Url)
+                            );
+                            card.Cover.Source = img;
+                        }
+                        else if (trackImageUri.Length > 0)
+                        {
+                            BitmapImage imageSource = new BitmapImage(new Uri(trackImageUri));
+                            card.Cover.Source = imageSource;
+                        }
+
+                        // Saved status
+                        bool isSaved = _savedTracksCache.ContainsKey(s.Id)
+                            ? _savedTracksCache[s.Id]
+                            : false;
+                        card.IsTrackSaved = isSaved;
+                        card.LikeButton.IsChecked = isSaved;
+
+                        var listboxItem = new ListBoxItem();
+                        listboxItem.Margin = new Thickness(0, 2, 0, 2);
+                        listboxItem.Padding = new Thickness(0, 0, 0, 0);
+                        listboxItem.Content = card;
+
+                        TracksListBox.Items.Add(listboxItem);
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Background);
+
+                _loadedCount += tracksToLoad.Count;
+            }
+            catch (Exception ex)
+            {
+                HandyControl.Controls.Growl.Warning($"Batch loading error: {ex.Message}");
+            }
+            finally
+            {
+                _isLoading = false;
+            }
+        }
+
+        private async void TracksListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // Scroll sona yaklaştığında yeni batch yükle
+            var scrollViewer = e.OriginalSource as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                // Son %20'ye gelince yeni batch yükle
+                double threshold = scrollViewer.ScrollableHeight * 0.8;
+                if (scrollViewer.VerticalOffset >= threshold && !_isLoading)
+                {
+                    await LoadNextBatch(_trackImageUri);
+                }
+            }
         }
 
         private void ChangeView_Click(object sender, RoutedEventArgs e)
@@ -332,8 +405,7 @@ namespace SpotiffyWidget.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var mw = Application.Current.MainWindow as MainWindow;
-            if (mw != null)
+            if (Application.Current.MainWindow is MainWindow mw)
             {
                 if (mw.TabsFrame.CanGoBack)
                     mw.TabsFrame.GoBack();

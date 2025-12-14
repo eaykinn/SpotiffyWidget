@@ -576,7 +576,7 @@ namespace SpotiffyWidget.Cards
                 mainw.PlayerBorder.Visibility = Visibility.Visible;
                 mainw.MiniPlayerBorder.Visibility = Visibility.Collapsed;
                 mainw.TabsBorder.Visibility = Visibility.Visible;
-                mainw.ShowNonClientArea = true;
+                mainw.TitleBarBorder.Visibility = Visibility.Visible; // Title bar'ı göster
                 mainw.Topmost = false;
             });
 

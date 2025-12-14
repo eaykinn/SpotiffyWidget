@@ -81,47 +81,58 @@ namespace SpotiffyWidget.Helpers
                 var mediaPBI = _dataSource.GetMediaPlaybackInfo();
                 var mediaPBState = mediaPBI.PlaybackState;
 
-                if (mediaPBState == MediaPlaybackState.Playing)
-                {
-                    IsPlaying = true;
-                }
-                else
-                {
-                    IsPlaying = false;
-                }
+                IsPlaying = mediaPBState == MediaPlaybackState.Playing;
 
                 var timeline = _dataSource.GetMediaTimelineProperties();
 
-                // Spotify'dan yeni pozisyon gelmiş mi kontrol et
-                if (
-                    Math.Abs(timeline.Position.TotalSeconds - _lastPosition) < 0.01
-                    && timeline.Position.TotalSeconds > 0
-                )
-                {
-                    // Yeni veri yok → biz arttıralım
-                    if ((DateTime.Now - _lastUpdate).TotalSeconds >= 1)
-                    {
-                        if (IsPlaying)
-                        {
-                            CurrentSecond++;
-                            if (CurrentSecond > MaxSeconds)
-                                CurrentSecond = MaxSeconds;
+                // Pozisyon kontrolü - threshold'u artırdık (0.5 saniye)
+                double currentPos = timeline.Position.TotalSeconds;
+                bool positionChanged = Math.Abs(currentPos - _lastPosition) > 0.5;
 
-                            _lastUpdate = DateTime.Now;
+                if (positionChanged || _lastPosition < 0)
+                {
+                    // Yeni veri geldi → Spotify'dan güncelle
+                    CurrentSecond = (int)currentPos;
+                    MaxSeconds = (int)timeline.EndTime.TotalSeconds;
+                    _lastPosition = currentPos;
+                    _lastUpdate = DateTime.Now;
+
+                    // Şarkı değişmiş olabilir - bilgileri güncelle
+                    var info = _dataSource.GetMediaObjectInfo();
+                    if (info.Title != SongName)
+                    {
+                        SongName = info.Title ?? "No Data";
+                        ArtistName = info.Artist ?? "No Data";
+                        AlbumName = info.AlbumTitle ?? "No Data";
+
+                        // Albüm resmi güncelle
+                        using (var stream = _dataSource.GetThumbnailStream())
+                        {
+                            if (stream != null)
+                            {
+                                Image = BitmapFrame.Create(
+                                    stream,
+                                    BitmapCreateOptions.None,
+                                    BitmapCacheOption.OnLoad
+                                );
+                            }
                         }
                     }
                 }
-                else
+                else if (IsPlaying)
                 {
-                    // Yeni veri geldi → normal güncelle
-                    if (IsPlaying)
+                    // Yeni veri yok ama çalıyor → Manuel artır
+                    double elapsedSeconds = (DateTime.Now - _lastUpdate).TotalSeconds;
+                    if (elapsedSeconds >= 1.0)
                     {
-                        CurrentSecond = (int)timeline.Position.TotalSeconds;
-                        MaxSeconds = (int)timeline.EndTime.TotalSeconds;
-                        _lastPosition = timeline.Position.TotalSeconds;
+                        // Her saniyede bir artır
+                        CurrentSecond++;
+                        
+                        if (CurrentSecond > MaxSeconds)
+                            CurrentSecond = MaxSeconds;
+
                         _lastUpdate = DateTime.Now;
                     }
-                    InitializeSession();
                 }
 
                 // Süre metinlerini güncelle
@@ -130,6 +141,8 @@ namespace SpotiffyWidget.Helpers
             }
             catch
             {
+                // Hata durumunda session'ı yeniden başlat
+                _lastPosition = -1;
                 InitializeSession();
             }
         }

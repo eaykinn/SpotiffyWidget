@@ -1,4 +1,4 @@
-﻿<hc:Window x:Class="SpotiffyWidget.MainWindow"
+﻿<Window x:Class="SpotiffyWidget.MainWindow"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,7 +8,6 @@
            mc:Ignorable="d"
            Title="Spotify Desktop Widget"
            WindowStartupLocation="CenterScreen"
-           ShowTitle="False"
            Height="770"
            Width="450"
            MinHeight="650"
@@ -18,106 +17,17 @@
            ShowInTaskbar="False"
            WindowStyle="None"
            AllowsTransparency="True"
-           ShowMinButton="False"
-           ShowMaxButton="False"
-           Icon="/Resources/spwB.ico" Loaded="Window_Loaded">
+           Background="Transparent"
+           ResizeMode="CanResize"
+           Loaded="Window_Loaded">
 
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="40"
+                      ResizeBorderThickness="5"
+                      GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
 
-    <hc:Window.NonClientAreaContent>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-            <Menu Padding="10,0,0,0">
-                <MenuItem  Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}">
-                    <MenuItem.Icon>
-                        <Viewbox>
-                            <Path Data="{DynamicResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
-                        </Viewbox>
-                    </MenuItem.Icon>
-
-                    <MenuItem Header="View Settings">
-                        <CheckBox x:Name="AlwaysOnTopCB" Click="AlwaysOnTopCB_Click" >Always On Top</CheckBox>
-                        <CheckBox x:Name="PlaceOnDesktopCB" Click="PlaceOnDesktopCB_Click">Place On Desktop</CheckBox>
-                       
-                    </MenuItem>
-                    <CheckBox x:Name="OpenSpotifyCB" Click="OpenSpotifyCB_Click">Open Spotify at Start</CheckBox>
-                </MenuItem>
-  
-            </Menu>
-            <Button Click="ChangeTheme" 
-                   Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                   hc:IconElement.Geometry="{StaticResource PaletteIcon}" />
-
-            <Button Click="ChangeSizeClick" Width="36"
-                   Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                   hc:IconElement.Geometry="{StaticResource MinimizeIcon}" />
-            <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
-                   HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
-                <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
-                        Effect="{StaticResource EffectShadow2}">
-                    <StackPanel Button.Click="ButtonSkins_OnClick">
-                        <hc:Divider Width="200" Margin="0,10" Content="Application Theme" />
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button Tag="{x:Static hc:ApplicationTheme.Light}" Style="{StaticResource ButtonCustom}">
-                                <Border Background="White" Width="32" Height="21" CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                            <Button Tag="{x:Static hc:ApplicationTheme.Dark}" Style="{StaticResource ButtonCustom}"
-                                    Margin="10,0,0,0">
-                                <Border Background="Black" Width="32" Height="21" CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                        </StackPanel>
-                        
-                        <hc:Divider Width="200" Margin="0,10" Content="Accent Color" />
-                        <StackPanel  Margin="0,0,0,10" HorizontalAlignment="Center" Orientation="Horizontal" >
-                            <Button Tag="{Binding ElementName=primaryBorder, Path=Background}"
-                                    Style="{StaticResource ButtonCustom}">
-                                <Border Name="primaryBorder" Background="#2196F3" Width="32" Height="21"
-                                        CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                            <Button Tag="{Binding ElementName=warningBorder, Path=Background}"
-                                    Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
-                                <Border Name="warningBorder" Background="Orange" Width="32"
-                                        Height="21" CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                            <Button Tag="{Binding ElementName=violetBorder, Path=Background}"
-                                    Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
-                                <Border Name="violetBorder" Background="#9C27B0" Width="32" Height="21"
-                                        CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                            <Button Tag="{Binding ElementName=successBorder, Path=Background}"
-                                    Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
-                                <Border Name="successBorder" Background="ForestGreen" Width="32"
-                                        Height="21" CornerRadius="2" BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}" />
-                            </Button>
-                        </StackPanel>
-
-                        <Button HorizontalAlignment="Stretch" Tag="Picker"  Content="More Colors" Margin="10" />
-                        
-                        <hc:Divider Width="200" Margin="0,10" Content="Others" />
-                        <StackPanel >
-                            <CheckBox Margin="10,0,0,10" x:Name="AllowTransparency" Click="AllowTransparency_Click" >Allow Transparent Background</CheckBox>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,15">
-                            <RadioButton x:Name="Mica" Margin="5,0,0,0" Content="Mica" GroupName="MicaGroup" Checked="RadioButton_Checked"></RadioButton>
-                            <RadioButton x:Name="MicaAlt" Margin="5,0,0,0" Content="Mica Alt" GroupName="MicaGroup" Checked="RadioButton_Checked"></RadioButton>
-                            <RadioButton x:Name="Acrylic" Margin="5,0,0,0" Content="Acrylic" GroupName="MicaGroup" Checked="RadioButton_Checked"></RadioButton>
-                        </StackPanel>
-
-                    </StackPanel>
-                </Border>
-            </Popup>
-        </StackPanel>
-        
-        
-        
-    </hc:Window.NonClientAreaContent>
-   
-    <hc:Window.Resources>
+    <Window.Resources>
         
         <Style x:Key="DynamicHeightListBoxItem" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="0" />
@@ -178,11 +88,115 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </hc:Window.Resources>
-    <Border Padding="5" >
+    </Window.Resources>
+    
+    <Border Background="{DynamicResource RegionBrush}" CornerRadius="10" ClipToBounds="True" BorderThickness="0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
+            <!-- Title Bar Panel -->
+            <Border x:Name="TitleBarBorder" Grid.Row="0" Background="{DynamicResource RegionBrush}" CornerRadius="10,10,0,0" 
+                    BorderThickness="0"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Menu Padding="10,0,0,0" Background="Transparent" WindowChrome.IsHitTestVisibleInChrome="True">
+                            <MenuItem Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}">
+                                <MenuItem.Icon>
+                                    <Viewbox>
+                                        <Path Data="{DynamicResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
+                                    </Viewbox>
+                                </MenuItem.Icon>
 
-        <Grid >
+                                <MenuItem Header="View Settings">
+                                    <CheckBox x:Name="AlwaysOnTopCB" Click="AlwaysOnTopCB_Click">Always On Top</CheckBox>
+                                    <CheckBox x:Name="PlaceOnDesktopCB" Click="PlaceOnDesktopCB_Click">Place On Desktop</CheckBox>
+                                </MenuItem>
+                                <MenuItem Header="Playback Settings">
+                                    <CheckBox x:Name="StopMusicCB" Click="StopMusicCB_Click">Stop when session is locked</CheckBox>
+                                    <CheckBox x:Name="PowerModeCB" Click="PreventSleepMode_Click">Prevent Sleep Mode</CheckBox>
+                                </MenuItem>
+                                <CheckBox x:Name="OpenSpotifyCB" Click="OpenSpotifyCB_Click">Open Spotify at Start</CheckBox>
+                            </MenuItem>
+                        </Menu>
+                        
+                        <Button Click="ChangeTheme" 
+                               Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                               hc:IconElement.Geometry="{StaticResource PaletteIcon}"
+                               WindowChrome.IsHitTestVisibleInChrome="True" />
+
+                        <Button Click="ChangeSizeClick" Width="36"
+                               Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                               hc:IconElement.Geometry="{StaticResource MinimizeIcon}"
+                               WindowChrome.IsHitTestVisibleInChrome="True" />
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Button Click="Button_Close" Width="36" Height="30" Content="✕"
+                               Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                               FontSize="16"
+                               WindowChrome.IsHitTestVisibleInChrome="True" />
+                    </StackPanel>
+                    
+                    <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
+                           HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
+                        <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
+                                Effect="{StaticResource EffectShadow2}">
+                            <StackPanel Button.Click="ButtonSkins_OnClick">
+                                <hc:Divider Width="200" Margin="0,10" Content="Application Theme" />
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button Tag="{x:Static hc:ApplicationTheme.Light}" Style="{StaticResource ButtonCustom}">
+                                        <Border Background="White" Width="32" Height="21" CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                    <Button Tag="{x:Static hc:ApplicationTheme.Dark}" Style="{StaticResource ButtonCustom}"
+                                            Margin="10,0,0,0">
+                                        <Border Background="Black" Width="32" Height="21" CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                </StackPanel>
+                                
+                                <hc:Divider Width="200" Margin="0,10" Content="Accent Color" />
+                                <StackPanel Margin="0,0,0,10" HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button Tag="{Binding ElementName=primaryBorder, Path=Background}"
+                                            Style="{StaticResource ButtonCustom}">
+                                        <Border Name="primaryBorder" Background="#2196F3" Width="32" Height="21"
+                                                CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                    <Button Tag="{Binding ElementName=warningBorder, Path=Background}"
+                                            Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                        <Border Name="warningBorder" Background="Orange" Width="32"
+                                                Height="21" CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                    <Button Tag="{Binding ElementName=violetBorder, Path=Background}"
+                                            Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                        <Border Name="violetBorder" Background="#9C27B0" Width="32" Height="21"
+                                                CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                    <Button Tag="{Binding ElementName=successBorder, Path=Background}"
+                                            Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                        <Border Name="successBorder" Background="ForestGreen" Width="32"
+                                                Height="21" CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{DynamicResource BorderBrush}" />
+                                    </Button>
+                                </StackPanel>
+
+                                <Button HorizontalAlignment="Stretch" Tag="Picker" Content="More Colors" Margin="10" />
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </Border>
+
+            <!-- Main Content -->
+            <Border Grid.Row="1" Padding="5">
+                <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
 
@@ -205,15 +219,15 @@
                 </StackPanel>       
             </hc:TransitioningContentControl>
 
-            <Border Background="Transparent" x:Name="PlayerBorder" Grid.Column="0" Grid.Row="1" Padding="0" CornerRadius="5" BorderBrush="{x:Null}" Style="{StaticResource BorderRegion}" >
+            <Border x:Name="PlayerBorder" Grid.Column="0" Grid.Row="1" Padding="0" 
+                    CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" 
+                    Background="Transparent">
                 <cards:PlayerCard x:Name="PlayerCard"/>
             </Border>
 
-            <Border Background="Transparent" x:Name="MiniPlayerBorder" Visibility="Collapsed" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" BorderBrush="{x:Null}" Style="{StaticResource BorderRegion}" >
-                <cards:MiniPlayerCard x:Name="MiniPlayerCard" />
-            </Border>
-
-            <Border Background="Transparent" x:Name="TabsBorder" Grid.Row="3" Grid.Column="0" CornerRadius="5" BorderBrush="{x:Null}" Style="{StaticResource BorderRegion}" Padding="0">
+            <Border x:Name="TabsBorder" Grid.Row="3" Grid.Column="0" 
+                    CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" 
+                    Background="Transparent" Padding="0">
                 <Frame x:Name="TabsFrame" NavigationUIVisibility="Hidden" BorderBrush="{x:Null}" Navigated="TabsFrame_Navigated"/>
             </Border>
 
@@ -230,8 +244,17 @@
                 </hc:NotifyIcon.ContextMenu>
 
        
-            </hc:NotifyIcon>
+                    </hc:NotifyIcon>
+                </Grid>
+            </Border>
+
+            <!-- Mini Player - Tüm pencereyi kaplar (Title Bar + Content) -->
+            <Border x:Name="MiniPlayerBorder" Visibility="Collapsed" 
+                    Grid.Row="0" Grid.RowSpan="2" CornerRadius="10" 
+                    BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" 
+                    Background="Transparent" Panel.ZIndex="10" Padding="5">
+                <cards:MiniPlayerCard x:Name="MiniPlayerCard" />
+            </Border>
         </Grid>
-        
     </Border>
-</hc:Window>
+</Window>

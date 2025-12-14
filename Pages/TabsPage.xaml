@@ -71,7 +71,7 @@
         </Style>
     </Page.Resources>
 
-    <Border Background="#10000000"  CornerRadius="10">
+    <Border Background="Transparent" CornerRadius="5">
         
         <Grid>
             <hc:TabControl x:Name="MainTabs"  IsScrollable="True" ShowScrollButton="True" BorderThickness="0" Background="Transparent"

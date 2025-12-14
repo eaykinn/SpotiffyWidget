@@ -47,7 +47,7 @@
         Margin="0"
         Padding="5"
         CornerRadius="10"
-        Background="#10000000"
+        Background="Transparent"
         HorizontalAlignment="Stretch">
         
         <Border.RenderTransform>
@@ -194,17 +194,6 @@
                     HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource ShowQueueIcon}" Click="ShowQueueButton_Click" />
-            <CheckBox x:Name="StopMusicCB" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="9" VerticalAlignment="Center"
-                      HorizontalAlignment="Left" Click="StopMusicCB_Click">
-                <Label Height="20" FontSize="9" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,0,0,0"
-                       Content="Stop when session is locked" BorderBrush="{x:Null}" Background="{x:Null}" />
-            </CheckBox>
-
-            <CheckBox x:Name="PowerModeCB" Grid.Column="12" Grid.Row="11" Grid.ColumnSpan="7"
-                      VerticalAlignment="Center" HorizontalAlignment="Left" Click="PreventSleepMode_Click">
-                <Label Height="20" FontSize="9" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,0,0,0"
-                       Content="Prevent Sleep Mode" BorderBrush="{x:Null}" Background="{x:Null}" />
-            </CheckBox>
 
             <Label x:Name="CurrentTime" Grid.Column="3" Grid.Row="7" Padding="0,0,0,0" BorderBrush="{x:Null}"
                    Background="Transparent" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"
