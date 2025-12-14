@@ -102,15 +102,21 @@
                     BorderThickness="0"
                     MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
                     <!-- App Logo and Title -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0">
                         <Image Source="Resources/spwB.ico" Width="20" Height="20" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
                         <TextBlock Text="Spotify Widget" FontSize="12" FontWeight="SemiBold" 
                                    Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
                     
                     <!-- Center Buttons -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Menu Background="Transparent" WindowChrome.IsHitTestVisibleInChrome="True" 
                               VerticalAlignment="Center">
                             <MenuItem Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}"
@@ -142,19 +148,21 @@
                         <Button Click="ChangeSizeClick" Width="36" Height="36"
                                Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                                hc:IconElement.Geometry="{StaticResource ExpandIcon}"
-                               
                                WindowChrome.IsHitTestVisibleInChrome="True"
-                               VerticalAlignment="Center"  ToolTip="Minimize"/>
+                               VerticalAlignment="Center" Margin="4,0" ToolTip="Minimize"/>
                     </StackPanel>
                     
                     <!-- Close Button -->
-                    <Button Click="Button_Close" Width="34" Height="34" Content="✕"
-                           Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                           FontSize="16" FontWeight="Normal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"
-                           WindowChrome.IsHitTestVisibleInChrome="True" />
+                    <Button Grid.Column="2" Click="Button_Close" Width="34" Height="34"
+                            Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                            hc:IconElement.Geometry="{StaticResource CloseIcon}"
+                           
+                            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="4,0"
+                            WindowChrome.IsHitTestVisibleInChrome="True"/>
                     
                     <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
-                           HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
+                           HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False"
+                           Grid.ColumnSpan="3">
                         <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16"
                                 Effect="{StaticResource EffectShadow2}">
                             <StackPanel Button.Click="ButtonSkins_OnClick">
