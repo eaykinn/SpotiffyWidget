@@ -11,12 +11,16 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded" IsVisibleChanged="UserControl_IsVisibleChanged">
 
     <UserControl.Resources>
+        <!-- Enhanced ActiveButtonStyle with Hover Effects -->
         <Style x:Key="ActiveButtonStyle" TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border Background="Transparent">
+                        <Border Background="Transparent" x:Name="ButtonBorder">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
                             <Path x:Name="Icon"
                                Data="{TemplateBinding Tag}"
                                Fill="{TemplateBinding Foreground}"
@@ -39,10 +43,88 @@
                             <Trigger Property="IsChecked" Value="{x:Null}">
                                 <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource PrimaryBrush}" />
                             </Trigger>
+                            
+                            <!-- Hover Animation -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="1.15" Duration="0:0:0.15">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="1.15" Duration="0:0:0.15">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="1.0" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="1.0" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        
+        <!-- Enhanced ButtonIcon Style -->
+        <Style x:Key="EnhancedButtonIcon" TargetType="Button" BasedOn="{StaticResource ButtonIcon}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                               To="1.15" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                               To="1.15" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                               To="1.0" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                               To="1.0" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
         </Style>
     </UserControl.Resources>
     <Border Margin="0"
@@ -113,15 +195,15 @@
                       HorizontalAlignment="Center" Click="ShuffleButton_Click"
                       Style="{StaticResource ActiveButtonStyle}" Tag="{StaticResource ShuffleIcon}" />
             <Button x:Name="PreviousButton" Grid.Column="9" Grid.Row="4" VerticalAlignment="Center"  Height="35" Width="35"
-                HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}"
+                HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource EnhancedButtonIcon}"
                 Foreground="{DynamicResource PrimaryTextBrush}"
                 hc:IconElement.Geometry="{StaticResource PreviousIcon}" />
             <Button x:Name="PlayPauseButton" Grid.Column="11" Grid.Row="4" VerticalAlignment="Center" 
                 HorizontalAlignment="Center" Click="PlayPauseButton_Click" Padding="0,0,0,0"
-                Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                Style="{StaticResource EnhancedButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                 hc:IconElement.Geometry="{StaticResource PlayIcon}" />
             <Button x:Name="NextButton" Grid.Column="13" Grid.Row="4" VerticalAlignment="Center"  Height="35" Width="35"
-                HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}"
+                HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource EnhancedButtonIcon}"
                 Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource NextIcon}" />
             <ToggleButton x:Name="RepeatModeButton" Grid.Column="17" Grid.Row="4" VerticalAlignment="Center"  Height="25" Width="25"
                       IsThreeState="True" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}"
@@ -145,11 +227,12 @@
                VerticalAlignment="Center">
                 0:00
             </Label>
-            <hc:PreviewSlider x:Name="PlayerSlider" Background="LightGray" Margin="0,0,0,0"
+            <hc:PreviewSlider x:Name="PlayerSlider" Margin="0,0,0,0"
                           PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="7"
                           Grid.Row="2" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
                           SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter" 
-                          DragOver="PlayerSlider_DragOver" />
+                          DragOver="PlayerSlider_DragOver"
+                          Foreground="{DynamicResource PrimaryBrush}" />
 
             <Border x:Name="VolumePopUpBorder" Grid.ColumnSpan="10" Grid.Row="4" Grid.Column="5"  Background="{x:Null}" HorizontalAlignment="Left"  MouseLeave="VolumePopup_MouseLeave">
             <StackPanel Orientation="Horizontal" 
@@ -157,7 +240,7 @@
                         Background="{x:Null}">
 
                 <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" Height="35" Width="35" Click="VolumeButton_Click"
-                    HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
+                    HorizontalAlignment="Center" Style="{StaticResource EnhancedButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource SoundMidIcon}" />
 
@@ -217,9 +300,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Horizontal" Maximum="100" Background="White"
-                                      PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" 
-                                       />
+                        <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Horizontal" Maximum="100"
+                                      PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp"
+                                      Foreground="{DynamicResource PrimaryBrush}" />
                     </Border>
 
                

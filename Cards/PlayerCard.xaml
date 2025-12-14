@@ -5,12 +5,16 @@
              xmlns:hc="https://handyorg.github.io/handycontrol" Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
+        <!-- Enhanced ActiveButtonStyle with Hover Effects -->
         <Style x:Key="ActiveButtonStyle" TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border Background="Transparent">
+                        <Border Background="Transparent" x:Name="ButtonBorder">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
                             <Path x:Name="Icon"
                                   Data="{TemplateBinding Tag}"
                                   Fill="{TemplateBinding Foreground}"
@@ -33,10 +37,88 @@
                             <Trigger Property="IsChecked" Value="{x:Null}">
                                 <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource PrimaryBrush}" />
                             </Trigger>
+                            
+                            <!-- Hover Animation -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="1.15" Duration="0:0:0.15">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="1.15" Duration="0:0:0.15">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="1.0" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonScale" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="1.0" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        
+        <!-- Enhanced ButtonIcon Style with Hover Effects -->
+        <Style x:Key="EnhancedButtonIcon" TargetType="Button" BasedOn="{StaticResource ButtonIcon}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                               To="1.15" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                               To="1.15" Duration="0:0:0.15">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                               To="1.0" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                               To="1.0" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
         </Style>
     </UserControl.Resources>
 
@@ -128,21 +210,77 @@
                 <RowDefinition Height="3" />
             </Grid.RowDefinitions>
 
+            <!-- Album Cover with Hover Zoom Effect -->
             <Border Background="Transparent" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" Grid.ColumnSpan="6"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" ClipToBounds="True">
-                <Image x:Name="Cover" Stretch="Uniform" >
-                    <Image.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Download Image" Click="DownloadMenuItem_Click" >
-                                <MenuItem.Icon>
-                                    <Viewbox>
-                                        <Path Data="{DynamicResource DownloadGeometry}" Fill="{DynamicResource PrimaryTextBrush}"></Path>
-                                    </Viewbox>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Image.ContextMenu>
-                </Image>
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0"
+                    CornerRadius="8">
+                <Grid x:Name="CoverContainer" Background="Transparent">
+                    <Grid.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="CoverScale" 
+                                                   Storyboard.TargetProperty="ScaleX"
+                                                   To="1.08" Duration="0:0:0.3">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="CoverScale" 
+                                                   Storyboard.TargetProperty="ScaleY"
+                                                   To="1.08" Duration="0:0:0.3">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="CoverOverlay" 
+                                                   Storyboard.TargetProperty="Opacity"
+                                                   To="1" Duration="0:0:0.3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="CoverScale" 
+                                                   Storyboard.TargetProperty="ScaleX"
+                                                   To="1.0" Duration="0:0:0.3"/>
+                                    <DoubleAnimation Storyboard.TargetName="CoverScale" 
+                                                   Storyboard.TargetProperty="ScaleY"
+                                                   To="1.0" Duration="0:0:0.3"/>
+                                    <DoubleAnimation Storyboard.TargetName="CoverOverlay" 
+                                                   Storyboard.TargetProperty="Opacity"
+                                                   To="0" Duration="0:0:0.3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Grid.Triggers>
+                    
+                    <Image x:Name="Cover" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <ScaleTransform x:Name="CoverScale" ScaleX="1" ScaleY="1"/>
+                        </Image.RenderTransform>
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Download Image" Click="DownloadMenuItem_Click" >
+                                    <MenuItem.Icon>
+                                        <Viewbox>
+                                            <Path Data="{DynamicResource DownloadGeometry}" Fill="{DynamicResource PrimaryTextBrush}"></Path>
+                                        </Viewbox>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+                    
+                    <!-- Hover Overlay -->
+                    <Border x:Name="CoverOverlay" Background="#40000000" Opacity="0" CornerRadius="8"
+                            IsHitTestVisible="False">
+                        <Viewbox Width="40" Height="40">
+                            <Path Data="{DynamicResource DownloadGeometry}" Fill="White" Stretch="Uniform"/>
+                        </Viewbox>
+                    </Border>
+                </Grid>
             </Border>
 
             <hc:RunningBlock BorderBrush="{x:Null}" Grid.Column="7" Grid.Row="1" Grid.ColumnSpan="9" 
@@ -168,15 +306,15 @@
                           HorizontalAlignment="Center" Click="ShuffleButton_Click"
                           Style="{StaticResource ActiveButtonStyle}" Tag="{StaticResource ShuffleIcon}" />
             <Button x:Name="PreviousButton" Grid.Column="7" Grid.Row="9" VerticalAlignment="Center"
-                    HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource ButtonIcon}"
+                    HorizontalAlignment="Center" Click="PreviousButton_Click" Style="{StaticResource EnhancedButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource PreviousIcon}" />
             <Button x:Name="PlayPauseButton" Grid.Column="9" Grid.Row="9" VerticalAlignment="Center"
                     HorizontalAlignment="Center" Click="PlayPauseButton_Click" Padding="0,0,0,0"
-                    Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                    Style="{StaticResource EnhancedButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource PlayIcon}" />
             <Button x:Name="NextButton" Grid.Column="11" Grid.Row="9" VerticalAlignment="Center"
-                    HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource ButtonIcon}"
+                    HorizontalAlignment="Center" Click="NextButton_Click" Style="{StaticResource EnhancedButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource NextIcon}" />
             <ToggleButton x:Name="RepeatModeButton" Grid.Column="13" Grid.Row="9" VerticalAlignment="Center"
                           IsThreeState="True" HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}"
@@ -184,14 +322,14 @@
 
 
             <Button x:Name="LyricsButton" Grid.Column="17" Grid.Row="1" VerticalAlignment="Center"
-                    HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
+                    HorizontalAlignment="Center" Style="{StaticResource EnhancedButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource LyricsIcon}" Click="LyricsButton_Click" />
             <ToggleButton x:Name="LikeSongButton" Grid.Column="17" Grid.Row="3" VerticalAlignment="Center"
                           HorizontalAlignment="Center" Style="{StaticResource ActiveButtonStyle}"
                           Tag="{StaticResource HeartIcon}" Click="LikeSongButton_Click" />
             <Button x:Name="ShowQueueButton" Grid.Column="17" Grid.Row="5" VerticalAlignment="Center"
-                    HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}"
+                    HorizontalAlignment="Center" Style="{StaticResource EnhancedButtonIcon}"
                     Foreground="{DynamicResource PrimaryTextBrush}"
                     hc:IconElement.Geometry="{StaticResource ShowQueueIcon}" Click="ShowQueueButton_Click" />
 
@@ -205,11 +343,13 @@
                    VerticalAlignment="Center">
                 0:00
             </Label>
-            <hc:PreviewSlider x:Name="PlayerSlider" Background="White"
+            <!-- Enhanced Progress Slider -->
+            <hc:PreviewSlider x:Name="PlayerSlider"
                               PreviewMouseLeftButtonUp="PlayerSlider_PreviewMouseLeftButtonUp" Grid.Column="5"
                               Grid.Row="7" Grid.ColumnSpan="10" VerticalAlignment="Center" LargeChange="10"
                               SmallChange="1" PreviewMouseLeftButtonDown="PlayerSlider_DragEnter"
-                              DragOver="PlayerSlider_DragOver" />
+                              DragOver="PlayerSlider_DragOver"
+                              Foreground="{DynamicResource PrimaryBrush}" />
             
             
             <Border x:Name="VolumePopUpBorder" Grid.Row="1" Grid.RowSpan="7" Background="{x:Null}" Grid.Column="17" VerticalAlignment="Bottom" MouseLeave="VolumePopup_MouseLeave">
@@ -275,13 +415,14 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Vertical" Maximum="100" Background="White"
+                        <hc:PreviewSlider x:Name="VolumeSlider" Orientation="Vertical" Maximum="100"
                                           PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" 
-                                          HorizontalAlignment="Center" />
+                                          HorizontalAlignment="Center"
+                                          Foreground="{DynamicResource PrimaryBrush}" />
                     </Border>
 
                 <Button x:Name="VolumeButton" MouseEnter="ShowVolumeSlider" VerticalAlignment="Center" 
-                        HorizontalAlignment="Center" Style="{StaticResource ButtonIcon}" 
+                        HorizontalAlignment="Center" Style="{StaticResource EnhancedButtonIcon}" 
                         Foreground="{DynamicResource PrimaryTextBrush}"
                         hc:IconElement.Geometry="{StaticResource SoundMidIcon}" Click="VolumeButton_Click" />
 

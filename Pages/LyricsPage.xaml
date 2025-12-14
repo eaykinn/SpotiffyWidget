@@ -71,6 +71,26 @@
     </Page.Resources>
 
     <Border CornerRadius="5" Background="Transparent">
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                       From="0" To="1" Duration="0:0:0.3">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                          From="0,20,0,0" To="0,0,0,0" Duration="0:0:0.3">
+                            <ThicknessAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </ThicknessAnimation.EasingFunction>
+                        </ThicknessAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>

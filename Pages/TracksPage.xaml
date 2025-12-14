@@ -10,6 +10,17 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TracksPage">
     <Page.Resources>
+        <!-- Shimmer Animation for Loading -->
+        <Storyboard x:Key="ShimmerAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="ShimmerTranslate" 
+                           Storyboard.TargetProperty="X"
+                           From="-400" To="400" Duration="0:0:1.5">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        
         <Style x:Key="DynamicHeightListBoxItem" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="10,2,2,2" />
@@ -71,6 +82,26 @@
         </Style>
     </Page.Resources>
     <Border CornerRadius="5" Background="Transparent">
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                       From="0" To="1" Duration="0:0:0.3">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                          From="0,20,0,0" To="0,0,0,0" Duration="0:0:0.3">
+                            <ThicknessAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </ThicknessAnimation.EasingFunction>
+                        </ThicknessAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" MinHeight="40" />
@@ -88,15 +119,46 @@
 
         </Grid.ColumnDefinitions>
 
+        <!-- Enhanced Loading Panel with Shimmer Effect -->
         <hc:TransitioningContentControl x:Name="LoadingPanel" Visibility="Collapsed" TransitionMode="Fade" HorizontalAlignment="Center" VerticalAlignment="Center"
                                       Grid.Column="0" Grid.Row="0" Panel.ZIndex="11" Grid.ColumnSpan="6" Grid.RowSpan="3">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
-                <TextBlock Text="Loading..."
-                         Margin="0,0,0,0"
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Shimmer Effect Container -->
+                <Border Grid.Row="0" Width="200" Height="80" CornerRadius="8" 
+                        Background="{DynamicResource SecondaryRegionBrush}" ClipToBounds="True">
+                    <Border.OpacityMask>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                <GradientStop Color="#80FFFFFF" Offset="0.5"/>
+                                <GradientStop Color="#00FFFFFF" Offset="1"/>
+                            </LinearGradientBrush.GradientStops>
+                            <LinearGradientBrush.RelativeTransform>
+                                <TranslateTransform x:Name="ShimmerTranslate" X="-400"/>
+                            </LinearGradientBrush.RelativeTransform>
+                        </LinearGradientBrush>
+                    </Border.OpacityMask>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard Storyboard="{StaticResource ShimmerAnimation}"/>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <hc:LoadingCircle Width="30" Height="30" DotSpeed="4" DotCount="5" />
+                    </StackPanel>
+                </Border>
+                
+                <TextBlock Grid.Row="2" Text="Loading tracks..."
                          FontSize="14"
-                         HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}" />
-            </StackPanel>
+                         HorizontalAlignment="Center" 
+                         Foreground="{DynamicResource PrimaryTextBrush}" />
+            </Grid>
         </hc:TransitioningContentControl>
         
         <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left"

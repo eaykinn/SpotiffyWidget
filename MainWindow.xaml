@@ -102,11 +102,21 @@
                     BorderThickness="0"
                     MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <Menu Padding="10,0,0,0" Background="Transparent" WindowChrome.IsHitTestVisibleInChrome="True">
-                            <MenuItem Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}">
+                    <!-- App Logo and Title -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0">
+                        <Image Source="Resources/spwB.ico" Width="20" Height="20" Margin="0,0,8,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock Text="Spotify Widget" FontSize="12" FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <!-- Center Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Menu Background="Transparent" WindowChrome.IsHitTestVisibleInChrome="True" 
+                              VerticalAlignment="Center">
+                            <MenuItem Style="{StaticResource MenuItemBaseStyle}" Foreground="{DynamicResource PrimaryTextBrush}"
+                                      Height="34" Padding="8,0" VerticalContentAlignment="Center">
                                 <MenuItem.Icon>
-                                    <Viewbox>
+                                    <Viewbox Width="16" Height="16">
                                         <Path Data="{DynamicResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -123,23 +133,25 @@
                             </MenuItem>
                         </Menu>
                         
-                        <Button Click="ChangeTheme" 
+                        <Button Click="ChangeTheme" Width="36" Height="36"
                                Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
                                hc:IconElement.Geometry="{StaticResource PaletteIcon}"
-                               WindowChrome.IsHitTestVisibleInChrome="True" />
+                               WindowChrome.IsHitTestVisibleInChrome="True" 
+                               VerticalAlignment="Center" Margin="4,0"/>
 
-                        <Button Click="ChangeSizeClick" Width="36"
+                        <Button Click="ChangeSizeClick" Width="36" Height="36"
                                Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                               hc:IconElement.Geometry="{StaticResource MinimizeIcon}"
-                               WindowChrome.IsHitTestVisibleInChrome="True" />
+                               hc:IconElement.Geometry="{StaticResource ExpandIcon}"
+                               
+                               WindowChrome.IsHitTestVisibleInChrome="True"
+                               VerticalAlignment="Center"  ToolTip="Minimize"/>
                     </StackPanel>
                     
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
-                        <Button Click="Button_Close" Width="36" Height="30" Content="✕"
-                               Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
-                               FontSize="16"
-                               WindowChrome.IsHitTestVisibleInChrome="True" />
-                    </StackPanel>
+                    <!-- Close Button -->
+                    <Button Click="Button_Close" Width="34" Height="34" Content="✕"
+                           Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}"
+                           FontSize="16" FontWeight="Normal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"
+                           WindowChrome.IsHitTestVisibleInChrome="True" />
                     
                     <Popup PlacementTarget="{Binding ElementName=ButtonConfig}" AllowsTransparency="True"
                            HorizontalOffset="-35" x:Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
@@ -222,6 +234,30 @@
             <Border x:Name="PlayerBorder" Grid.Column="0" Grid.Row="1" Padding="0" 
                     CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" 
                     Background="Transparent">
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Style.Triggers>
+                            <Trigger Property="Visibility" Value="Visible">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                           From="0" To="1" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <cards:PlayerCard x:Name="PlayerCard"/>
             </Border>
 
@@ -253,6 +289,42 @@
                     Grid.Row="0" Grid.RowSpan="2" CornerRadius="10" 
                     BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" 
                     Background="Transparent" Panel.ZIndex="10" Padding="5">
+                <Border.RenderTransform>
+                    <ScaleTransform x:Name="MiniPlayerScale" ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Style.Triggers>
+                            <Trigger Property="Visibility" Value="Visible">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                           From="0" To="1" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                                           From="0.95" To="1" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                                           From="0.95" To="1" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <cards:MiniPlayerCard x:Name="MiniPlayerCard" />
             </Border>
         </Grid>

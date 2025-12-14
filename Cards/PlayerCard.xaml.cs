@@ -504,6 +504,20 @@ public partial class PlayerCard : UserControl
         if (LikeSongButton.IsChecked == null)
             return;
 
+        // Heart beat animation
+        var heartBeatAnimation = new System.Windows.Media.Animation.DoubleAnimationUsingKeyFrames();
+        heartBeatAnimation.KeyFrames.Add(new System.Windows.Media.Animation.EasingDoubleKeyFrame(1.3, System.Windows.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(100))));
+        heartBeatAnimation.KeyFrames.Add(new System.Windows.Media.Animation.EasingDoubleKeyFrame(1.0, System.Windows.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200))));
+        heartBeatAnimation.KeyFrames.Add(new System.Windows.Media.Animation.EasingDoubleKeyFrame(1.2, System.Windows.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(300))));
+        heartBeatAnimation.KeyFrames.Add(new System.Windows.Media.Animation.EasingDoubleKeyFrame(1.0, System.Windows.Media.Animation.KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400))));
+
+        var scaleTransform = new ScaleTransform(1, 1);
+        LikeSongButton.RenderTransform = scaleTransform;
+        LikeSongButton.RenderTransformOrigin = new Point(0.5, 0.5);
+        
+        scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, heartBeatAnimation);
+        scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, heartBeatAnimation);
+
         if (LikeSongButton.IsChecked == true)
             await LikeSong(TrackId);
         else
