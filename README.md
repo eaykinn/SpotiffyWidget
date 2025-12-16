@@ -16,6 +16,7 @@
       <li>Media Playback Control(NPSMLib)</li>
       <li>Spotify api for searching & playing content, liking songs & adding user's queue</li>
       <li>Lyrics (by GeniusApi with web parsing)</li>
+      <li>Windows API (DWM) for system events </li>
     </ul>
     <p> You can also change theme from top left corner. Menu / playback settings provides stopping music when the user locks the current Windows session. I use HandyControl library for interface and colorpicker.</p>
    <div>
